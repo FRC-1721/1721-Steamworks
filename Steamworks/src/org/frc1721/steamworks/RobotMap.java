@@ -2,6 +2,7 @@ package org.frc1721.steamworks;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
@@ -15,7 +16,7 @@ public class RobotMap {
 	// --------- DRIVE TRAIN ----------
 	
 	/** VictorSPs for drive (left, right) **/
-	public static VictorSP dtLeft, dtRight;
+	public static Victor dtLeft, dtRight;
 	
 	/** PWM ports for drive motor controllers **/
 	public static final int dtlPWM = 0, dtrPWM = 1;

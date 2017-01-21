@@ -86,4 +86,8 @@ public void disablePID() {
 	  m_rightController.disable();
 }
 
+public void setDriveRate(double rate) {
+	  m_rateScale = rate;
+}
+
 }

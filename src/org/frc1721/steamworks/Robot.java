@@ -50,6 +50,7 @@ public class Robot extends IterativeRobot {
 		//Drive System
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
 						RobotMap.dtLeftController, RobotMap.dtRightController);
+		robotDrive.stopMotor();
 		
 		/* Add items to live windows */
 		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
@@ -82,7 +83,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.enablePID();
+		robotDrive.disablePID();
 	}
 
 	@Override

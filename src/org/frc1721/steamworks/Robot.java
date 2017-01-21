@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber;
 	public static Shooter shooter;
 	public static DriveTrain driveTrain;
-	
+	public static CustomRobotDrive robotDrive;
 	
 	@Override
 	public void robotInit() {
@@ -46,6 +46,10 @@ public class Robot extends IterativeRobot {
 				RobotMap.dtD, RobotMap.dtF, RobotMap.dtrEnc, RobotMap.dtRight, 0.03);
 		RobotMap.dtLeftController.setPIDSourceType(PIDSourceType.kRate);
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
+		
+		//Drive System
+		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
+						RobotMap.dtLeftController, RobotMap.dtRightController);
 		
 		/* Add items to live windows */
 		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);

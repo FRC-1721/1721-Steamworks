@@ -47,4 +47,43 @@ public class CustomRobotDrive extends RobotDrive {
 		// TODO Auto-generated constructor stub
 	}
 
+
+/* Over-ridden functions */
+public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
+    if (m_PIDEnabled) {
+    	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+    	if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
+    	m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
+    	if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
+    	
+    	/* Safety updates normally done in super class */
+        if (this.m_syncGroup != 0) {
+            CANJaguar.updateSyncGroup(m_syncGroup);
+          }
+
+          if (m_safetyHelper != null)
+            m_safetyHelper.feed();
+    	
+    } else {
+    	super.setLeftRightMotorOutputs(leftOutput, rightOutput);
+    }
+
+  }
+
+/* New Functions */
+public void enablePID() {
+	  m_PIDEnabled = true;
+
+	  m_leftController.reset();
+	  m_rightController.reset();
+	  m_leftController.enable();
+	  m_rightController.enable();
+}
+
+public void disablePID() {
+	  m_PIDEnabled = false;
+	  m_leftController.disable();
+	  m_rightController.disable();
+}
+
 }

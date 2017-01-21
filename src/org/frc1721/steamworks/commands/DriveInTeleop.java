@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.command.*;
 
 public class DriveInTeleop extends Command {
 
-
+	public DriveInTeleop() {
+		requires(Robot.driveTrain);
+	}
 
     // Called just before this Command runs the first time
     protected void initialize() {

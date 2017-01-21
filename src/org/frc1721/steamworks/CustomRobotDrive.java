@@ -53,7 +53,7 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     if (m_PIDEnabled) {
     	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
     	if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
-    	m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
+    	m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * m_rateScale);
     	if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
     	
     	/* Safety updates normally done in super class */

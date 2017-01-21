@@ -6,10 +6,11 @@ import org.frc1721.steamworks.subsystems.DriveTrain;
 import org.frc1721.steamworks.subsystems.Shooter;
 import org.frc1721.steamworks.CustomPIDController;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
@@ -32,7 +33,7 @@ public class Robot extends IterativeRobot {
 		// Motor Controllers
 		RobotMap.dtLeft = new Victor(RobotMap.dtlPWM);
 		RobotMap.dtRight = new Victor(RobotMap.dtrPWM);
-		RobotMap.dtRight.setInverted(true);
+		//RobotMap.dtRight.setInverted(true);
 		// Encoders
 		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB);
 		RobotMap.dtrEnc = new Encoder(RobotMap.dtrEncPA, RobotMap.dtrEncPB);
@@ -51,6 +52,8 @@ public class Robot extends IterativeRobot {
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
 						RobotMap.dtLeftController, RobotMap.dtRightController);
 		robotDrive.stopMotor();
+		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
+		driveTrain = new DriveTrain(robotDrive);
 		
 		/* Add items to live windows */
 		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
@@ -89,6 +92,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		LiveWindow.run();
+		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
+		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getY());
 	}
 
 	@Override

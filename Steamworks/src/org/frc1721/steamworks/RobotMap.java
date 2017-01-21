@@ -1,10 +1,8 @@
 package org.frc1721.steamworks;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-
+import org.frc1721.steamworks.CustomPIDController;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -53,7 +51,9 @@ public class RobotMap {
 	/** Rate Controller for the NavX **/
 	public static final double navRateP = 0.05, navRateI = 0.0, navRateD = 0.0, navRateF = 0.0;
 	
-	
+	/* Drive Train PID Rate controllers */
+	public static CustomPIDController dtLeftController;
+	public static CustomPIDController dtRightController;
 	
 	
 }

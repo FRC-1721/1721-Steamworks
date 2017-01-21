@@ -7,8 +7,8 @@ import org.frc1721.steamworks.subsystems.Shooter;
 import org.frc1721.steamworks.CustomPIDController;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.*;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 
 public class Robot extends IterativeRobot {
@@ -59,6 +59,8 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
 	    
+	    // Create the OI
+	    oi = new OI();
 	}
 
 	@Override
@@ -80,10 +82,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		robotDrive.enablePID();
 	}
 
 	@Override
 	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
 	}
 
 	@Override

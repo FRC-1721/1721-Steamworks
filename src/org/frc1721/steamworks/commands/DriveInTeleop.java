@@ -1,8 +1,9 @@
 package org.frc1721.steamworks.commands;
 
 import org.frc1721.steamworks.Robot;
+import edu.wpi.first.wpilibj.command.*;
 
-public class DriveInTeleop {
+public class DriveInTeleop extends Command {
 
 
 

@@ -55,5 +55,9 @@ public class RobotMap {
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;
 	
+	/**
+	 *Joysticks, Input, and Buttons.
+	 */
+	public static final int jStickPort = 1;
 	
 }

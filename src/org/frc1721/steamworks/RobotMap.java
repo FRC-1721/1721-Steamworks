@@ -53,13 +53,15 @@ public class RobotMap {
 	/** Rate Controller for the NavX **/
 	public static final double navRateP = 0.001, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
 	
-	/* Drive Train PID Rate controllers */
+	/** Drive Train PID Rate controllers **/
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;
 	
-	/**
-	 *Joysticks, Input, and Buttons.
-	 */
-	public static final int jStickPort = 1;
+	
+	
+	// ---------> OI <----------
+	
+	/** Joysticks, Input, and Buttons **/
+	public static final int jStickPort = 0;
 	
 }

@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class NavxController extends CustomPIDSubsystem  {
 
-  double pidOut;
+  double pidOut = 0.0;
   private AHRS mGyro;
   private double lastHeading = 0.0;
   static final double kToleranceDegrees = 2.0f;
@@ -86,7 +86,15 @@ public class NavxController extends CustomPIDSubsystem  {
   		if (deltaT > kMinPeriod ) {
   			gyroTimer.reset();
   			double heading = mGyro.getYaw();
-  			gyroRate = (heading - lastHeading)/deltaT;
+  			// Subtract/add 360 if the change in heading is larger than 180
+  			gyroRate = heading - lastHeading;
+  			if (gyroRate >= 180.0) {
+  				gyroRate = gyroRate - 360.0;
+  			} else if (gyroRate <= -180.0) {
+  				gyroRate = gyroRate + 360.0;
+  			}
+  			// now divide change in heading by deltaT
+  			gyroRate = gyroRate/deltaT;
   			lastHeading = heading;
   			gyroTimer.reset();
   		}
@@ -94,7 +102,10 @@ public class NavxController extends CustomPIDSubsystem  {
   	}
   }
   
-  
+ public void zeroOutput() {
+	controller.zeroOutput();
+	pidOut = 0.0;
+ }
   
   public void setSetpointRelative(double deltaSetpoint) {
 	    setSetpoint(getPosition() + deltaSetpoint);

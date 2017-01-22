@@ -272,6 +272,9 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
       double dsdt;
       double dxdt;
       double ddxdt;
+      // feed forward term
+      double ff = 0.0;
+      
       PIDOutput pidOutput = null;
       synchronized (this) {
         input = pidInput.pidGet();
@@ -299,6 +302,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         if (rateControl) {
         	dsdt = m_setpoint;
         	dxdt = input;
+        	ff = m_F*(dsdt - m_prevSetpoint);
         } else {
         	dsdt = dsdt/m_period;
         	dxdt = (input - m_prevPosition);
@@ -314,7 +318,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         	dxdt = dxdt/m_period;
         }
         ddxdt = (dxdt - m_prevDxDt);
-        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt;
+        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt + ff;
         // Don't include the i term for rate control
         if (!rateControl) {
         	newOutput = newOutput + m_I*m_error;

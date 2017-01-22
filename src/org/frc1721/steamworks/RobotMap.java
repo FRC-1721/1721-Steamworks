@@ -36,7 +36,7 @@ public class RobotMap {
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 	
 	/** PID Control Variables **/
-	public static final double dtP = 0.5, dtI = 0.0, dtD = 0.0, dtF = .0;
+	public static final double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = .1;
 	
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = true, dtrEncR = false;
@@ -48,10 +48,10 @@ public class RobotMap {
 	public static final byte navUpdateHz = 20;
 	
 	/** NavX PID Controller **/
-	public static final double navP = 0.05, navI = 0.01, navD = 0.0, navF = 0.0;
+	public static final double navP = 0.05, navI = 0.0, navD = 0.0, navF = 0.0;
 	
 	/** Rate Controller for the NavX **/
-	public static final double navRateP = 0.05, navRateI = 0.0, navRateD = 0.0, navRateF = 0.0;
+	public static final double navRateP = 0.001, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
 	
 	/* Drive Train PID Rate controllers */
 	public static CustomPIDController dtLeftController;

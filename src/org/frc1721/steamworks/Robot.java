@@ -44,21 +44,14 @@ public class Robot extends IterativeRobot {
 		
 		// PID Controllers
 		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, 
-				RobotMap.dtD, RobotMap.dtF, RobotMap.dtlEnc, RobotMap.dtLeft, 0.03);
+				RobotMap.dtD, RobotMap.dtF, RobotMap.dtlEnc, RobotMap.dtLeft, 0.01);
 		RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, 
-				RobotMap.dtD, RobotMap.dtF, RobotMap.dtrEnc, RobotMap.dtRight, 0.03);
+				RobotMap.dtD, RobotMap.dtF, RobotMap.dtrEnc, RobotMap.dtRight, 0.01);
 		RobotMap.dtLeftController.setPIDSourceType(PIDSourceType.kRate);
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
 		
 
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
-		
-	
-		//Drive System
-		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
-						RobotMap.dtLeftController, RobotMap.dtRightController,
-						navController);
-		robotDrive.stopMotor();
 		
 		// Gyro and controller
         RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
@@ -66,8 +59,14 @@ public class Robot extends IterativeRobot {
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
 		
         // Add the drive train last since it depends on robotDrive and navController
-        driveTrain = new DriveTrain(robotDrive, navController);
+		//Drive System
+		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
+						RobotMap.dtLeftController, RobotMap.dtRightController,
+						navController);
+		//robotDrive.stopMotors();
         
+        driveTrain = new DriveTrain(robotDrive, navController);
+        driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
         
 		/* Add items to live windows */
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
@@ -109,9 +108,9 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
-
-		//SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
-		//SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getY());
+		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
+		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
+		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getTwist());
 	}
 
 	@Override

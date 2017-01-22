@@ -60,7 +60,8 @@ public class DriveTrain extends Subsystem {
 	}	
 	
 	public void jInput(Joystick stick) {
-		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist());
+		// third argument for squaring inputs
+		m_robotDrive.arcadeDrive(-Math.abs(stick.getY())*stick.getY(), -stick.getTwist(), false);
 	}
 	
 	public void stop() {

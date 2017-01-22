@@ -16,6 +16,7 @@ public class CustomRobotDrive extends RobotDrive {
 	protected CustomPIDController m_leftController;
 	protected CustomPIDController m_rightController;
 	protected boolean m_PIDPresent = false;
+	protected boolean m_NAVPresent = false;
 	protected boolean m_PIDEnabled = false; 
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
 	protected double m_rateScale = 10.0;
@@ -23,8 +24,8 @@ public class CustomRobotDrive extends RobotDrive {
 	// Gyro parameters
 	protected NavxController m_turnController;
 	protected double m_turnDeadzone = 0.02;
-	public double turnRateScale = 30.0;
-	protected GyroMode gyroMode = GyroMode.off;
+	public double turnRateScale = 180.0;
+	protected static GyroMode gyroMode = GyroMode.off;
 	
 	public CustomRobotDrive(int leftMotorChannel, int rightMotorChannel) {
 		super(leftMotorChannel, rightMotorChannel);
@@ -49,6 +50,7 @@ public class CustomRobotDrive extends RobotDrive {
 		m_rightController.setPIDSourceType(PIDSourceType.kRate);
 		m_PIDPresent = true;
 		m_turnController = navController;
+		m_NAVPresent = true;
 		
 	}
 	
@@ -75,12 +77,20 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     	double diffOutput = leftOutput - rightOutput;
     	if (gyroMode == GyroMode.rate) {
     		// If in rate control mode need to set the controller target based
-    		// on the requested turn rate
-    		m_turnController.setSetpoint(diffOutput*turnRateScale);
+    		// on the requested turn rate.  Take half the diff output since 
+    		// left - right could be 2.0 (+1 - (-1)).
+    		m_turnController.setSetpoint(0.5*diffOutput*turnRateScale);
+    		// if the turn rate is less than 1 deg/sec, zero the output for the controller
+    		if (Math.abs(diffOutput) < 0.01) {
+    			//m_turnController.zeroOutput();
+    		}
     	}
     	// Replace the differential output with the commanded turn rate from the 
     	// controller.
     	diffOutput = m_turnController.getPIDOutput();
+    	if (Math.abs(diffOutput)< 0.01) {
+    		diffOutput = 0.0;
+    	}
     	leftOutput = limit(avgOutput + diffOutput);
     	rightOutput = limit(avgOutput - diffOutput);
     		
@@ -89,9 +99,9 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	
     if (m_PIDEnabled) {
     	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
-    	if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
+    	//if (Math.abs(leftOutput) < 0.01) m_leftController.zeroOutput();
     	m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * m_rateScale);
-    	if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
+    	//if (Math.abs(rightOutput) < 0.01) m_rightController.zeroOutput();
     	
     	/* Safety updates normally done in super class */
         if (this.m_syncGroup != 0) {

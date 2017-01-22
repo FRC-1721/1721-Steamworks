@@ -21,6 +21,8 @@ public class RobotMap {
 	
 	/** Encoders for drive **/
 	public static Encoder dtlEnc, dtrEnc;
+	public static boolean leftEncoderDisabled = false;
+	public static boolean rightEncoderDisabled = false;
 	
 	/** Encoder DIO Ports **/
 	public static final int dtlEncPA = 0,

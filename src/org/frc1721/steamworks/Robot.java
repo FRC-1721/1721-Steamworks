@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 		
 
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
-		driveTrain = new DriveTrain(robotDrive);
+		
 	
 		//Drive System
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
@@ -65,7 +65,10 @@ public class Robot extends IterativeRobot {
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
 		
-		
+        // Add the drive train last since it depends on robotDrive and navController
+        driveTrain = new DriveTrain(robotDrive, navController);
+        
+        
 		/* Add items to live windows */
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
 		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
@@ -99,7 +102,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		robotDrive.enablePID();
-		robotDrive.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override

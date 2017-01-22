@@ -110,6 +110,21 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 
 
 /* New Functions */
+
+public double getDistance() {
+	double leftDistance = RobotMap.dtlEnc.getDistance();
+	// By convention in RobotDrive, the right are positive in the reverse direction
+	double rightDistance = - RobotMap.dtrEnc.getDistance();
+	// Account for one of the encoders being out by copying the working distance
+	if (RobotMap.leftEncoderDisabled) {
+		leftDistance = rightDistance;
+	} else if (RobotMap.rightEncoderDisabled) {
+		rightDistance = leftDistance;
+	}
+	double avgDist = 0.5*(leftDistance + rightDistance);
+	return avgDist;
+}
+
 public void enablePID() {
 	  m_PIDEnabled = true;
 

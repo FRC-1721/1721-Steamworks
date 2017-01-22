@@ -1,8 +1,8 @@
 package org.frc1721.steamworks;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import org.frc1721.steamworks.CustomPIDController;
+import com.kauailabs.navx.frc.AHRS;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -40,7 +40,7 @@ public class RobotMap {
 	public static final boolean dtlEncR = true, dtrEncR = false;
 	
 	/** Gyro **/
-	public static Gyro navx; // TODO: Import the NavX libraries and correct this.
+	public static AHRS navx; 
 	
 	/** Update Speed (Hz) **/
 	public static final byte navUpdateHz = 20;

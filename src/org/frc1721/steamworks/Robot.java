@@ -1,16 +1,18 @@
 
 package org.frc1721.steamworks;
 
-import org.frc1721.steamworks.subsystems.Climber;
-import org.frc1721.steamworks.subsystems.DriveTrain;
-import org.frc1721.steamworks.subsystems.Shooter;
-import org.frc1721.steamworks.CustomPIDController;
+import org.frc1721.steamworks.subsystems.*;
+
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SPI;
+
+import com.kauailabs.navx.frc.AHRS;
 
 public class Robot extends IterativeRobot {
 
@@ -25,7 +27,7 @@ public class Robot extends IterativeRobot {
 	public static Shooter shooter;
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
-	
+	public static NavxController navController;
 	@Override
 	public void robotInit() {
 		/* Initialize the Drive Train systems */
@@ -48,14 +50,24 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtLeftController.setPIDSourceType(PIDSourceType.kRate);
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
 		
-		//Drive System
-		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
-						RobotMap.dtLeftController, RobotMap.dtRightController);
-		robotDrive.stopMotor();
+
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
 		driveTrain = new DriveTrain(robotDrive);
+	
+		//Drive System
+		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
+						RobotMap.dtLeftController, RobotMap.dtRightController,
+						navController);
+		robotDrive.stopMotor();
+		
+		// Gyro and controller
+        RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
+        navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
+        		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
+		
 		
 		/* Add items to live windows */
+        LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
 		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
 		LiveWindow.addActuator("RightRobotDrive", "Victor", RobotMap.dtRight);
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtlEnc);
@@ -86,15 +98,17 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.disablePID();
+		robotDrive.enablePID();
+		robotDrive.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
-		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
-		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getY());
+
+		//SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
+		//SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getY());
 	}
 
 	@Override

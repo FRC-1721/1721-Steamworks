@@ -1,10 +1,17 @@
 package org.frc1721.steamworks;
 
 import edu.wpi.first.wpilibj.*;
+
 import org.frc1721.steamworks.CustomPIDController;
+import org.frc1721.steamworks.subsystems.NavxController;
 
 public class CustomRobotDrive extends RobotDrive {
 
+	// Enumerated class to hold gyro mode
+	public enum GyroMode {
+		off, rate, heading
+	}
+	
 	// Default PID parameters
 	protected CustomPIDController m_leftController;
 	protected CustomPIDController m_rightController;
@@ -12,6 +19,12 @@ public class CustomRobotDrive extends RobotDrive {
 	protected boolean m_PIDEnabled = false; 
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
 	protected double m_rateScale = 10.0;
+	
+	// Gyro parameters
+	protected NavxController m_turnController;
+	protected double m_turnDeadzone = 0.02;
+	public double turnRateScale = 30.0;
+	protected GyroMode gyroMode = GyroMode.off;
 	
 	public CustomRobotDrive(int leftMotorChannel, int rightMotorChannel) {
 		super(leftMotorChannel, rightMotorChannel);
@@ -25,7 +38,8 @@ public class CustomRobotDrive extends RobotDrive {
 
 	/* Initialize with PID Controls */
 	public CustomRobotDrive(SpeedController leftMotor, SpeedController rightMotor,
-			CustomPIDController leftController,  CustomPIDController rightController) {
+			CustomPIDController leftController,  CustomPIDController rightController, 
+			NavxController navController) {
 		super(leftMotor, rightMotor);
 		m_leftController = leftController;
 		m_rightController = rightController;
@@ -34,6 +48,8 @@ public class CustomRobotDrive extends RobotDrive {
 		m_leftController.setPIDSourceType(PIDSourceType.kRate);
 		m_rightController.setPIDSourceType(PIDSourceType.kRate);
 		m_PIDPresent = true;
+		m_turnController = navController;
+		
 	}
 	
 	public CustomRobotDrive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
@@ -50,6 +66,27 @@ public class CustomRobotDrive extends RobotDrive {
 
 /* Over-ridden functions */
 public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
+	
+    if (gyroMode != GyroMode.off) {
+    	/* First find the requested avgOutput (forward/reverse) and differential 
+    	 * output (twist).  
+    	 */
+    	double avgOutput = 0.5*(leftOutput + rightOutput);
+    	double diffOutput = leftOutput - rightOutput;
+    	if (gyroMode == GyroMode.rate) {
+    		// If in rate control mode need to set the controller target based
+    		// on the requested turn rate
+    		m_turnController.setSetpoint(diffOutput*turnRateScale);
+    	}
+    	// Replace the differential output with the commanded turn rate from the 
+    	// controller.
+    	diffOutput = m_turnController.getPIDOutput();
+    	leftOutput = limit(avgOutput + diffOutput);
+    	rightOutput = limit(avgOutput - diffOutput);
+    		
+    }
+	
+	
     if (m_PIDEnabled) {
     	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
     	if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
@@ -70,6 +107,8 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 
   }
 
+
+
 /* New Functions */
 public void enablePID() {
 	  m_PIDEnabled = true;
@@ -88,6 +127,18 @@ public void disablePID() {
 
 public void setDriveRate(double rate) {
 	  m_rateScale = rate;
+}
+
+
+public void setGyroMode(GyroMode gMode) {
+	  
+	  gyroMode = gMode;
+	  // Set the setpoint to the current heading
+	  if (gyroMode == GyroMode.rate) {
+		  m_turnController.setSetpoint(0.0);
+	  } else if (gyroMode == GyroMode.heading) {
+		  m_turnController.setSetpointRelative(0.0);
+	  }  
 }
 
 }

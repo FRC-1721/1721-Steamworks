@@ -3,3 +3,5 @@ build
 .externalToolBuilders
 .project
 .classpath
+dist
+sysProps.xml

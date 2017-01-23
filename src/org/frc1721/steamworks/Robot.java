@@ -109,8 +109,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
 		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
-		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
-		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getTwist());
+//		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
+//		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getTwist());
 	}
 
 	@Override

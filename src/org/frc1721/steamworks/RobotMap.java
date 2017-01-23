@@ -62,6 +62,7 @@ public class RobotMap {
 	// ---------> OI <----------
 	
 	/** Joysticks, Input, and Buttons **/
-	public static final int jStickPort = 0;
+	public static final int jLeftPort = 0;
+	public static final int jRightPort = 1;
 	
 }

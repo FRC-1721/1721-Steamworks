@@ -1,7 +1,7 @@
 package org.frc1721.steamworks;
 
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -36,11 +36,13 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
-	public static Joystick jstick;
+	public static Joystick jLeft;
+	public static Joystick jRight;
 	
 	public OI ()
 	{
-		jstick = new Joystick(RobotMap.jStickPort);
+		jLeft = new Joystick(RobotMap.jLeftPort);
+    	jRight = new Joystick(RobotMap.jRightPort);
 	}
 	
 }

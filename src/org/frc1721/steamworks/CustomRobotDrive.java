@@ -1,6 +1,7 @@
 package org.frc1721.steamworks;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc1721.steamworks.CustomPIDController;
 import org.frc1721.steamworks.subsystems.NavxController;
@@ -26,6 +27,9 @@ public class CustomRobotDrive extends RobotDrive {
 	protected double m_turnDeadzone = 0.02;
 	public double turnRateScale = 180.0;
 	protected static GyroMode gyroMode = GyroMode.off;
+	
+	// FooBar
+	double bar = 0;
 	
 	public CustomRobotDrive(int leftMotorChannel, int rightMotorChannel) {
 		super(leftMotorChannel, rightMotorChannel);
@@ -104,9 +108,10 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     	//if (Math.abs(rightOutput) < 0.01) m_rightController.zeroOutput();
     	
     	/* Safety updates normally done in super class */
-        if (this.m_syncGroup != 0) {
-            CANJaguar.updateSyncGroup(m_syncGroup);
-          }
+//        if (this.m_syncGroup != 0) {
+//        	CANJaguar.updateSyncGroup(m_syncGroup);
+//        }
+    	// TODO This crashes if it's uncommented?
 
           if (m_safetyHelper != null)
             m_safetyHelper.feed();
@@ -117,7 +122,23 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 
   }
 
-
+/**
+ * Provide tank steering using the stored robot configuration. drive the robot using two joystick
+ * inputs. The Y-axis will be selected from each Joystick object.
+ *
+ * @param leftStick     The joystick to control the left side of the robot.
+ * @param rightStick    The joystick to control the right side of the robot.
+ * @param squaredInputs Setting this parameter to true decreases the sensitivity at lower speeds
+ */
+@Override
+public void tankDrive(GenericHID leftStick, GenericHID rightStick, boolean squaredInputs) {
+  if (leftStick == null || rightStick == null) {
+    throw new NullPointerException("Null HID provided");
+  }
+//  SmartDashboard.putNumber("foo", bar);
+//  bar++;
+  tankDrive(-leftStick.getY(), -rightStick.getY(), squaredInputs);
+}
 
 /* New Functions */
 

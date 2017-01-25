@@ -108,7 +108,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
+		robotDrive.disablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
@@ -117,8 +117,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
 		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
-		SmartDashboard.putNumber("JoystickXAxis", OI.jLeft.getY());
-		SmartDashboard.putNumber("JoystickYAxis", OI.jRight.getX());
+		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getY());
+		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getTwist());
 	}
 
 	@Override

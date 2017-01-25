@@ -41,28 +41,26 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
-	public static Joystick jLeft;
-	public static Joystick jRight;
+	public static Joystick jstick;
 	
 	// Drive controls
     public static JoystickButton enableDrivePIDButton;
     public static JoystickButton disableDrivePIDButton;
     
-    // foo
+    // Print buttons
     public static JoystickButton printLimitSwitch;
 	
 	public OI ()
 	{
-		jLeft = new Joystick(RobotMap.jLeftPort);
-    	jRight = new Joystick(RobotMap.jRightPort);
+		jstick = new Joystick(RobotMap.jStickPort);
 		
 		// Drive commands
-    	disableDrivePIDButton = new JoystickButton(jLeft, 1);
+    	disableDrivePIDButton = new JoystickButton(jstick, 1);
     	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
-    	enableDrivePIDButton = new JoystickButton(jLeft, 8);
+    	enableDrivePIDButton = new JoystickButton(jstick, 8);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
     	
-    	printLimitSwitch = new JoystickButton(jRight, 1);
+    	printLimitSwitch = new JoystickButton(jstick, 9);
     	printLimitSwitch.whenPressed(new IsGear());
     	
 	}

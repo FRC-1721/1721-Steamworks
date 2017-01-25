@@ -83,7 +83,7 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
 	    
-	    limitSwitch = new DigitalInput(9);
+	    limitSwitch = new DigitalInput(RobotMap.lsLsPA);
 	    
 	    // Create the OI
 	    oi = new OI();

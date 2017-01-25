@@ -30,6 +30,9 @@ public class RobotMap {
 							dtrEncPA = 2,
 							dtrEncPB = 3;
 	
+	/** Limit Switch DIO Port **/
+	public static final int lsLsPA = 9;
+	
 	
 	
 	

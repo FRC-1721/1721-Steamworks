@@ -1,22 +1,28 @@
 
 package org.frc1721.steamworks;
 
-import org.frc1721.steamworks.subsystems.*;
-
-
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.RobotDrive.MotorType;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.command.*;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.SPI;
+import org.frc1721.steamworks.subsystems.Climber;
+import org.frc1721.steamworks.subsystems.DriveTrain;
+import org.frc1721.steamworks.subsystems.NavxController;
+import org.frc1721.steamworks.subsystems.Shooter;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
+	
+	public static DigitalInput limitSwitch;
 	
 	/** 
 	 * Subsystems List
@@ -77,6 +83,8 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
 	    
+	    limitSwitch = new DigitalInput(9);
+	    
 	    // Create the OI
 	    oi = new OI();
 	}
@@ -100,7 +108,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.enablePID();
+		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
@@ -109,8 +117,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
 		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
-//		SmartDashboard.putNumber("JoystickXAxis", OI.jstick.getX());
-//		SmartDashboard.putNumber("JoystickYAxis", OI.jstick.getTwist());
+		SmartDashboard.putNumber("JoystickXAxis", OI.jLeft.getY());
+		SmartDashboard.putNumber("JoystickYAxis", OI.jRight.getX());
 	}
 
 	@Override

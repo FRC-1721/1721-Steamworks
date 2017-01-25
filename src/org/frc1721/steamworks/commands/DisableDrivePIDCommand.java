@@ -3,9 +3,7 @@ package org.frc1721.steamworks.commands;
 import org.frc1721.steamworks.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-/**
- *
- */
+
 public class DisableDrivePIDCommand extends Command {
 
 	protected boolean complete = false;

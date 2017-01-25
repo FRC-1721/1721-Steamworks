@@ -3,6 +3,7 @@ package org.frc1721.steamworks;
 
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
+import org.frc1721.steamworks.commands.IsGear;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -46,6 +47,9 @@ public class OI {
 	// Drive controls
     public static JoystickButton enableDrivePIDButton;
     public static JoystickButton disableDrivePIDButton;
+    
+    // foo
+    public static JoystickButton printLimitSwitch;
 	
 	public OI ()
 	{
@@ -57,7 +61,10 @@ public class OI {
     	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
     	enableDrivePIDButton = new JoystickButton(jLeft, 8);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
-
+    	
+    	printLimitSwitch = new JoystickButton(jRight, 1);
+    	printLimitSwitch.whenPressed(new IsGear());
+    	
 	}
 	
 }

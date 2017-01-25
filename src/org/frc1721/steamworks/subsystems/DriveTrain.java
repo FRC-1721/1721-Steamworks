@@ -60,8 +60,8 @@ public class DriveTrain extends Subsystem {
 	}	
 	
 	public void jInput(Joystick stick) {
-		// third argument for squaring inputs
-		m_robotDrive.arcadeDrive(-Math.abs(stick.getY())*stick.getY(), -stick.getTwist(), false);
+		// I don't think we need this `-Math.abs(stick.getY())*stick.getY()` anymore?
+		m_robotDrive.arcadeDrive(stick.getY(), stick.getTwist(), true, false);
 	}
 	
 	public void jInput(Joystick left, Joystick right) {

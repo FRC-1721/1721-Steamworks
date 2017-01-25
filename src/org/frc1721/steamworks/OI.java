@@ -1,7 +1,11 @@
 package org.frc1721.steamworks;
 
 
+import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
+import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -39,10 +43,21 @@ public class OI {
 	public static Joystick jLeft;
 	public static Joystick jRight;
 	
+	// Drive controls
+    public static JoystickButton enableDrivePIDButton;
+    public static JoystickButton disableDrivePIDButton;
+	
 	public OI ()
 	{
 		jLeft = new Joystick(RobotMap.jLeftPort);
     	jRight = new Joystick(RobotMap.jRightPort);
+		
+		// Drive commands
+    	disableDrivePIDButton = new JoystickButton(jLeft, 1);
+    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
+    	enableDrivePIDButton = new JoystickButton(jLeft, 8);
+    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+
 	}
 	
 }

@@ -1,27 +1,24 @@
 package org.frc1721.steamworks.subsystems;
 
-import org.frc1721.steamworks.*;
-import org.frc1721.steamworks.commands.DriveInTeleop;
-import org.frc1721.steamworks.subsystems.NavxController;
+import org.frc1721.steamworks.CustomPIDController;
+import org.frc1721.steamworks.CustomRobotDrive;
 import org.frc1721.steamworks.CustomRobotDrive.GyroMode;
-
+import org.frc1721.steamworks.RobotMap;
+import org.frc1721.steamworks.commands.DriveInTeleop;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.*;
-/**
- *
- */
+
 public class DriveTrain extends Subsystem {
-	
 	
 	protected CustomRobotDrive m_robotDrive;
 	protected NavxController m_navController;
 	protected GyroMode gyroMode = GyroMode.off;
-	
+
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-
+	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());

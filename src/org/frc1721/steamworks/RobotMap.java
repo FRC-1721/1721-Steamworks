@@ -60,11 +60,24 @@ public class RobotMap {
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;
 	
-	
-	
 	// ---------> OI <----------
 	
 	/** Joysticks, Input, and Buttons **/
-	public static final int jStickPort = 0;
+	
+	// Name the Logitech Extreme Pro controllers identify with
+	public static final String jstick = "Logitech Extreme 3D";
+	
+	// Name the Logitech F310 Gamepad identifies with
+	public static final String gamepad = "Controller (Gamepad F310)";
+	
+	// Number of usb ports to scan
+	// We should never use more then 3 USB ports but I'm scanning 6 because that seems to be the max Driver Station will allow
+	public static final int numUSB = 6;
+	
+	// Joystick to have PID buttons on, and the buttons to use
+	public static final int pidStick = 0, // Note: This will crash if the Joystick doesn't exist, I recommend only making it controller two (1) if you know you're going to use tank drive
+							pidDisableButton = 1,
+							pidEnableButton = 8;
+	
 	
 }

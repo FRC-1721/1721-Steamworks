@@ -133,62 +133,32 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 // * @param squaredMoveValue If set, decreases the sensitivity at low speeds on moveValue
 // * @param squaredRotateValue if set, decreases the sensitivity at low speeds on rotataValue
 // */
-//public void arcadeDrive(double moveValue, double rotateValue, boolean squaredMoveValue, boolean squaredRotateValue) {
-//  // local variables to hold the computed PWM values for the motors
-//  if (!kArcadeStandard_Reported) {
-//    HAL.report(tResourceType.kResourceType_RobotDrive, getNumMotors(),
-//        tInstances.kRobotDrive_ArcadeStandard);
-//    kArcadeStandard_Reported = true;
-//  }
-//
-//  double leftMotorSpeed;
-//  double rightMotorSpeed;
-//
-//  // Zachary put the negative sign in front of limit
-//  moveValue = limit(moveValue);
-//  rotateValue = limit(rotateValue);
-//
-//  if (squaredMoveValue) {
-//    // square the inputs (while preserving the sign) to increase fine control
-//    // while permitting full power
-//    if (moveValue >= 0.0) {
-//      moveValue = moveValue * moveValue;
-//    } else {
-//      moveValue = -(moveValue * moveValue);
-//    }
-//  }
-//  
-//  if (squaredRotateValue) {
-//	// square the inputs (while preserving the sign) to increase fine control
-//	// while permitting full power
-//    if (rotateValue >= 0.0) {
-//      rotateValue = rotateValue * rotateValue;
-//    } else {
-//      rotateValue = -(rotateValue * rotateValue);
-//    }
-//  }
-//
-//  if (moveValue > 0.0) {
-//    if (rotateValue > 0.0) {
-//      leftMotorSpeed = moveValue - rotateValue;
-//      rightMotorSpeed = Math.max(moveValue, rotateValue);
-//    } else {
-//      leftMotorSpeed = Math.max(moveValue, -rotateValue);
-//      rightMotorSpeed = moveValue + rotateValue;
-//    }
-//  } else {
-//    if (rotateValue > 0.0) {
-//      leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-//      rightMotorSpeed = moveValue + rotateValue;
-//    } else {
-//      leftMotorSpeed = moveValue - rotateValue;
-//      rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-//    }
-//  }
-//
-//  setLeftRightMotorOutputs(leftMotorSpeed, rightMotorSpeed);
-//}
+public void arcadeDrive(double moveValue, double rotateValue, boolean squaredMoveValue, boolean squaredRotateValue) {
+  // local variables to hold the computed PWM values for the motors
+
+
+  if (squaredMoveValue) {
+    // square the inputs (while preserving the sign) to increase fine control
+    // while permitting full power
+    if (moveValue >= 0.0) {
+      moveValue = moveValue * moveValue;
+    } else {
+      moveValue = -(moveValue * moveValue);
+    }
+  }
   
+  if (squaredRotateValue) {
+	// square the inputs (while preserving the sign) to increase fine control
+	// while permitting full power
+    if (rotateValue >= 0.0) {
+      rotateValue = rotateValue * rotateValue;
+    } else {
+      rotateValue = -(rotateValue * rotateValue);
+    }
+  }
+  super.arcadeDrive(moveValue, rotateValue,false);
+}
+
 
 /**
  * Provide tank steering using the stored robot configuration. drive the robot using two joystick

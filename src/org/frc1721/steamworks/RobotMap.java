@@ -39,7 +39,7 @@ public class RobotMap {
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 	
 	/** PID Control Variables **/
-	public static final double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0;
+	public static final double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = .1;
 	
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = false,

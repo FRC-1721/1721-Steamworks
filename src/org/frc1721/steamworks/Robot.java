@@ -110,7 +110,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		robotDrive.disablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
-//		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override

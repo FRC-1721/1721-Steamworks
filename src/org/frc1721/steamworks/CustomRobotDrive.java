@@ -205,7 +205,7 @@ public void tankDrive(GenericHID leftStick, GenericHID rightStick, boolean squar
   }
 //  SmartDashboard.putNumber("foo", bar);
 //  bar++;
-  tankDrive(leftStick.getY(), rightStick.getY(), squaredInputs);
+  tankDrive(-leftStick.getY(), -rightStick.getY(), squaredInputs);
 }
 
 /* New Functions */

@@ -57,8 +57,7 @@ public class DriveTrain extends Subsystem {
 	}	
 	
 	public void jInput(Joystick stick) {
-		// I don't think we need this `-Math.abs(stick.getY())*stick.getY()` anymore?
-		m_robotDrive.arcadeDrive(stick.getY(), stick.getTwist(), true, false);
+		m_robotDrive.arcadeDrive(-Math.abs(stick.getY())*stick.getY(), stick.getTwist(), false);
 	}
 	
 	public void jInput(Joystick left, Joystick right) {

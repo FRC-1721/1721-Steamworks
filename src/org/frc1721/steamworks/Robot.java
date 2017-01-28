@@ -34,6 +34,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
 	public static NavxController navController;
+	
 	@Override
 	public void robotInit() {
 		/* Initialize the Drive Train systems */
@@ -43,10 +44,10 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRight = new Victor(RobotMap.dtrPWM);
 		//RobotMap.dtRight.setInverted(true);
 		// Encoders
-		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB);
-		RobotMap.dtrEnc = new Encoder(RobotMap.dtrEncPA, RobotMap.dtrEncPB);
-		RobotMap.dtlEnc.setDistancePerPulse(0.00727);
-		RobotMap.dtrEnc.setDistancePerPulse(0.00727); // ToDo, move to RobotMap
+		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB, RobotMap.dtrEncL);
+		RobotMap.dtrEnc = new Encoder(RobotMap.dtrEncPA, RobotMap.dtrEncPB, RobotMap.dtlEncR);
+		RobotMap.dtlEnc.setDistancePerPulse(0.0074536447630841);
+		RobotMap.dtrEnc.setDistancePerPulse(0.0074074074074074); // TODO, move to RobotMap
 		
 		// PID Controllers
 		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, 
@@ -109,16 +110,29 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		robotDrive.disablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
-		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+//		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
-		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
-//		SmartDashboard.putNumber("JoystickXAxis", OI.controllers[0].getY());
-//		SmartDashboard.putNumber("JoystickYAxis", OI.controllers[0].getTwist());
+//		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
+//		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
+//		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
+//		SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());
+//		SmartDashboard.putNumber("DisplacementX",RobotMap.navx.getDisplacementX());
+//		SmartDashboard.putNumber("DisplacementY",RobotMap.navx.getDisplacementY());
+//		SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
+//		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
+				
+		
+		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
+		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
+//		SmartDashboard.putNumber("Joystick Two YAxis", OI.jsticks[1].getTwist());
+		
+		
+		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}
 
 	@Override

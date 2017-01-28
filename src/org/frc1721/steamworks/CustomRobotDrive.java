@@ -145,7 +145,7 @@ public void arcadeDrive(double moveValue, double rotateValue, boolean squaredMov
   double rightMotorSpeed;
 
   // Zachary put the negative sign in front of limit
-  moveValue = -limit(moveValue);
+  moveValue = limit(moveValue);
   rotateValue = -limit(rotateValue);
 
   if (squaredMoveValue) {
@@ -205,7 +205,7 @@ public void tankDrive(GenericHID leftStick, GenericHID rightStick, boolean squar
   }
 //  SmartDashboard.putNumber("foo", bar);
 //  bar++;
-  tankDrive(-leftStick.getY(), -rightStick.getY(), squaredInputs);
+  tankDrive(leftStick.getY(), rightStick.getY(), squaredInputs);
 }
 
 /* New Functions */
@@ -237,6 +237,12 @@ public void disablePID() {
 	  m_PIDEnabled = false;
 	  m_leftController.disable();
 	  m_rightController.disable();
+}
+
+/****/ //TODO Comment this
+public boolean getPIDStatus()
+{
+	return m_PIDEnabled;
 }
 
 public void setDriveRate(double rate) {

@@ -119,6 +119,9 @@ public class NavxController extends CustomPIDSubsystem  {
   
   public void reset() {
   	controller.reset();
+  	lastHeading = mGyro.getYaw();
+  	gyroTimer.reset();
+  	
   }
   
   public double getPIDOutput() {

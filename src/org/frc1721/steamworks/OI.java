@@ -102,6 +102,7 @@ public class OI {
     	
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
+//    	out.printf("The jOp Joystick name is: %s\n", jOp.getName());
     	
 //    	out.printf("First %d\n", jsOne);
 //    	out.printf("Second %d\n", jsTwo);

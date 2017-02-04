@@ -137,20 +137,18 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
-//		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
-//		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
-//		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
-//		SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());
-//		SmartDashboard.putNumber("DisplacementX",RobotMap.navx.getDisplacementX());
-//		SmartDashboard.putNumber("DisplacementY",RobotMap.navx.getDisplacementY());
-//		SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
-//		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
+		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());
+//		SmartDashboard.putNumber("Angle", RobotMap.navx.getAngle());
+//		SmartDashboard.putNumber("CompassHeading", RobotMap.navx.getCompassHeading());
+//		SmartDashboard.putNumber("Altitude", RobotMap.navx.getAltitude());
+//		SmartDashboard.putNumber("DisplacementX", RobotMap.navx.getDisplacementX());
+//		SmartDashboard.putNumber("DisplacementY", RobotMap.navx.getDisplacementY());
+//		SmartDashboard.putNumber("DisplacementZ", RobotMap.navx.getDisplacementZ());
+//		SmartDashboard.putNumber("Roll", RobotMap.navx.getRoll());
 				
 		
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
-		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
-//		SmartDashboard.putNumber("Joystick Two YAxis", OI.jsticks[1].getTwist());
-		
+		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());		
 		
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}

@@ -29,7 +29,7 @@ public class CustomRobotDrive extends RobotDrive {
 	// Gyro parameters
 	protected NavxController m_turnController;
 	protected double m_turnDeadzone = 0.02;
-	public double turnRateScale = 180.0;
+	public double m_turnRateScale = 180.0;
 	protected static GyroMode gyroMode = GyroMode.off;
 	
 	
@@ -85,18 +85,18 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     		// If in rate control mode need to set the controller target based
     		// on the requested turn rate.  Take half the diff output since 
     		// left - right could be 2.0 (+1 - (-1)).
-    		m_turnController.setSetpoint(0.5*diffOutput*turnRateScale);
+    		m_turnController.setSetpoint(0.5*diffOutput*m_turnRateScale);
     		// if the turn rate is less than 1 deg/sec, zero the output for the controller
     		if (Math.abs(diffOutput) < 0.01) {
-    			//m_turnController.zeroOutput();
+    			m_turnController.zeroOutput();
     		}
     	}
     	// Replace the differential output with the commanded turn rate from the 
     	// controller.
     	diffOutput = m_turnController.getPIDOutput();
-    	if (Math.abs(diffOutput)< 0.01) {
-    		diffOutput = 0.0;
-    	}
+    	//if (Math.abs(diffOutput)< 0.01) {
+    	//	diffOutput = 0.0;
+    	//}
     	leftOutput = limit(avgOutput + diffOutput);
     	rightOutput = limit(avgOutput - diffOutput);
     		
@@ -186,11 +186,11 @@ public double getDistance() {
 	double rightDistance = - RobotMap.dtrEnc.getDistance();
 	// Account for one of the encoders being out by copying the working distance
 	if (RobotMap.leftEncoderDisabled) {
-		leftDistance = rightDistance;
+		leftDistance = -rightDistance;
 	} else if (RobotMap.rightEncoderDisabled) {
-		rightDistance = leftDistance;
+		rightDistance = -leftDistance;
 	}
-	double avgDist = 0.5*(leftDistance + rightDistance);
+	double avgDist = 0.5*(leftDistance - rightDistance);
 	return avgDist;
 }
 
@@ -223,12 +223,20 @@ public void setDriveRate(double rate) {
 public void setGyroMode(GyroMode gMode) {
 	  
 	  gyroMode = gMode;
-	  // Set the setpoint to the current heading
+	  
 	  if (gyroMode == GyroMode.rate) {
+		  // Zero the rate
 		  m_turnController.setSetpoint(0.0);
 	  } else if (gyroMode == GyroMode.heading) {
+		// Set the setpoint to the current heading
 		  m_turnController.setSetpointRelative(0.0);
 	  }  
+}
+
+// Changes the scaling of raw inputs into a drive rate and turn rate
+public void setDriveScale(double driveRate, double turnRate) {
+	m_rateScale = driveRate;
+	m_turnRateScale = turnRate;
 }
 
 }

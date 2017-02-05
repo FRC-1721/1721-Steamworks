@@ -160,7 +160,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_P = Kp;
     m_I = Ki;
     m_D = Kd;
-
+    m_F = Kf;
     m_pidInput = source;
     m_pidOutput = output;
     m_period = period;

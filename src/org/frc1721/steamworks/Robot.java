@@ -5,6 +5,8 @@ import org.frc1721.steamworks.subsystems.Climber;
 import org.frc1721.steamworks.subsystems.DriveTrain;
 import org.frc1721.steamworks.subsystems.NavxController;
 import org.frc1721.steamworks.subsystems.Shooter;
+import org.frc1721.steamworks.PreferencesNames;
+import org.frc1721.steamworks.commands.*;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -17,7 +19,10 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Robot extends IterativeRobot {
 
@@ -35,6 +40,9 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
 	public static NavxController navController;
+	public static Preferences preferences;
+	public static CommandGroup autonomousCommand;
+	public static SendableChooser autoChooser;
 	
 	@Override
 	public void robotInit() {
@@ -75,6 +83,7 @@ public class Robot extends IterativeRobot {
         
         driveTrain = new DriveTrain(robotDrive, navController);
         driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
+        driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
         
 		/* Add items to live windows */
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
@@ -87,6 +96,17 @@ public class Robot extends IterativeRobot {
 	    
 	    limitSwitch = new DigitalInput(RobotMap.lsLsPA);
 	    
+	    // Create preferences
+        preferences =Preferences.getInstance();
+        // Reset the preferences to the default values
+        setPreferences();
+        
+		// Create a chooser for auto so it can be set from the DS
+		autonomousCommand = new TestAuto();
+		autoChooser = new SendableChooser();
+		autoChooser.addDefault("Test", new TestAuto());
+		SmartDashboard.putData("Auto Chooser", autoChooser);        
+        
 //	    new Thread(() -> {
 //            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 //            camera.setResolution(640, 480);
@@ -114,28 +134,39 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		getPreferences();
 	}
 
 	@Override
 	public void autonomousInit() {
+		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
+		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
+		// is started multiple times.
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+    	autonomousCommand = (CommandGroup) autoChooser.getSelected();
+    	//autonomousCommand.addCommands();
+    	autonomousCommand.start();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        updateSmartDashboard();
 	}
 
 	@Override
 	public void teleopInit() {
+		
+		
 		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
 		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
 		// is started multiple times.
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
-
-	@Override
-	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
+	
+	public void updateSmartDashboard() {
 		LiveWindow.run();
 		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());
 //		SmartDashboard.putNumber("Angle", RobotMap.navx.getAngle());
@@ -152,9 +183,37 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}
+	
+	
+	@Override
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+		updateSmartDashboard();
+	}
 
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
+	
+	
+	public static void getPreferences() {
+		RobotMap.navRateP = preferences.getDouble(PreferencesNames.GYRO_RATE_P, RobotMap.navRateP);
+		RobotMap.navRateD = preferences.getDouble(PreferencesNames.GYRO_RATE_D, RobotMap.navRateD);		
+		RobotMap.navRateF = preferences.getDouble(PreferencesNames.GYRO_RATE_F, RobotMap.navRateF);
+		RobotMap.navP = preferences.getDouble(PreferencesNames.GYRO_HEADING_P, RobotMap.navP);
+		RobotMap.navI = preferences.getDouble(PreferencesNames.GYRO_HEADING_D, RobotMap.navD);		
+		RobotMap.navD = preferences.getDouble(PreferencesNames.GYRO_HEADING_I, RobotMap.navI);
+	}
+
+	public static void setPreferences() {
+		preferences.putDouble(PreferencesNames.GYRO_HEADING_P, RobotMap.navP);
+		preferences.putDouble(PreferencesNames.GYRO_HEADING_I, RobotMap.navI);
+	    preferences.putDouble(PreferencesNames.GYRO_HEADING_D, RobotMap.navD);
+		preferences.putDouble(PreferencesNames.GYRO_RATE_P, RobotMap.navRateP);
+		preferences.putDouble(PreferencesNames.GYRO_RATE_D, RobotMap.navRateD);		
+		preferences.putDouble(PreferencesNames.GYRO_RATE_F, RobotMap.navRateF);
+
+	}
+	
 }

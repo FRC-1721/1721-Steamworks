@@ -1,17 +1,13 @@
 package org.frc1721.steamworks;
 
 
-import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
+import static java.lang.System.out;
 
+import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
-import org.frc1721.steamworks.commands.IsGear;
-import org.frc1721.steamworks.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
-import static java.lang.System.out;
-import static java.lang.System.err;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -62,10 +58,18 @@ public class OI {
 	public OI ()
 	{
 
-//    	out.printf("First %d\n", jsOne);
-//    	out.printf("Second %d\n", jsTwo);
-
+		try {
+			// Sleep two and a half seconds to wait for the controllers to boot
+			Thread.sleep(2500); 
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		out.printf("Zach, please remember to test if this works!\n'%s.java'\n", this.getClass().getName());
 		
+		// TODO Find out why controllers don't init 100% of the time.
+		// TODO Find out why switching from tank to arcade is sketch sometimes.
+		// TODO Make code automatically detect deadzone and scale output for it.
 		for (int i = 0; i < RobotMap.numUSB; i++)
 		{
 			Joystick controller = new Joystick(i);
@@ -81,12 +85,6 @@ public class OI {
 		
 		// Find RobotMap.jstick sticks
     	    	
-		
-//    	out.printf("First %d\n", jsOne);
-//    	out.printf("Second %d\n", jsTwo);
-    	
-//		out.println("THIS NEEDS TO BE SEEN" + foo);
-		
     	
     	if(jsTwo == -1)
     		jsticks = new Joystick[1];
@@ -102,11 +100,6 @@ public class OI {
     	
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
-    	
-//    	out.printf("First %d\n", jsOne);
-//    	out.printf("Second %d\n", jsTwo);
-    	
-		
 		
 		// Drive commands
     	disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);

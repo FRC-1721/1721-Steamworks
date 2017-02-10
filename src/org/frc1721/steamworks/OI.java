@@ -1,6 +1,7 @@
 package org.frc1721.steamworks;
 
 
+import static java.lang.System.err;
 import static java.lang.System.out;
 
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
@@ -8,6 +9,7 @@ import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -98,6 +100,8 @@ public class OI {
     		jsticks[1] = new Joystick(jsTwo);	
 	
     	
+    	if (jsticks.length == 0)
+        	DriverStation.reportError("Controller init failed, please stop being bad! (also try restarting robot code)", false);
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
 		

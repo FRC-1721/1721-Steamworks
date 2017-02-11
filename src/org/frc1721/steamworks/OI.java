@@ -74,7 +74,7 @@ public class OI {
 		// TODO Make code automatically detect deadzone and scale output for it.
 		for (int i = 0; i < RobotMap.numUSB; i++)
 		{
-			Joystick controller = new Joystick(i);
+			Joystick controller = new Joystick(i); // Maybe this is the issue? Maybe because I init the controllers two times it gets angry.
 			
 			if(controller.getName().equals(RobotMap.jstick)) {
 				if (jsOne == -1)

@@ -71,9 +71,15 @@ public class RobotMap {
 	// Name the Logitech F310 Gamepad identifies with
 	public static final String gamepad = "Controller (Gamepad F310)";
 	
-	// Number of usb ports to scan
-	// We should never use more then 3 USB ports but I'm scanning 6 because that seems to be the max Driver Station will allow
-	public static final int numUSB = 6;
+	// Number of USB ports to scan
+	/** The Driver Station will now show up to 6 devices in the Setup window.
+	 * The first 4 devices will be transmitted to the robot.
+	 * The additional devices are shown to allow teams to use one component of a composite device,
+	 * such as the TI Launchpad with FRC software without having to sacrifice one of the 4 transmitted devices. 
+	 */
+	public static final int numUSB = 3;
+	
+	// TODO I might have to do something about device 5 and 6 if we do something with the custom driverstation. 
 	
 	// Joystick to have PID buttons on, and the buttons to use
 	public static final int pidStick = 0, // Note: This will crash if the Joystick doesn't exist, I recommend only making it controller two (1) if you know you're going to use tank drive

@@ -14,8 +14,7 @@ public class IsGear extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
-		SmartDashboard.putBoolean("Limit Switch", Robot.limitSwitch.get());
+		SmartDashboard.putBoolean("Limit Switch", Robot.gearLimitSwitch.get());
     }
     
     // Called repeatedly when this Command is scheduled to run

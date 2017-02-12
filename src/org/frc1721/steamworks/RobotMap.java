@@ -37,9 +37,10 @@ public class RobotMap {
 							dtrEncPB = 3;
 	
 	/** Limit Switch DIO Port **/
-	public static final int topLs = 4,
-							bottomLs = 5,
-							gearLs = 3;
+	public static final int gearLs = 4,
+							topLs = 5,
+							bottomLs = 6;
+							
 	
 	
 	

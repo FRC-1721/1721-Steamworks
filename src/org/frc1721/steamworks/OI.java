@@ -52,6 +52,8 @@ public class OI {
     
     // Print buttons
     public static JoystickButton printLimitSwitch;
+    
+    private final DriverStation m_ds = DriverStation.getInstance();
    
 	private int 	jsOne = -1,
 					jsTwo = -1;
@@ -104,7 +106,7 @@ public class OI {
 	    	enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
 	    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
 		} catch (RuntimeException e) {
-			DriverStation.reportWarning("Seems this has broken again", false);
+			DriverStation.reportWarning("Seems this has broken again, if buttons don't work restart robot code.", false);
 			//e.printStackTrace();
 		}
 	    	
@@ -113,8 +115,8 @@ public class OI {
 //		for (int i = 0; i < jsticks.length; i++)
 //			out.print(joystickInfo(jsticks[i]));
     	
-    	for (int i = 0; i < 128; i++) //TEMP Don't leave this as 128 please!
-    		out.print(driverstationInfo(i));
+//    	for (int i = 0; i < 128; i++) //TEMP Don't leave this as 128 please!
+//    		out.print(driverstationInfo(i));
     	
     	
 	}
@@ -130,7 +132,6 @@ public class OI {
 	
 	private String driverstationInfo(int stick)
 	{
-	    private final DriverStation m_ds = DriverStation.getInstance();
 		return String.format(
 				"The driverstation joystick type is %d\n",
 				m_ds.getJoystickType(stick));

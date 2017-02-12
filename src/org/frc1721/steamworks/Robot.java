@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
+		robotDrive.enablePID();
 		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
 		// is started multiple times.
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
@@ -143,11 +143,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotPeriodic() {
-		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
-		
-		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
-		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
-		
+
 		if(topLimitSwitch.get())
 		{
 			RobotMap.lLift.set(0.1);
@@ -157,12 +153,30 @@ public class Robot extends IterativeRobot {
 		{
 			RobotMap.lLift.set(-0.1);
 		}
+		
+		printSmartDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
+
+	}
+	
+	@Override
+	public void testPeriodic() {
+		LiveWindow.run();
+	}
+	
+	private void printSmartDashboard ()
+	{
+		// Limit switch stuff
+		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
+		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
+		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
+		
+		// Navx stuff
 //		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
 //		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
 //		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
@@ -172,17 +186,12 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
 //		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 				
-		
-		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
-		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
+		// Controller stuff
+//		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
+//		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
 //		SmartDashboard.putNumber("Joystick Two YAxis", OI.jsticks[1].getTwist());
 		
-		
+		// PID stuff
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
-	}
-	
-	@Override
-	public void testPeriodic() {
-		LiveWindow.run();
 	}
 }

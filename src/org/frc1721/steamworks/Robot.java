@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +24,9 @@ public class Robot extends IterativeRobot {
 
 	public static OI oi;
 	
-	public static DigitalInput limitSwitch;
+	public static DigitalInput topLimitSwitch;
+	public static DigitalInput bottomLimitSwitch;
+	public static DigitalInput gearLimitSwitch;
 	
 	/** 
 	 * Subsystems List
@@ -41,8 +44,9 @@ public class Robot extends IterativeRobot {
 		/* Initialize the Drive Train systems */
 		
 		// Motor Controllers
-		RobotMap.dtLeft = new Victor(RobotMap.dtlPWM);
-		RobotMap.dtRight = new Victor(RobotMap.dtrPWM);
+		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);
+		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);
+		RobotMap.lLift = new VictorSP(RobotMap.liftPWM);
 		//RobotMap.dtRight.setInverted(true);
 		// Encoders
 		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB, RobotMap.dtrEncL);
@@ -65,7 +69,8 @@ public class Robot extends IterativeRobot {
         RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
-		
+
+        
         // Add the drive train last since it depends on robotDrive and navController
 		//Drive System
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
@@ -85,7 +90,9 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
 	    
-	    limitSwitch = new DigitalInput(RobotMap.lsLsPA);
+	    topLimitSwitch = new DigitalInput(RobotMap.topLs);
+	    bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs);
+	    gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
 	    
 //	    new Thread(() -> {
 //            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -114,6 +121,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		RobotMap.lLift.set(0);
 	}
 
 	@Override
@@ -131,6 +139,24 @@ public class Robot extends IterativeRobot {
 		// is started multiple times.
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+	}
+
+	@Override
+	public void robotPeriodic() {
+		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
+		
+		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
+		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
+		
+		if(topLimitSwitch.get())
+		{
+			RobotMap.lLift.set(0.1);
+		}
+		
+		if(bottomLimitSwitch.get())
+		{
+			RobotMap.lLift.set(-0.1);
+		}
 	}
 
 	@Override
@@ -154,7 +180,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}
-
+	
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();

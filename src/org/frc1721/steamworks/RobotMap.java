@@ -1,6 +1,6 @@
 package org.frc1721.steamworks;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.*; 
 import org.frc1721.steamworks.CustomPIDController;
 import com.kauailabs.navx.frc.AHRS;
 /**
@@ -14,10 +14,16 @@ public class RobotMap {
 	// --------- DRIVE TRAIN ----------
 	
 	/** VictorSPs for drive (left, right) **/
-	public static Victor dtLeft, dtRight;
+	public static VictorSP dtLeft, dtRight;
+	
+	/** VictorSP for the lift **/
+	public static VictorSP lLift;
 	
 	/** PWM ports for drive motor controllers **/
 	public static final int dtlPWM = 0, dtrPWM = 1;
+	
+	/** PWM port for the lift motor controller **/
+	public static final int liftPWM = 3;
 	
 	/** Encoders for drive **/
 	public static Encoder dtlEnc, dtrEnc;
@@ -31,7 +37,9 @@ public class RobotMap {
 							dtrEncPB = 3;
 	
 	/** Limit Switch DIO Port **/
-	public static final int lsLsPA = 9;
+	public static final int topLs = 4,
+							bottomLs = 5,
+							gearLs = 3;
 	
 	
 	

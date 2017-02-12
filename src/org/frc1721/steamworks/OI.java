@@ -1,15 +1,14 @@
 package org.frc1721.steamworks;
 
 
-import static java.lang.System.err;
 import static java.lang.System.out;
 
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -44,7 +43,7 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
-	public static Joystick[] jsticks;
+	public static Joystick[] jsticks; // declares an array of joysticks
 	public static Joystick jOp;
 	
 	// Drive controls
@@ -53,41 +52,34 @@ public class OI {
     
     // Print buttons
     public static JoystickButton printLimitSwitch;
-    
+   
 	private int 	jsOne = -1,
 					jsTwo = -1;
 	
 	public OI ()
 	{
-
-		try {
-			// Sleep two and a half seconds to wait for the controllers to boot
-			Thread.sleep(2500); 
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		out.printf("Zach, please remember to test if this works!\n'%s.java'\n", this.getClass().getName());
+		out.printf("Zach, please remember to test if this works!: '%s.java'\n", this.getClass().getName());
 		
 		// TODO Find out why controllers don't init 100% of the time.
 		// TODO Find out why switching from tank to arcade is sketch sometimes.
 		// TODO Make code automatically detect deadzone and scale output for it.
 		for (int i = 0; i < RobotMap.numUSB; i++)
 		{
+			//out.println("ABC" + i);
 			Joystick controller = new Joystick(i); // Maybe this is the issue? Maybe because I init the controllers two times it gets angry.
 			
+
 			if(controller.getName().equals(RobotMap.jstick)) {
 				if (jsOne == -1)
 					jsOne = controller.getPort();
 				else
 					jsTwo = controller.getPort();	
-    		}
+    		}		
+			
 		}
 			
 		
-		// Find RobotMap.jstick sticks
-    	    	
-    	
+        // allocates memory for joystick
     	if(jsTwo == -1)
     		jsticks = new Joystick[1];
     	else
@@ -105,16 +97,28 @@ public class OI {
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
 		
-		// Drive commands
-    	disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
-    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
-    	enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
-    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+    	/** Driver Buttons **/
+    	try {
+	    	disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
+	    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
+	    	enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
+	    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+		} catch (RuntimeException e) {
+			DriverStation.reportWarning("Seems this has broken again", false);
+			//e.printStackTrace();
+		}
+	    	
+    	
     	
 //		for (int i = 0; i < jsticks.length; i++)
 //			out.print(joystickInfo(jsticks[i]));
+    	
+    	for (int i = 0; i < 128; i++) //TEMP Don't leave this as 128 please!
+    		out.print(driverstationInfo(i));
+    	
+    	
 	}
-	
+    	
 	private String joystickInfo(Joystick jstick)
 	{
 		return String.format(
@@ -122,6 +126,14 @@ public class OI {
     			"The name of the joystick is %s\n" +
 				"The port of this joystick is %s\n",
 				jstick.getButtonCount(), jstick.getName(), jstick.getPort());
+	}
+	
+	private String driverstationInfo(int stick)
+	{
+	    private final DriverStation m_ds = DriverStation.getInstance();
+		return String.format(
+				"The driverstation joystick type is %d\n",
+				m_ds.getJoystickType(stick));
 	}
 	
 }

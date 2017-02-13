@@ -8,13 +8,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
 
-/**
- * Class implements a PID Control Loop.
- *
- * Creates a separate thread which reads the given PIDSource and takes care of
- * the integral calculations, as well as writing the given PIDOutput
- */
 public class CustomPIDController extends PIDController {
 
     private double 	m_Pdt,
@@ -30,7 +25,7 @@ public class CustomPIDController extends PIDController {
     protected boolean m_onTarget = false;
     protected int m_iterOnTarget = 0;
 	
-	public CustomPIDController(double dtp, double dti, double dtd, double dtf, Encoder dtlEnc, Victor dtLeft, double d) {
+	public CustomPIDController(double dtp, double dti, double dtd, double dtf, Encoder dtlEnc, VictorSP dtLeft, double d) {
 		super(dtp, dti, dtd, dtf, dtlEnc, dtLeft, d);
 
         scalePID();
@@ -38,7 +33,7 @@ public class CustomPIDController extends PIDController {
         m_onTarget = false;
         m_iterOnTarget = 0;
 	}
-	
+
 	// I left all of this here so it's easy to quickly edit.
 	@Override
 	protected void calculate() { 

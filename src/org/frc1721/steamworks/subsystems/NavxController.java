@@ -7,7 +7,8 @@
 
 package org.frc1721.steamworks.subsystems;
 
-import org.frc1721.steamworks.CustomPIDSubsystem;
+import org.frc1721.steamworks.commands.CustomPIDSubsystem;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -57,13 +58,13 @@ public class NavxController extends CustomPIDSubsystem  {
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
 	  super.setPIDSourceType(pidSourceType);
-	  controller.setOutputRange(-0.8, 0.8);
+	  m_controller.setOutputRange(-0.8, 0.8);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
-		  controller.setInputRange(-180.0, 180.0);
-		  controller.setContinuous();
+		  m_controller.setInputRange(-180.0, 180.0);
+		  m_controller.setContinuous();
 	  } else {
-		  controller.setInputRange(0.0, 0.0);
-		  controller.setContinuous(false);
+		  m_controller.setInputRange(0.0, 0.0);
+		  m_controller.setContinuous(false);
 		  lastHeading = mGyro.getYaw();
 		  gyroTimer.reset();
 		  gyroRate = 0.0;
@@ -103,7 +104,7 @@ public class NavxController extends CustomPIDSubsystem  {
   }
   
  public void zeroOutput() {
-	controller.zeroOutput();
+	 m_controller.zeroOutput();
 	pidOut = 0.0;
  }
   
@@ -118,7 +119,7 @@ public class NavxController extends CustomPIDSubsystem  {
   }
   
   public void reset() {
-  	controller.reset();
+  	m_controller.reset();
   	lastHeading = mGyro.getYaw();
   	gyroTimer.reset();
   	

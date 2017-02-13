@@ -3,18 +3,18 @@ package org.frc1721.steamworks;
 
 import org.frc1721.steamworks.subsystems.Climber;
 import org.frc1721.steamworks.subsystems.DriveTrain;
+import org.frc1721.steamworks.subsystems.LCDController;
 import org.frc1721.steamworks.subsystems.NavxController;
 import org.frc1721.steamworks.subsystems.Shooter;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -38,6 +38,7 @@ public class Robot extends IterativeRobot {
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
 	public static NavxController navController;
+	public static LCDController lcdController;
 	
 	@Override
 	public void robotInit() {
@@ -64,6 +65,11 @@ public class Robot extends IterativeRobot {
 		
 
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
+		
+		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
+		lcdController = new LCDController();
+		lcdController.initLCD(RobotMap.lcd);
+		LCDController.print(RobotMap.lcd, "Hello World", 1);
 		
 		// Gyro and controller
         RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 

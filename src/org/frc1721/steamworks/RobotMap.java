@@ -43,7 +43,7 @@ public class RobotMap {
 							
 	
 	
-	
+	public static I2C lcd;
 	
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 	

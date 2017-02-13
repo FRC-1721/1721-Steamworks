@@ -1,5 +1,6 @@
 package org.frc1721.steamworks.commands;
 
+import org.frc1721.steamworks.CustomRobotDrive;
 import org.frc1721.steamworks.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,6 +22,8 @@ public class EnableDrivePIDCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.robotDrive.enablePID();
+    	Robot.driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+
     	complete = true;
     }
 

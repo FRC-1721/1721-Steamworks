@@ -98,14 +98,6 @@ public class OI {
         	DriverStation.reportError("Controller init failed, please stop being bad! (also try restarting robot code)", false);
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
-<<<<<<< HEAD
-=======
-//    	out.printf("The jOp Joystick name is: %s\n", jOp.getName());
-    	
-//    	out.printf("First %d\n", jsOne);
-//    	out.printf("Second %d\n", jsTwo);
-    	
->>>>>>> branch 'pid' of https://github.com/FRC-1721/2017-Steamworks.git
 		
     	/** Driver Buttons **/
     	try {

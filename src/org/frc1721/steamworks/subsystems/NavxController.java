@@ -7,6 +7,7 @@
 
 package org.frc1721.steamworks.subsystems;
 
+import org.frc1721.steamworks.CustomPIDController;
 import org.frc1721.steamworks.commands.CustomPIDSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -83,7 +84,7 @@ public class NavxController extends CustomPIDSubsystem  {
   }
   
  public void zeroOutput() {
-//	 m_controller.zeroOutput(); // TODO, figure this out
+	 m_controller.zeroOutput();
 	 pidOut = 0.0;
  }
   

@@ -34,6 +34,10 @@ public class CustomPIDController extends PIDController {
         m_iterOnTarget = 0;
 	}
 
+	public CustomPIDController(double p, double i, double d, double f, PIDSource m_source, PIDOutput m_output) {
+		super(p, i, d, f, m_source, m_output);
+	}
+
 	// I left all of this here so it's easy to quickly edit.
 	@Override
 	protected void calculate() { 

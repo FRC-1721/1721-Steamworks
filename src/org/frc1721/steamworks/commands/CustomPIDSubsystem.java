@@ -9,6 +9,7 @@ package org.frc1721.steamworks.commands;
 
 import org.frc1721.steamworks.CustomPIDController;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -17,9 +18,11 @@ public abstract class CustomPIDSubsystem extends PIDSubsystem {
 
 	protected PIDSourceType m_pidSourceType = PIDSourceType.kDisplacement;
 	
+	protected final CustomPIDController m_controller;
 	
     public CustomPIDSubsystem(String name, double p, double i, double d, double f) {
 		super(name, p, i, d, f);
+		m_controller = new CustomPIDController(p, i, d, f, m_source, m_output);
 	}
 
 	public PIDSourceType getPIDSourceType() {

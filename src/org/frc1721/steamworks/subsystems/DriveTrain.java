@@ -7,6 +7,7 @@ import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.DriveInTeleop;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -42,14 +43,14 @@ public class DriveTrain extends Subsystem {
 				m_navController.reset();
 				m_navController.enable();
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
-				CustomPIDController gyroController = m_navController.getPIDController();
+				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
 
 			} else {
 				m_navController.reset();
 				m_navController.enable();
 				m_navController.setPIDSourceType(PIDSourceType.kRate);
-				CustomPIDController gyroController = m_navController.getPIDController();
+				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 			}
 		}

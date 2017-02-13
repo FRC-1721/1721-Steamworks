@@ -60,6 +60,8 @@ public class OI {
 	
 	public OI ()
 	{
+		DriverStation.reportWarning("OI init just ran", false);
+		
 		out.printf("Zach, please remember to test if this works!: '%s.java'\n", this.getClass().getName());
 		
 		// TODO Find out why controllers don't init 100% of the time.

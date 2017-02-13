@@ -1,6 +1,8 @@
 
 package org.frc1721.steamworks;
 
+import static java.lang.System.out;
+
 import org.frc1721.steamworks.subsystems.Climber;
 import org.frc1721.steamworks.subsystems.DriveTrain;
 import org.frc1721.steamworks.subsystems.LCDController;
@@ -127,7 +129,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		RobotMap.lLift.set(0);
 	}
 
 	@Override
@@ -149,17 +150,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotPeriodic() {
-
-		if(topLimitSwitch.get())
-		{
-			RobotMap.lLift.set(0.1);
-		}
-		
-		if(bottomLimitSwitch.get())
-		{
-			RobotMap.lLift.set(-0.1);
-		}
-		
 		printSmartDashboard();
 	}
 
@@ -167,7 +157,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
-
 	}
 	
 	@Override
@@ -175,8 +164,10 @@ public class Robot extends IterativeRobot {
 		LiveWindow.run();
 	}
 	
-	private void printSmartDashboard ()
+	private void printSmartDashboard()
 	{
+//		out.printf("'%s' Worked.\n", this.getClass().getName());
+		
 		// Limit switch stuff
 		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
 		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());

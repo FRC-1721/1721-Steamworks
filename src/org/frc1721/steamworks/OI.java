@@ -60,8 +60,6 @@ public class OI {
 	
 	public OI ()
 	{
-		DriverStation.reportWarning("OI init just ran", false);
-		
 		out.printf("Zach, please remember to test if this works!: '%s.java'\n", this.getClass().getName());
 		
 		// TODO Find out why controllers don't init 100% of the time.
@@ -101,24 +99,31 @@ public class OI {
     	
     	out.printf("Number of Joysticks: %d\n", jsticks.length);
 		
+    	// TODO Make this insure button activation
     	/** Driver Buttons **/
     	try {
+//    		DriverStation.reportWarning("OI buttons have started", false); // TODO this is temporary, make sure to remove this from the final version
 	    	disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
 	    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
 	    	enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
 	    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+//			DriverStation.reportWarning("OI buttons are finished", false); // TODO this is temporary, make sure to remove this from the final version
 		} catch (RuntimeException e) {
-			DriverStation.reportWarning("Seems this has broken again, if buttons don't work restart robot code.", false);
-			//e.printStackTrace();
+			DriverStation.reportError(
+							String.format(
+									"The Driver Buttons in '%s.java' broke again.\n" +
+									"RESTARTING ROBOT CODE!!!\n",
+									this.getClass().getName()), false);
+			e.printStackTrace();
+			System.exit(RobotMap.roboError.BtnErr.getExitCode());
 		}
-	    	
     	
     	
 //		for (int i = 0; i < jsticks.length; i++)
 //			out.print(joystickInfo(jsticks[i]));
     	
-//    	for (int i = 0; i < 128; i++) //TEMP Don't leave this as 128 please!
-//    		out.print(driverstationInfo(i));
+    	for (int i = 0; i < 3; i++) // TODO see how this works out.
+    		out.print(driverstationInfo(i));
     	
     	
 	}

@@ -6,6 +6,7 @@ import org.frc1721.steamworks.CustomRobotDrive.GyroMode;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.DriveInTeleop;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -45,6 +46,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
+				DriverStation.reportWarning("GyroMode is heading!", false);
 
 			} else {
 				m_navController.reset();
@@ -52,6 +54,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kRate);
 				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
+				DriverStation.reportWarning("GyroMode is not heading!", false);
 			}
 		}
 		m_robotDrive.setGyroMode(gMode); 

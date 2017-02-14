@@ -22,7 +22,8 @@ public class CustomRobotDrive extends RobotDrive {
 	protected CustomPIDController m_rightController;
 	protected boolean m_PIDPresent = false;
 	protected boolean m_NAVPresent = false;
-	protected boolean m_PIDEnabled = false; 
+	
+	protected boolean m_PIDEnabled = true; 
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
 	protected double m_rateScale = 10.0;
 	

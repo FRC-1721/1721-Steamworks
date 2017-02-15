@@ -35,7 +35,9 @@ public abstract class CustomPIDSubsystem extends PIDSubsystem {
         m_pidSourceType = pidSourceType;
         m_controller.setPIDSourceType(m_pidSourceType);
     }
-    
+    public CustomPIDController getCustomPIDController() {
+  	  return m_controller;
+    }
     public boolean onTargetDuringTime () {
         if( m_controller.onTarget()) {
             return true;

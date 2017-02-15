@@ -5,9 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.frc1721.steamworks.commands;
-
-import org.frc1721.steamworks.CustomPIDController;
+package org.frc1721.steamworks;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;

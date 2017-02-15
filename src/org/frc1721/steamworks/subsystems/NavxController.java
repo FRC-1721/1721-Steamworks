@@ -8,7 +8,7 @@
 package org.frc1721.steamworks.subsystems;
 
 import org.frc1721.steamworks.CustomPIDController;
-import org.frc1721.steamworks.commands.CustomPIDSubsystem;
+import org.frc1721.steamworks.CustomPIDSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -41,7 +41,7 @@ public class NavxController extends CustomPIDSubsystem  {
 	  m_controller.setOutputRange(-0.8, 0.8);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
 		  m_controller.setInputRange(-180.0, 180.0);
-		  m_controller.setContinuous();
+		  m_controller.setContinuous(true);
 	  } else {
 		  m_controller.setInputRange(0.0, 0.0);
 		  m_controller.setContinuous(false);

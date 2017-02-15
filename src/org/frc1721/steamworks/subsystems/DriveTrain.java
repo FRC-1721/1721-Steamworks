@@ -17,7 +17,8 @@ public class DriveTrain extends Subsystem {
 	protected CustomRobotDrive m_robotDrive;
 	protected NavxController m_navController;
 	protected GyroMode gyroMode = GyroMode.off;
-
+	protected double m_rateScale = 10.0;
+	protected double m_turnRateScale = 180.0;
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
@@ -46,6 +47,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
+				gyroController.setOutputRange(-0.5,0.5);
 				DriverStation.reportWarning("GyroMode is heading!", false);
 
 			} else {
@@ -54,11 +56,18 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kRate);
 				PIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
+				gyroController.setOutputRange(-0.8,0.8);
 				DriverStation.reportWarning("GyroMode is not heading!", false);
 			}
 		}
 		m_robotDrive.setGyroMode(gMode); 
 	}	
+
+	// Drive using a dimensional speed and turn rate
+	public void rateDrive(double forward, double turn) {
+		// Use Arcade drive, but first turn rates into non-dimensional values
+		m_robotDrive.arcadeDrive(forward/m_rateScale, turn/m_turnRateScale, false, false);
+	}
 	
 	public void jInput(Joystick stick) {
 		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist(), true, false);
@@ -72,7 +81,16 @@ public class DriveTrain extends Subsystem {
 	public void stop() {
 		m_robotDrive.drive(0, 0);
 	}
+
+	public double getDistance() {
+		return m_robotDrive.getDistance();
+	}
 	
+	// Changes the scaling of raw inputs into a drive rate and turn rate
+	public void setDriveScale(double driveRate, double turnRate) {
+		m_rateScale = driveRate;
+		m_turnRateScale = turnRate;
+	}
     
 }
 

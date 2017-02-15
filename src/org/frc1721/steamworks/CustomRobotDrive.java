@@ -25,7 +25,7 @@ public class CustomRobotDrive extends RobotDrive {
 	
 	protected boolean m_PIDEnabled = true; 
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
-	protected double m_rateScale = 10.0;
+	protected double rateScale = 10.0;
 	
 	// Gyro parameters
 	protected NavxController m_turnController;
@@ -105,9 +105,9 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
 	
 	
     if (m_PIDEnabled) {
-    	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+    	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * rateScale);
     	//if (Math.abs(leftOutput) < 0.01) m_leftController.zeroOutput();
-    	m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * m_rateScale);
+    	m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * rateScale);
     	//if (Math.abs(rightOutput) < 0.01) m_rightController.zeroOutput();
     	
     	/* Safety updates normally done in super class */
@@ -217,7 +217,7 @@ public boolean getPIDStatus()
 }
 
 public void setDriveRate(double rate) {
-	  m_rateScale = rate;
+	  rateScale = rate;
 }
 
 
@@ -233,6 +233,12 @@ public void setGyroMode(GyroMode gMode) {
 		  m_turnController.setSetpointRelative(0.0);
 	  }  
 	  */
+}
+
+//Changes the scaling of raw inputs into a drive rate and turn rate
+public void setDriveScale(double driveRate, double turnRate) {
+	rateScale = driveRate;
+	turnRateScale = turnRate;
 }
 
 }

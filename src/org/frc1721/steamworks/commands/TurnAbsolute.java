@@ -30,7 +30,7 @@ public class TurnAbsolute extends Command{
 	protected void execute() { 
 		Robot.driveTrain.rateDrive(0, 0); 
 		SmartDashboard.putNumber("TargetHeading", m_targetHeading);
-		SmartDashboard.putNumber("IterOnTarget", Robot.navController.getIterOnTarget());
+		//SmartDashboard.putNumber("IterOnTarget", Robot.navController.getIterOnTarget());
 		}
 	// Just set to run tank.
 	protected void end() { 
@@ -42,7 +42,7 @@ public class TurnAbsolute extends Command{
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
 		//return finished;
-		if ( Robot.navController.getIterOnTarget() > kToleranceIterations) {
+		if ( Robot.navController.onTargetDuringTime()) {
 			return true;
 		} else {
 			return false;

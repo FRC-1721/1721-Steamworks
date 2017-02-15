@@ -3,11 +3,8 @@ package org.frc1721.steamworks;
 
 import static java.lang.System.out;
 
-import org.frc1721.steamworks.subsystems.Climber;
-import org.frc1721.steamworks.subsystems.DriveTrain;
-import org.frc1721.steamworks.subsystems.LCDController;
-import org.frc1721.steamworks.subsystems.NavxController;
-import org.frc1721.steamworks.subsystems.Shooter;
+import org.frc1721.steamworks.subsystems.*;
+import org.frc1721.steamworks.commands.TestAuto;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -20,7 +17,9 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Robot extends IterativeRobot {
 
@@ -41,6 +40,9 @@ public class Robot extends IterativeRobot {
 	public static CustomRobotDrive robotDrive;
 	public static NavxController navController;
 	public static LCDController lcdController;
+	public static CommandGroup autonomousCommand;
+	public static SendableChooser autoChooser;
+	public static DistanceController distanceController;
 	
 	@Override
 	public void robotInit() {
@@ -88,6 +90,7 @@ public class Robot extends IterativeRobot {
         
         driveTrain = new DriveTrain(robotDrive, navController);
         driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
+        driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
         
 		/* Add items to live windows */
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
@@ -101,6 +104,17 @@ public class Robot extends IterativeRobot {
 	    topLimitSwitch = new DigitalInput(RobotMap.topLs);
 	    bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs);
 	    gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
+	    
+	    // Add the distance controller
+	    distanceController = new DistanceController("DistanceController", RobotMap.distP, 
+	    		RobotMap.distI, RobotMap.distD, driveTrain);
+
+		// Create a chooser for auto so it can be set from the DS
+		autonomousCommand = new TestAuto();
+		autoChooser = new SendableChooser();
+		autoChooser.addDefault("Test", new TestAuto());
+		SmartDashboard.putData("Auto Chooser", autoChooser); 	    
+	    
 	    
 //	    new Thread(() -> {
 //            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
@@ -133,10 +147,20 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
+		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
+		// is started multiple times.
+		RobotMap.navx.zeroYaw();
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
+    	autonomousCommand = (CommandGroup) autoChooser.getSelected();
+    	//autonomousCommand.addCommands();
+    	autonomousCommand.start();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        printSmartDashboard();
 	}
 
 	@Override
@@ -148,6 +172,8 @@ public class Robot extends IterativeRobot {
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
+	
+	
 	@Override
 	public void robotPeriodic() {
 		printSmartDashboard();

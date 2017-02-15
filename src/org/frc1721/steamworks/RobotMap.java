@@ -51,7 +51,8 @@ public class RobotMap {
 	
 	/** PID Control Variables **/
 	public static final double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
-	
+	// Distance controller
+	public static double distP = 1.0, distI = 0.1, distD = 0.0;
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = false,
 								dtrEncL = false; // TODO FIX
@@ -73,6 +74,10 @@ public class RobotMap {
 	/** Drive Train PID Rate controllers **/
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;
+	
+	/* Rate Conversion for drive train */
+	public static double driveRateScale = 10.0; // feet per second
+	public static double turnRateScale = 180.0; // Degrees per second
 	
 	// ---------> OI <----------
 	

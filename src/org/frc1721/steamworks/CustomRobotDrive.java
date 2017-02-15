@@ -224,12 +224,15 @@ public void setDriveRate(double rate) {
 public void setGyroMode(GyroMode gMode) {
 	  
 	  gyroMode = gMode;
-	  // Set the setpoint to the current heading
+	  // Don't reset setpoint, that should be done by whatever class
+	  // is driving the motion
+	  /* 
 	  if (gyroMode == GyroMode.rate) {
 		  m_turnController.setSetpoint(0.0);
 	  } else if (gyroMode == GyroMode.heading) {
 		  m_turnController.setSetpointRelative(0.0);
 	  }  
+	  */
 }
 
 }

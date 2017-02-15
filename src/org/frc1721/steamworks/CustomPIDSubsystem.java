@@ -27,6 +27,11 @@ public abstract class CustomPIDSubsystem extends PIDSubsystem {
         return m_pidSourceType;
     }
     
+	@Override
+	public PIDController getPIDController() {
+		return m_controller;
+	}
+	
     public void setToleranceBuffer(int bufLength) {
         m_controller.setToleranceBuffer(bufLength);
     }
@@ -35,9 +40,11 @@ public abstract class CustomPIDSubsystem extends PIDSubsystem {
         m_pidSourceType = pidSourceType;
         m_controller.setPIDSourceType(m_pidSourceType);
     }
+    
     public CustomPIDController getCustomPIDController() {
   	  return m_controller;
     }
+    
     public boolean onTargetDuringTime () {
         if( m_controller.onTarget()) {
             return true;

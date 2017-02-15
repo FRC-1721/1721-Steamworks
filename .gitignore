@@ -5,3 +5,5 @@ build
 .classpath
 dist
 sysProps.xml
+WPILib.jar
+WPILib-sources.jar

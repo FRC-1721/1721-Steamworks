@@ -50,17 +50,16 @@ public class NavxController extends CustomPIDSubsystem  {
   public NavxController(String name, double p, double i, double d, double f, AHRS gyro, PIDSourceType pidSourceType) {
     super(name, p, i, d, f);
     mGyro = gyro;
-    setPIDSourceType(pidSourceType);
     gyroTimer = new Timer();
     gyroTimer.start();
+    setPIDSourceType(pidSourceType);
   }
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
 	  super.setPIDSourceType(pidSourceType);
-	  controller.setOutputRange(-0.8, 0.8);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
 		  controller.setInputRange(-180.0, 180.0);
-		  controller.setContinuous();
+		  controller.setContinuous(true);
 	  } else {
 		  controller.setInputRange(0.0, 0.0);
 		  controller.setContinuous(false);

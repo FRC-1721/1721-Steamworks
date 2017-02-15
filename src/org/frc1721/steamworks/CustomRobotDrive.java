@@ -186,11 +186,11 @@ public double getDistance() {
 	double rightDistance = - RobotMap.dtrEnc.getDistance();
 	// Account for one of the encoders being out by copying the working distance
 	if (RobotMap.leftEncoderDisabled) {
-		leftDistance = -rightDistance;
+		leftDistance = rightDistance;
 	} else if (RobotMap.rightEncoderDisabled) {
-		rightDistance = -leftDistance;
+		rightDistance = leftDistance;
 	}
-	double avgDist = 0.5*(leftDistance - rightDistance);
+	double avgDist = 0.5*(leftDistance + rightDistance);
 	return avgDist;
 }
 
@@ -223,14 +223,15 @@ public void setDriveRate(double rate) {
 public void setGyroMode(GyroMode gMode) {
 	  
 	  gyroMode = gMode;
-	  
+	  // Rather than zero set points, the setpoint should be set externally.
+	  /*
 	  if (gyroMode == GyroMode.rate) {
 		  // Zero the rate
 		  m_turnController.setSetpoint(0.0);
 	  } else if (gyroMode == GyroMode.heading) {
 		// Set the setpoint to the current heading
 		  m_turnController.setSetpointRelative(0.0);
-	  }  
+	  }  */
 }
 
 // Changes the scaling of raw inputs into a drive rate and turn rate

@@ -45,13 +45,14 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				CustomPIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
-
+				gyroController.setOutputRange(-0.5,0.5);
 			} else {
 				m_navController.reset();
 				m_navController.enable();
 				m_navController.setPIDSourceType(PIDSourceType.kRate);
 				CustomPIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
+				gyroController.setOutputRange(-0.8,0.8);
 			}
 		}
 		m_robotDrive.setGyroMode(gMode); 

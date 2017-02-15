@@ -13,35 +13,52 @@ public class DistanceDriveStraight extends Command {
 	static int kToleranceIterations = 5;
 	protected double mSpeed = 0.0; // speed in feet/sec
 	protected double m_startDistance;
+	protected boolean m_usePID = false;
+
 	
-    public DistanceDriveStraight(double distance, double speed) {
+
+    public DistanceDriveStraight(double distance, double speed, boolean usePID) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
     	mSpeed = speed;
     	m_distance=distance;
+    	m_usePID = usePID;
     }
 
+    public DistanceDriveStraight(double distance, double speed) {
+        this(distance,speed,false);
+    }
+    
     // Called just before this Command runs the first time
     protected void initialize() {
-    	//Robot.distanceDrivePID.enable();
-    	//Robot.distanceDrivePID.setSetpointRelative(m_distance);
-    	//Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	//Robot.distanceDrivePID.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
-		//Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
-		//Robot.distanceDrivePID.setAbsoluteTolerance(1.0);
-		m_startDistance = Robot.driveTrain.getDistance();
+    	m_startDistance = Robot.driveTrain.getDistance();
+
+    	if (m_usePID) {
+    		Robot.distanceController.enable();
+    		Robot.distanceController.setSetpointRelative(m_distance);
+    		Robot.distanceController.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
+    		Robot.distanceController.setToleranceBuffer(kToleranceIterations);
+    		Robot.distanceController.setAbsoluteTolerance(1.0);
+    	}
 		
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//double speed = Robot.distanceDrivePID.getPIDOutput();
-    	Robot.driveTrain.rateDrive(mSpeed,0);
+    	double speed = mSpeed;
+    	if (m_usePID) {
+    		speed = Robot.distanceController.getPIDOutput();
+    	}
+    	Robot.driveTrain.rateDrive(speed,0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	if (m_usePID) {
+    		return Robot.distanceController.onTargetDuringTime();
+    	} 
+    	// Without PID, just make sure it made it past the point
     	if (m_distance > 0) {
     		if (Robot.driveTrain.getDistance() > m_startDistance + m_distance) {
     			return true;
@@ -52,12 +69,6 @@ public class DistanceDriveStraight extends Command {
     		}
     	}
     	return false;
-      /*
-
-    	   return true;
-       } else {
-    	   return false;
-       } */
     }
 
     // Called once after isFinished returns true

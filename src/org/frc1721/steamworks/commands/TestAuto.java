@@ -1,7 +1,5 @@
 package org.frc1721.steamworks.commands;
 
-import org.frc1721.steamworks.Robot;
-import org.frc1721.steamworks.RobotMap;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -10,17 +8,18 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class TestAuto extends CommandGroup {
     public  TestAuto() {
-
-    	addSequential(new EnableDrivePIDCommand());
+    	// Set the turn scale to lower
+    	//addSequential(new SetDriveRates(10.0, 45.0));
+    	//addSequential(new EnableDrivePIDCommand());
  
-    	addSequential(new TurnRelative(0, 1));
-    	addSequential(new DistanceDriveStraight(5.0,0.2));
-    	addSequential(new TurnRelative(90, 1));
-    	addSequential(new DistanceDriveStraight(5.0,0.2));
-    	addSequential(new TurnRelative(90, 1));
-    	addSequential(new DistanceDriveStraight(5.0,0.2));
-    	addSequential(new TurnRelative(90, 1));
-    	addSequential(new DistanceDriveStraight(5.0,0.2));
+    	addSequential(new TurnAbsolute(-90, 10));
+    	//addSequential(new DistanceDriveStraight(5.0,4.0));
+    	addSequential(new TurnAbsolute(90, 10));
+    	//addSequential(new DistanceDriveStraight(5.0,4.0));
+    	addSequential(new TurnAbsolute(180, 10));
+    	//addSequential(new DistanceDriveStraight(5.0,4.0,true));
+    	addSequential(new TurnAbsolute(-90, 10));
+    	//addSequential(new DistanceDriveStraight(5.0,4.0, true));
    	
         // Add Commands here:
         // e.g. addSequential(new Command1());

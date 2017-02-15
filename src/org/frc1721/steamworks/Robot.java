@@ -1,10 +1,7 @@
 
 package org.frc1721.steamworks;
 
-import org.frc1721.steamworks.subsystems.Climber;
-import org.frc1721.steamworks.subsystems.DriveTrain;
-import org.frc1721.steamworks.subsystems.NavxController;
-import org.frc1721.steamworks.subsystems.Shooter;
+import org.frc1721.steamworks.subsystems.*;
 import org.frc1721.steamworks.PreferencesNames;
 import org.frc1721.steamworks.commands.*;
 
@@ -43,6 +40,7 @@ public class Robot extends IterativeRobot {
 	public static Preferences preferences;
 	public static CommandGroup autonomousCommand;
 	public static SendableChooser autoChooser;
+	public static DistanceController distanceController;
 	
 	@Override
 	public void robotInit() {
@@ -73,7 +71,6 @@ public class Robot extends IterativeRobot {
         RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
-		
         // Add the drive train last since it depends on robotDrive and navController
 		//Drive System
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
@@ -96,6 +93,10 @@ public class Robot extends IterativeRobot {
 	    
 	    limitSwitch = new DigitalInput(RobotMap.lsLsPA);
 	    
+	    // Add the distance controller
+	    distanceController = new DistanceController("DistanceController", RobotMap.distP, 
+	    		RobotMap.distI, RobotMap.distD, driveTrain);
+
 	    // Create preferences
         preferences =Preferences.getInstance();
         // Reset the preferences to the default values
@@ -142,8 +143,8 @@ public class Robot extends IterativeRobot {
 		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
 		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
 		// is started multiple times.
+		RobotMap.navx.zeroYaw();
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
     	autonomousCommand = (CommandGroup) autoChooser.getSelected();
     	//autonomousCommand.addCommands();
     	autonomousCommand.start();
@@ -182,6 +183,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());		
 		
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
+		SmartDashboard.putNumber("DriveDistance", Robot.robotDrive.getDistance());
 	}
 	
 	

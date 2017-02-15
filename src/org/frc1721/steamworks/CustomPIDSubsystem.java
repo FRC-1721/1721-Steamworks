@@ -280,6 +280,9 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
 	  }
   }  
   
+  public int getIterOnTarget() {
+	  return controller.getIterOnTarget();
+  }
   /**
    * Uses the value that the pid loop calculated. The calculated value is the
    * "output" parameter. This method is a good time to set motor values, maybe

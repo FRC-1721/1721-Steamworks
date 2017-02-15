@@ -1,6 +1,7 @@
 package org.frc1721.steamworks;
 
 import java.util.LinkedList;
+import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -160,6 +161,20 @@ public class CustomPIDController extends PIDController {
 
        	}
 	}
+	
+	protected class CustomPIDTask extends PIDTask {
+
+	    private CustomPIDController m_controller;
+	    
+	    public CustomPIDTask(CustomPIDController controller) {
+	    	super(controller);
+	    }
+
+	    @Override
+	    public void run() {
+	      m_controller.calculate();
+	    }
+	  }
 	
 	@Override
     public synchronized void setSetpoint(double setpoint) {

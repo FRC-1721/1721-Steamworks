@@ -210,8 +210,8 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 				
 		// Controller stuff
-//		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
-//		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
+		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
+		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
 //		SmartDashboard.putNumber("Joystick Two YAxis", OI.jsticks[1].getTwist());
 		
 		// PID stuff

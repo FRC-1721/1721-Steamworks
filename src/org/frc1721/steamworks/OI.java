@@ -1,3 +1,4 @@
+
 package org.frc1721.steamworks;
 
 
@@ -80,19 +81,19 @@ public class OI {
 			
 		}
 			
-		
-        // allocates memory for joystick
-    	if(jsTwo == -1)
-    		jsticks = new Joystick[1];
-    	else
-    		jsticks = new Joystick[2];
-    	
-
-    	// always create the first Joystick, if we have a second Joystick create it as well
-   		jsticks[0] = new Joystick(jsOne);
-    	if(jsticks.length == 2)
-    		jsticks[1] = new Joystick(jsTwo);	
+		{ // TODO make this better, and tell the drivers what mode they're in
+	        // allocates memory for joystick
+	    	if(jsTwo == -1)
+	    		jsticks = new Joystick[1];
+	    	else
+	    		jsticks = new Joystick[2];
+	    	
 	
+	    	// always create the first Joystick, if we have a second Joystick create it as well
+	   		jsticks[0] = new Joystick(jsOne);
+	    	if(jsticks.length == 2)
+	    		jsticks[1] = new Joystick(jsTwo);	
+		}
     	
     	if (jsticks.length == 0)
         	DriverStation.reportError("Controller init failed, please stop being bad! (also try restarting robot code)", false);

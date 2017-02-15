@@ -145,7 +145,7 @@ public class Robot extends IterativeRobot {
 		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
 		// is started multiple times.
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-//		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override

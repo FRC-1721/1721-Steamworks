@@ -66,7 +66,8 @@ public class RobotMap {
 	public static final double navP = 0.05, navI = 0.0, navD = 0.0, navF = 0;
 	
 	/** Rate Controller for the NavX **/
-	public static final double navRateP = 0.001, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
+	public static final double navRateP = 0.0, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
+//	public static final double navRateP = 0.001, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
 //	public static final double navRateP = 0.005, navRateI = 0.0, navRateD = 0.0005, navRateF = 0;
 	
 	/** Drive Train PID Rate controllers **/

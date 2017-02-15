@@ -22,6 +22,10 @@ This code is maintained and written by the following people
 - Zachary Samenfeld
 - Brennan Macaig
 
+### WARNING!!!
+
+THE WPILib.jar doesn't have a source jar with it yet don't trust the old source file
+
 
 
 

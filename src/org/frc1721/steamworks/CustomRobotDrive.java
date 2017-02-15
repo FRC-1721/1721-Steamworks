@@ -161,24 +161,6 @@ public void arcadeDrive(double moveValue, double rotateValue, boolean squaredMov
 }
 
 
-/**
- * Provide tank steering using the stored robot configuration. drive the robot using two joystick
- * inputs. The Y-axis will be selected from each Joystick object.
- *
- * @param leftStick     The joystick to control the left side of the robot.
- * @param rightStick    The joystick to control the right side of the robot.
- * @param squaredInputs Setting this parameter to true decreases the sensitivity at lower speeds
- */
-@Override
-public void tankDrive(GenericHID leftStick, GenericHID rightStick, boolean squaredInputs) {
-  if (leftStick == null || rightStick == null) {
-    throw new NullPointerException("Null HID provided");
-  }
-//  SmartDashboard.putNumber("foo", bar);
-//  bar++;
-  tankDrive(-leftStick.getY(), -rightStick.getY(), squaredInputs);
-}
-
 /* New Functions */
 
 public double getDistance() {

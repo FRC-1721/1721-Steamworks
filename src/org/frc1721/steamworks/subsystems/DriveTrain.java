@@ -45,7 +45,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.reset();
 				m_navController.enable();
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
-				PIDController gyroController = m_navController.getPIDController();
+				CustomPIDController gyroController = (CustomPIDController) m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
 				gyroController.setOutputRange(-0.5,0.5);
 				DriverStation.reportWarning("GyroMode is heading!", false);
@@ -54,7 +54,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.reset();
 				m_navController.enable();
 				m_navController.setPIDSourceType(PIDSourceType.kRate);
-				PIDController gyroController = m_navController.getPIDController();
+				CustomPIDController gyroController = (CustomPIDController) m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 				gyroController.setOutputRange(-0.8,0.8);
 				DriverStation.reportWarning("GyroMode is not heading!", false);
@@ -70,11 +70,11 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void jInput(Joystick stick) {
-		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist(), true, false);
+		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist(), true, false); // TODO make guud
 	}
 	
 	public void jInput(Joystick left, Joystick right) {
-		m_robotDrive.tankDrive(left, right, false);
+		m_robotDrive.tankDrive(-left.getX(), -right.getX(), false); // TODO make guud
 	}
 	
 	

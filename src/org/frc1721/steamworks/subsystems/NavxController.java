@@ -8,7 +8,7 @@
 package org.frc1721.steamworks.subsystems;
 
 import org.frc1721.steamworks.CustomPIDController;
-import org.frc1721.steamworks.commands.CustomPIDSubsystem;
+import org.frc1721.steamworks.CustomPIDSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 

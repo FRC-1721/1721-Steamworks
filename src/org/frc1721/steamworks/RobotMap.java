@@ -22,7 +22,7 @@ public class RobotMap {
 	/** PWM ports for drive motor controllers **/
 	public static final int dtlPWM = 0, dtrPWM = 1;
 	
-	// Seems port 2 goes to the VictorSP for climing
+	// Seems port 2 goes to the VictorSP for climbing
 	
 	/** PWM port for the lift motor controller **/
 	public static final int liftPWM = 3;

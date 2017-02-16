@@ -47,6 +47,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   private double m_prevDxDt = 0.0;
   private double m_prevOutput = 0.0;
   private double m_prevPosition = 0.0;
+  private double m_intError = 0.0;
   private Tolerance m_tolerance; // the tolerance object used to check if on
                                  // target
   private int m_bufLength = 1;
@@ -318,16 +319,31 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         	dxdt = dxdt/m_period;
         }
         ddxdt = (dxdt - m_prevDxDt);
-        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt + ff;
-        // Don't include the i term for rate control
-        if (!rateControl) {
-        	newOutput = newOutput + m_I*m_error;
+        if (rateControl) {
+        	newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt + ff;
+            if (newOutput > m_maximumOutput) {
+            	newOutput = m_maximumOutput;
+            } else if (newOutput < m_minimumOutput) {
+            	newOutput = m_minimumOutput;
+            }
+        } else {
+        	// position control, use traditional PID method, but don't include
+        	// setpoint changes for the damping term. Only accumlate the I term if
+        	// we haven't hit max output to prevent integral windup.
+        	m_intError += m_error*m_period;
+        	newOutput = m_P*m_error + m_I*m_intError - m_D*dxdt;
+        	
+            if (newOutput > m_maximumOutput) {
+            	newOutput = m_maximumOutput;
+            	// newOutput the integral contribution if it is increasing the output
+            	if (m_error > 0)  m_intError -= m_error*m_period;
+            } else if (newOutput < m_minimumOutput) {
+            	newOutput = m_minimumOutput;
+            	if (m_error < 0) m_intError -= m_error*m_period;
+            } 
         }
-        if (newOutput > m_maximumOutput) {
-        	newOutput = m_maximumOutput;
-        } else if (newOutput < m_minimumOutput) {
-        	newOutput = m_minimumOutput;
-        }
+        
+
         m_prevSetpoint = m_setpoint;
         m_prevPosition = input;
         m_result = newOutput;
@@ -374,6 +390,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   public void zeroOutput () {
 	  m_result = 0.0;
 	  m_prevOutput = 0.0;
+	  m_intError = 0.0;
 	  m_pidOutput.pidWrite(0.0);
   }
   public void setOutput(double output) {
@@ -792,6 +809,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   public synchronized void reset() {
     disable();
     m_prevError = 0;
+    m_intError = 0;
     m_result = 0;
     m_bufTotal = 0.0;
     m_buf.clear();

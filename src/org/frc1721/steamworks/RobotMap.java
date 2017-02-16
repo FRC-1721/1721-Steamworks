@@ -52,7 +52,7 @@ public class RobotMap {
 	/** PID Control Variables **/
 	public static final double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 	// Distance controller
-	public static double distP = 1.0, distI = 0.1, distD = 0.0;
+	public static double distP = 1.0, distI = 0.0, distD = 0.0;
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = false,
 								dtrEncL = false; // TODO FIX

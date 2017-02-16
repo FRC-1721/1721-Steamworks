@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DistanceDriveStraight extends Command {
 	double m_distance;
-	static int kToleranceIterations = 5;
+	static int kToleranceIterations = 200;
 	protected double mSpeed = 0.0; // speed in feet/sec
 	protected double m_startDistance;
 	protected boolean m_usePID = false;

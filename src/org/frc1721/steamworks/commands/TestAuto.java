@@ -14,6 +14,17 @@ public class TestAuto extends CommandGroup {
  
     	addSequential(new EnableDrivePIDCommand());
     	
+    	/* First block to try */
+    	addSequential(new TurnAbsolute(0, 10));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
+    	addSequential(new DistanceDriveStraight(-5.0,-2.0, true));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
+    	addSequential(new DistanceDriveStraight(-5.0,-2.0, true));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
+    	addSequential(new DistanceDriveStraight(-5.0,-2.0, true));
+    	/* */ 
+   
+    	/* Second block to try 
     	addSequential(new TurnAbsolute(0, 10));
     	addSequential(new DistanceDriveStraight(5.0,2.0, true));
     	addSequential(new TurnAbsolute(-180, 200));
@@ -21,14 +32,15 @@ public class TestAuto extends CommandGroup {
     	addSequential(new TurnAbsolute(0, 200));
     	addSequential(new DistanceDriveStraight(5.0,2.0, true));
     	addSequential(new TurnAbsolute(-180, 200));
+    	 */ 	
     	
     	addSequential(new DisableDrivePIDCommand());
-    	//addSequential(new DistanceDriveStraight(5.0,4.0));
-//    	addSequential(new TurnAbsolute(180, 10));
-    	//addSequential(new DistanceDriveStraight(5.0,4.0,true));
-//    	addSequential(new TurnAbsolute(-90, 10));
-    	//addSequential(new DistanceDriveStraight(5.0,4.0, true));
-   	
+    	
+    	
+
+    	
+    	
+    	
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

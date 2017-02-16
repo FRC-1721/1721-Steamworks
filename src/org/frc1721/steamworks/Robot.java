@@ -202,6 +202,7 @@ public class Robot extends IterativeRobot {
 		// Navx stuff
 		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
 		navController.updateSmartDashboard();
+		distanceController.updateSmartDashboard();
 //		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
 //		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
 //		SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());

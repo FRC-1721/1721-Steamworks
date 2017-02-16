@@ -14,19 +14,13 @@ public class TestAuto extends CommandGroup {
  
     	addSequential(new EnableDrivePIDCommand());
     	
-    	addSequential(new TurnAbsolute(-90, 200));
-    	//addSequential(new DistanceDriveStraight(5.0,4.0));
+    	addSequential(new TurnAbsolute(0, 10));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
+    	addSequential(new TurnAbsolute(-180, 200));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
     	addSequential(new TurnAbsolute(0, 200));
-    	
-    	
-    	addSequential(new TurnAbsolute(-90, 200));
-       	addSequential(new TurnAbsolute(0, 200));
-
-    	addSequential(new TurnAbsolute(-90, 200));
-       	addSequential(new TurnAbsolute(0, 200));
-       	
-    	addSequential(new TurnAbsolute(-90, 200));
-       	addSequential(new TurnAbsolute(0, 200));
+    	addSequential(new DistanceDriveStraight(5.0,2.0, true));
+    	addSequential(new TurnAbsolute(-180, 200));
     	
     	addSequential(new DisableDrivePIDCommand());
     	//addSequential(new DistanceDriveStraight(5.0,4.0));

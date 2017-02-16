@@ -67,9 +67,9 @@ public class RobotMap {
 	// Time scale of oscillations when using only P term
 	public static final double navTu = 1.0;
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
-	public static double	navP = 0.6*0.0075;
-	public static double	navI = navP/(0.5*navTu);
-	public static double	navD = navP*navTu/8.0;
+	public static double	navP = 0.45*0.0075;
+	public static double	navI = navP*1.2/navTu;
+	public static double	navD = 0.0*navP*navTu/8.0;
 	public static double	navF = 0.0;
 	
 	/** Rate Controller for the NavX **/

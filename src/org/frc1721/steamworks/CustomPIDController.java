@@ -25,6 +25,11 @@ public class CustomPIDController extends PIDController {
     protected boolean m_onTarget = false;
     protected int m_iterOnTarget = 0;
 	
+    public CustomPIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source, PIDOutput output, double period) {
+    	super(Kp, Ki, Kd, Kf, source, output, period);
+    	
+    }
+    
 	public CustomPIDController(double dtp, double dti, double dtd, double dtf, Encoder dtlEnc, VictorSP dtLeft, double d) {
 		super(dtp, dti, dtd, dtf, dtlEnc, dtLeft, d);
 

@@ -64,11 +64,12 @@ public class RobotMap {
 	public static final byte navUpdateHz = 20;
 	
 	/** NavX PID Controller **/
-	public static final double navPu = 0.6;
-	
-	public static final double	navP = navPu*0.0075,
-								navI = navP/(0.5*navPu),
-								navD = navP*navPu/8.0,
+	// Time scale of oscillations when using only P term
+	public static final double navTu = 1.0;
+	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
+	public static final double	navP = 0.6*0.0075,
+								navI = navP/(0.5*navTu),
+								navD = navP*navTu/8.0,
 								navF = 0.0;
 	
 	/** Rate Controller for the NavX **/

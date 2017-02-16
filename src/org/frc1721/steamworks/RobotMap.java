@@ -66,6 +66,8 @@ public class RobotMap {
 	
 	/** Update Speed (Hz) **/
 	public static final byte navUpdateHz = 20;
+	public static double yawOffset = 0.0;
+	public static double xStart = 0.0, yStart = 0.0;
 	
 	/** NavX PID Controller **/
 	// Time scale of oscillations when using only P term

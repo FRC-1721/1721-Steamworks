@@ -5,6 +5,7 @@ import static java.lang.System.out;
 
 import org.frc1721.steamworks.subsystems.*;
 import org.frc1721.steamworks.commands.TestAuto;
+import org.frc1721.steamworks.PositionEstimator;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -43,6 +44,7 @@ public class Robot extends IterativeRobot {
 	public static CommandGroup autonomousCommand;
 	public static SendableChooser autoChooser;
 	public static DistanceController distanceController;
+	public static PositionEstimator positionEstimator;
 	
 	@Override
 	public void robotInit() {
@@ -79,7 +81,7 @@ public class Robot extends IterativeRobot {
         RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
-
+        positionEstimator = new PositionEstimator();
         
         // Add the drive train last since it depends on robotDrive and navController
 		//Drive System
@@ -151,6 +153,7 @@ public class Robot extends IterativeRobot {
 		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
 		// is started multiple times.
 		RobotMap.navx.zeroYaw();
+		positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
     	autonomousCommand = (CommandGroup) autoChooser.getSelected();
     	//autonomousCommand.addCommands();
@@ -203,6 +206,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
 		navController.updateSmartDashboard();
 		distanceController.updateSmartDashboard();
+		positionEstimator.updateSmartDashboard();
 //		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
 //		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
 //		SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());

@@ -64,7 +64,12 @@ public class RobotMap {
 	public static final byte navUpdateHz = 20;
 	
 	/** NavX PID Controller **/
-	public static final double navP = 0.05, navI = 0.0, navD = 0.0, navF = 0;
+	public static final double navPu = 0.6;
+	
+	public static final double	navP = navPu*0.0075,
+								navI = navP/(0.5*navPu),
+								navD = navP*navPu/8.0,
+								navF = 0.0;
 	
 	/** Rate Controller for the NavX **/
 	public static final double navRateP = 0.0, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
@@ -75,7 +80,7 @@ public class RobotMap {
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;
 	
-	/* Rate Conversion for drive train */
+	/** Rate Conversion for drive train **/
 	public static double driveRateScale = 10.0; // feet per second
 	public static double turnRateScale = 180.0; // Degrees per second
 	

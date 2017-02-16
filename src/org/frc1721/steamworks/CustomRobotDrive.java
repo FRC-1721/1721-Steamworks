@@ -95,9 +95,9 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     	// Replace the differential output with the commanded turn rate from the 
     	// controller.
     	diffOutput = m_turnController.getPIDOutput();
-    	if (Math.abs(diffOutput)< 0.01) {
-    		diffOutput = 0.0;
-    	}
+//    	if (Math.abs(diffOutput)< 0.01) {
+//    		diffOutput = 0.0;
+//    	}
     	leftOutput = limit(avgOutput + diffOutput);
     	rightOutput = limit(avgOutput - diffOutput);
     		

@@ -23,7 +23,7 @@ public class TurnAbsolute extends Command{
 		Robot.navController.reset();
 		Robot.navController.enable();
 		Robot.navController.setSetpoint(m_targetHeading);
-		Robot.navController.setAbsoluteTolerance(5.0);
+		Robot.navController.setAbsoluteTolerance(20.0);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
 		
 	}

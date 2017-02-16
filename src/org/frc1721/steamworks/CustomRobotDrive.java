@@ -89,7 +89,7 @@ public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
     		m_turnController.setSetpoint(0.5*diffOutput*turnRateScale);
     		// if the turn rate is less than 1 deg/sec, zero the output for the controller
     		if (Math.abs(diffOutput) < 0.01) {
-    			//m_turnController.zeroOutput();
+    			m_turnController.zeroOutput();
     		}
     	}
     	// Replace the differential output with the commanded turn rate from the 

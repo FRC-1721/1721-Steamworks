@@ -79,8 +79,10 @@ public class DriveToCoordinates extends Command {
     	} 
     	if (onHeading) {
     		// Update the set points
-    		Robot.navController.setSetpoint(heading);
-    		Robot.distanceController.setSetpointRelative(distance);
+    		if (Math.abs(distance) > 4.0) {
+    			Robot.navController.setSetpoint(heading);
+    			Robot.distanceController.setSetpointRelative(distance);
+    		}
     		double speed = Robot.distanceController.getPIDOutput();
     		Robot.driveTrain.rateDrive(speed,0);
     	}

@@ -328,7 +328,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
             }
         } else {
         	// position control, use traditional PID method, but don't include
-        	// setpoint changes for the damping term. Only accumlate the I term if
+        	// setpoint changes for the damping term. Only accumulate the I term if
         	// we haven't hit max output to prevent integral windup.
         	m_intError += m_error*m_period;
         	newOutput = m_P*m_error + m_I*m_intError - m_D*dxdt;

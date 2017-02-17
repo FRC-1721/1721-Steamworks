@@ -47,7 +47,7 @@ public class DriveTrain extends Subsystem {
 				m_navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				CustomPIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
-				gyroController.setOutputRange(-1.0, 1.0);
+				gyroController.setOutputRange(-0.3, 0.3);
 				DriverStation.reportWarning("GyroMode is heading!", false);
 
 			} else {

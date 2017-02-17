@@ -68,8 +68,8 @@ public class RobotMap {
 	private static final double navTu = 0.5;
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
-	public static double navP = 0.4*0.006;
-	public static double navI = navP/(0.5*navTu)*0.01;
+	public static double navP = 0.6*0.006;
+	public static double navI = navP/(0.5*navTu)*0.01*0.0;
 	public static double navD = navP*navTu/3.0;
 	public static double navF = 0.0;
 

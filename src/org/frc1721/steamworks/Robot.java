@@ -42,10 +42,12 @@ public class Robot extends IterativeRobot {
 	public static NavxController navController;
 	public static LCDController lcdController;
 	public static CommandGroup autonomousCommand;
+	@SuppressWarnings("rawtypes")
 	public static SendableChooser autoChooser;
 	public static DistanceController distanceController;
 	public static PositionEstimator positionEstimator;
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void robotInit() {
 		/* Initialize the Drive Train systems */

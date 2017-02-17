@@ -15,16 +15,19 @@ public class AutoPositionDrive extends CommandGroup {
     	addSequential(new EnableDrivePIDCommand());
     	
     	// First block to try
-    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
-    	addSequential(new DriveToCoordinates(0.0,0.0,2.0));
-    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
-    	addSequential(new DriveToCoordinates(0.0,0.0,2.0));
+//    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
+//    	addSequential(new DriveToCoordinates(0.0,0.0,2.0));
+//    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
+//    	addSequential(new DriveToCoordinates(0.0,0.0,2.0));
     	
     	// Second block to try, should back up
-    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
-    	addSequential(new DriveToCoordinates(0.0,0.0,-2.0));
-    	addSequential(new DriveToCoordinates(10.0,0.0,2.0));
-    	addSequential(new DriveToCoordinates(0.0,0.0,-2.0));
+    	addSequential(new DriveToCoordinates(10.0,-2.0,2.0));
+    	addSequential(new DriveToCoordinates(0.0, -2.0,-2.0));
+    	
+    	addSequential(new DriveToCoordinates(0.0, 0.0,2.0));
+    	addSequential(new DriveToCoordinates(10.0, 0.0,2.0));
+    	addSequential(new DriveToCoordinates(0.0, 0.0,-2.0));
+    	
     	
     	addSequential(new DisableDrivePIDCommand());
     	

@@ -58,7 +58,11 @@ public class RobotMap {
 	/** PID Control Variables **/
 	public static final double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 	// Distance controller
-	public static double distP = 1.0, distI = 0.0, distD = 0.0;
+	public static double distTu = 0.2;
+	public static double distP = 2.0;
+	public static double distI = 0.0*distP*2.0/distTu;
+	public static double distD = distP*distTu/3.0;
+	
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = false,
 								dtrEncL = false; // TODO FIX
@@ -75,7 +79,7 @@ public class RobotMap {
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
 	public static double navP = 0.6*0.006;
-	public static double navI = navP/(0.5*navTu)*0.01*0.0;
+	public static double navI = 0.0*navP/(0.5*navTu);
 	public static double navD = navP*navTu/3.0;
 	public static double navF = 0.0;
 

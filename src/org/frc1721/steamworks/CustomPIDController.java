@@ -3,6 +3,7 @@ package org.frc1721.steamworks;
 import java.util.LinkedList;
 import java.util.TimerTask;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -27,7 +28,10 @@ public class CustomPIDController extends PIDController {
 	
     public CustomPIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source, PIDOutput output, double period) {
     	super(Kp, Ki, Kd, Kf, source, output, period);
-    	
+    	DriverStation.reportWarning(String.format("Before .cancel(): %s", m_controlLoop.toString()), false);
+    	m_controlLoop.cancel();
+    	DriverStation.reportWarning(String.format("After .cancel(): %s", m_controlLoop.toString()), false);
+    	// TODO see what this gives me.
     }
     
 	public CustomPIDController(double dtp, double dti, double dtd, double dtf, Encoder dtlEnc, VictorSP dtLeft, double d) {

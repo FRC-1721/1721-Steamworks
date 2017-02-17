@@ -4,7 +4,7 @@ package org.frc1721.steamworks;
 import static java.lang.System.out;
 
 import org.frc1721.steamworks.subsystems.*;
-import org.frc1721.steamworks.commands.TestAuto;
+import org.frc1721.steamworks.commands.*;
 import org.frc1721.steamworks.PositionEstimator;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -115,6 +115,7 @@ public class Robot extends IterativeRobot {
 		autonomousCommand = new TestAuto();
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("Test", new TestAuto());
+		autoChooser.addObject("PositionDrive", new AutoPositionDrive());
 		SmartDashboard.putData("Auto Chooser", autoChooser); 	    
 	    
 	    

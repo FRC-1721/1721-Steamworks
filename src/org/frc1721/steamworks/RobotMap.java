@@ -1,8 +1,11 @@
 package org.frc1721.steamworks;
 
-import edu.wpi.first.wpilibj.*; 
-import org.frc1721.steamworks.CustomPIDController;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -46,6 +49,9 @@ public class RobotMap {
 	
 	
 	public static I2C lcd;
+	
+	public static NetworkTable cameraTable;
+	
 	
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 	

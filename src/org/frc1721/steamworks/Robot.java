@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
@@ -28,7 +30,6 @@ public class Robot extends IterativeRobot {
 	public static DigitalInput topLimitSwitch;
 	public static DigitalInput bottomLimitSwitch;
 	public static DigitalInput gearLimitSwitch;
-	
 	/** 
 	 * Subsystems List
 	 * In order to create a new subsystem this list must be appended.
@@ -69,6 +70,9 @@ public class Robot extends IterativeRobot {
 		
 
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
+		
+		// Network tables
+		RobotMap.cameraTable = NetworkTable.getTable("myContourReport");
 		
 		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
 		lcdController = new LCDController();
@@ -211,6 +215,10 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
 //		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 				
+		// Camera data
+		RobotMap.cameraTable.getNumberArray("area", );
+		
+		
 		// Controller stuff
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());

@@ -42,6 +42,11 @@ public class DriveToCoordinates extends Command {
     	if (mSpeed < 0 ) {
     		// Driving backwards
     		heading = heading + 180.0;
+    		if (heading > 180.0) {
+    			heading -= 360.0;
+    		} else if (heading < 180.0) {
+    			heading += 360.0;
+    		}
     		distance = -distance;
     	}
     }

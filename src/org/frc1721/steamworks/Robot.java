@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import sun.java2d.loops.MaskFill;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -72,7 +73,7 @@ public class Robot extends IterativeRobot {
 		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
 		
 		// Network tables
-		RobotMap.cameraTable = NetworkTable.getTable("myContourReport");
+		RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
 		
 		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
 		lcdController = new LCDController();
@@ -216,9 +217,14 @@ public class Robot extends IterativeRobot {
 //		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 				
 		// Camera data
-		RobotMap.cameraTable.getNumberArray("area", );
 		
-		
+		SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[]{-1})[0]);
+		SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[]{-1})[0]);
+		SmartDashboard.putNumber("centerX", RobotMap.cameraTable.getNumberArray("centerX", new double[]{-1})[0]);
+		SmartDashboard.putNumber("height", RobotMap.cameraTable.getNumberArray("height", new double[]{-1})[0]);
+		SmartDashboard.putNumber("width", RobotMap.cameraTable.getNumberArray("width", new double[]{-1})[0]);
+		SmartDashboard.putNumber("solidity", RobotMap.cameraTable.getNumberArray("solidity", new double[]{-1})[0]);
+
 		// Controller stuff
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());

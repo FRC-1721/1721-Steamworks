@@ -26,8 +26,9 @@ public class LiftController extends Subsystem {
 	}
 
 	// TODO, make better
+	
 	public void jInput(Joystick operator) {
-		out.printf("'%s.jInput()' ran!", this.getClass().getName());
+		//out.printf("'%s.jInput()' ran!", this.getClass().getName());
 
 		// If the top limit switch is true and the left motor or the gamepad
 		// axis is positive stop the motor!!

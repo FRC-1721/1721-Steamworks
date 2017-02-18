@@ -147,23 +147,25 @@ public class Robot extends IterativeRobot {
 		distanceController = new DistanceController("DistanceController", RobotMap.distP, RobotMap.distI,
 				RobotMap.distD, driveTrain);
 
-//		new Thread(() -> {
-//			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-//			camera.setResolution(640, 480);
-//
-//			CvSink cvSink = CameraServer.getInstance().getVideo();
-//			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-//
-//			Mat source = new Mat();
-//			Mat output = new Mat();
-//
-//			while (!Thread.interrupted()) {
-//				cvSink.grabFrame(source);
-//				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2);
-//				outputStream.putFrame(output);
-//			}
-//		}).start();
-		
+		// new Thread(() -> {
+		// UsbCamera camera =
+		// CameraServer.getInstance().startAutomaticCapture();
+		// camera.setResolution(640, 480);
+		//
+		// CvSink cvSink = CameraServer.getInstance().getVideo();
+		// CvSource outputStream = CameraServer.getInstance().putVideo("Blur",
+		// 640, 480);
+		//
+		// Mat source = new Mat();
+		// Mat output = new Mat();
+		//
+		// while (!Thread.interrupted()) {
+		// cvSink.grabFrame(source);
+		// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2);
+		// outputStream.putFrame(output);
+		// }
+		// }).start();
+
 		CameraServer.getInstance().startAutomaticCapture();
 
 		/** Create the OI **/
@@ -231,12 +233,12 @@ public class Robot extends IterativeRobot {
 		// out.printf("'%s.printSmartDashboard()' Worked.\n",
 		// this.getClass().getName());
 
-		/** Limit switch stuff **/
+		/** Limit Switch Stuff **/
 		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
 		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
 		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
 
-		/** Navx stuff **/
+		/** Navx Stuff **/
 		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());
 		navController.updateSmartDashboard();
 		distanceController.updateSmartDashboard();
@@ -249,7 +251,16 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
 		// SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 
-		/** Controller stuff **/
+		/** Camera Data **/
+
+		SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
+		SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
+		SmartDashboard.putNumber("centerX", RobotMap.cameraTable.getNumberArray("centerX", new double[] { -1 })[0]);
+		SmartDashboard.putNumber("height", RobotMap.cameraTable.getNumberArray("height", new double[] { -1 })[0]);
+		SmartDashboard.putNumber("width", RobotMap.cameraTable.getNumberArray("width", new double[] { -1 })[0]);
+		SmartDashboard.putNumber("solidity", RobotMap.cameraTable.getNumberArray("solidity", new double[] { -1 })[0]);
+
+		/** Controller Stuff **/
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
 
@@ -257,7 +268,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Operator Left Trigger", OI.jOp.getRawAxis(RobotMap.gamepadLTrigger));
 		SmartDashboard.putNumber("Operator Right Trigger", OI.jOp.getRawAxis(RobotMap.gamepadRTrigger));
 
-		/** PID stuff **/
+		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}
 }

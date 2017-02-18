@@ -155,6 +155,8 @@ public class RobotMap {
 	public static final int gamepadLTrigger = 2;
 	public static final int gamepadRTrigger = 3;
 	
+	public static final int redTeam = 0, blueTeam = 1;
+	
 	/** Exit codes for Team1721 **/
 	public static enum roboError {
 	    SUCCESS(0),

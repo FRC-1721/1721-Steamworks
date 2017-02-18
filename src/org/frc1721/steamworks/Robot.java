@@ -74,6 +74,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtlEnc.setDistancePerPulse(RobotMap.lDPP);
 		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
 
+		/** Network Tables **/
+		RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
+
 		/** PID Controllers **/
 		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
 				RobotMap.dtlEnc, RobotMap.dtLeft, 0.01);

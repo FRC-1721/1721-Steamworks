@@ -69,7 +69,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void jInput(Joystick stick) {
-		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist(), true, false);
+		m_robotDrive.arcadeDrive(stick.getY(), -stick.getTwist(), true, false);
 	}
 
 	public void jInput(Joystick left, Joystick right) {

@@ -11,7 +11,7 @@ public class AutoCrossLineStraight extends CommandGroup {
     	// Set the turn scale to lower
     	addSequential(new EnableDrivePIDCommand());
     	addSequential(new TurnAbsolute(0.0, 1));
-    	addSequential(new DistanceDriveStraight(12.0,4.0, true));
+    	addSequential(new DistanceDriveStraight(14.0,4.0, true));
     	// First block to try
 
     }

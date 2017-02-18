@@ -17,7 +17,8 @@ public class LiftUp extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		RobotMap.lLift.set(1.0);
+		if(!Robot.topLimitSwitch.get())
+			RobotMap.lLift.set(1.0);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

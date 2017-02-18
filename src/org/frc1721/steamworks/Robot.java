@@ -1,14 +1,24 @@
 
 package org.frc1721.steamworks;
 
-import static java.lang.System.out;
-
-import org.frc1721.steamworks.subsystems.*;
-import org.frc1721.steamworks.commands.*;
-import org.frc1721.steamworks.PositionEstimator;
+import org.frc1721.steamworks.commands.AutoCrossLineStraight;
+import org.frc1721.steamworks.commands.AutoDepositSteam;
+import org.frc1721.steamworks.commands.TestAuto;
+import org.frc1721.steamworks.subsystems.ClimberController;
+import org.frc1721.steamworks.subsystems.DistanceController;
+import org.frc1721.steamworks.subsystems.DriveTrain;
+import org.frc1721.steamworks.subsystems.LCDController;
+import org.frc1721.steamworks.subsystems.LiftController;
+import org.frc1721.steamworks.subsystems.NavxController;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
@@ -16,11 +26,11 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Robot extends IterativeRobot {
 
@@ -137,24 +147,22 @@ public class Robot extends IterativeRobot {
 		distanceController = new DistanceController("DistanceController", RobotMap.distP, RobotMap.distI,
 				RobotMap.distD, driveTrain);
 
-		// new Thread(() -> {
-		// UsbCamera camera =
-		// CameraServer.getInstance().startAutomaticCapture();
-		// camera.setResolution(640, 480);
-		//
-		// CvSink cvSink = CameraServer.getInstance().getVideo();
-		// CvSource outputStream = CameraServer.getInstance().putVideo("Blur",
-		// 640, 480);
-		//
-		// Mat source = new Mat();
-		// Mat output = new Mat();
-		//
-		// while(!Thread.interrupted()) {
-		// cvSink.grabFrame(source);
-		// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-		// outputStream.putFrame(output);
-		// }
-		// }).start();
+		new Thread(() -> {
+			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+			camera.setResolution(1280, 720);
+
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+
+			Mat source = new Mat();
+			Mat output = new Mat();
+
+			while (!Thread.interrupted()) {
+				cvSink.grabFrame(source);
+				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+				outputStream.putFrame(output);
+			}
+		}).start();
 
 		/** Create the OI **/
 		oi = new OI();

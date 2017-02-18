@@ -19,6 +19,7 @@ public class DriveTrain extends Subsystem {
 	protected GyroMode gyroMode = GyroMode.off;
 	protected double m_rateScale = 10.0;
 	protected double m_turnRateScale = 180.0;
+	protected double m_reversed = 1.0;
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
@@ -65,13 +66,21 @@ public class DriveTrain extends Subsystem {
 	// Drive using a dimensional speed and turn rate
 	public void rateDrive(double forward, double turn) {
 		// Use Arcade drive, but first turn rates into non-dimensional values
-		m_robotDrive.arcadeDrive(forward / m_rateScale, turn / m_turnRateScale, false, false);
+		m_robotDrive.arcadeDrive(m_reversed*forward / m_rateScale, turn / m_turnRateScale, false, false);
 	}
 
 	public void jInput(Joystick stick) {
-		m_robotDrive.arcadeDrive(-stick.getY(), -stick.getTwist(), true, false);
+		m_robotDrive.arcadeDrive(-m_reversed*stick.getY(), -stick.getTwist(), true, false);
 	}
 
+	public boolean setDriveReversed (double reversed) {
+		boolean newDirection = false;
+		if (reversed*m_reversed < 0.0) newDirection = true;
+		m_reversed = reversed;
+		return newDirection;
+	}
+	
+	
 	public void jInput(Joystick left, Joystick right) {
 		m_robotDrive.tankDrive(left, right, false);
 	}

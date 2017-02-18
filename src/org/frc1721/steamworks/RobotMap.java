@@ -148,7 +148,9 @@ public class RobotMap {
 	// Joystick to have PID buttons on, and the buttons to use
 	public static final int pidStick = 0, // Note: This will crash if the Joystick doesn't exist, I recommend only making it controller two (1) if you know you're going to use tank drive
 							pidDisableButton = 1,
-							pidEnableButton = 8;
+							pidEnableButton = 8,
+							forwardDriveButton = 7,
+							reverseDriveButton = 9;
 	
 	public static final int gamepadLYaxis = 1;
 	

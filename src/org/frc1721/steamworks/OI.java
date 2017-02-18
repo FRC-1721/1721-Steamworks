@@ -5,6 +5,7 @@ import static java.lang.System.out;
 
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
+import org.frc1721.steamworks.commands.SetDriveReversed;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -50,6 +51,8 @@ public class OI {
 	// Drive controls
 	public static JoystickButton enableDrivePIDButton;
 	public static JoystickButton disableDrivePIDButton;
+	public static JoystickButton forwardDriveButton;
+	public static JoystickButton reverseDriveButton;
 
 	// Print buttons
 	public static JoystickButton printLimitSwitch;
@@ -149,6 +152,11 @@ public class OI {
 			disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
 			enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
 			enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+			forwardDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.forwardDriveButton);
+			forwardDriveButton.whenPressed(new SetDriveReversed(1.0));
+			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
+			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
+			
 		} catch (RuntimeException e) {
 			DriverStation.reportError(
 					String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n",

@@ -18,16 +18,20 @@ public class AutoDepositSteam extends CommandGroup {
     	addSequential(new SetCoordinates(startX, startY));
     	addSequential(new EnableDrivePIDCommand());
     	addSequential(new TurnAbsolute(0.0, 1));
-    	addSequential(new DistanceDriveStraight(4.0,4.0, true));
+    	addSequential(new DistanceDriveStraight(3.0,4.0, true));
     	// Drive to a point diagonal from hopper
     	addSequential(new DriveToCoordinates(5.0,hopperDir*5.0, 4.0));
-    	addSequential(new TurnAbsolute(hopperDir*135.0, 5));
+    	
     	// Try the above before adding the next steps
     	if (dumpBalls) {
     		// Drive slowly, may want to turn off gyro
+    		addSequential(new TurnAbsolute(hopperDir*135.0, 5));
     		addSequential(new DistanceDriveStraight(3.0, 1.0, true));
     		// Raise the lift
     		addSequential(new LiftUp());
+    	} else {
+    		addSequential(new TurnAbsolute(0, 5));
+    		addSequential(new DistanceDriveStraight(8.0,4.0, true));
     	}
     }
     

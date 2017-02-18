@@ -19,8 +19,8 @@ public class DriveToCoordinates extends Command {
 	protected double mSpeed;
 	protected static final double kRad2Deg = 57.3;
 	protected static final double kDistTol = 1.0;
-	protected static final double angleTol = 5.0;
-	static int kToleranceIterations = 100;
+	protected static final double angleTol = 10.0;
+	static int kToleranceIterations = 5;
 	protected boolean onHeading = false;
 	
     public DriveToCoordinates(double x, double y, double speed) {

@@ -17,8 +17,8 @@ public class AutoDepositSteam extends CommandGroup {
     	// Set the position
     	addSequential(new SetCoordinates(startX, startY));
     	addSequential(new EnableDrivePIDCommand());
-    	addSequential(new TurnAbsolute(0.0, 1));
-    	addSequential(new DistanceDriveStraight(3.0,4.0, true));
+    	addSequential(new TurnAbsolute(0.0, 2));
+    	addSequential(new DistanceDriveStraight(3.0,2.0, true));
     	// Drive to a point diagonal from hopper
     	addSequential(new DriveToCoordinates(5.0,hopperDir*5.0, 4.0));
     	

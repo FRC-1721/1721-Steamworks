@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Brennan
  *
  */
+@SuppressWarnings("unused")
 public class LCDController extends Subsystem {
 
 	@Override

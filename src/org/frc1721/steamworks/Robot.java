@@ -25,18 +25,15 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
-	
-	public static DigitalInput topLimitSwitch;
-	public static DigitalInput bottomLimitSwitch;
-	public static DigitalInput gearLimitSwitch;
-	
-	/** 
-	 * Subsystems List
-	 * In order to create a new subsystem this list must be appended.
-	 * Also note that you must initialize your subsystem in robotInit() 
+
+	/**
+	 * Subsystems List In order to create a new subsystem this list must be
+	 * appended. Also note that you must initialize your subsystem in
+	 * robotInit()
 	 */
-	public static Climber climber;
-	public static Shooter shooter;
+
+	public static ClimberController climber;
+	public static LiftController lift;
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
 	public static NavxController navController;
@@ -46,100 +43,113 @@ public class Robot extends IterativeRobot {
 	public static SendableChooser autoChooser;
 	public static DistanceController distanceController;
 	public static PositionEstimator positionEstimator;
-	
+	public static DigitalInput topLimitSwitch;
+	public static DigitalInput bottomLimitSwitch;
+	public static DigitalInput gearLimitSwitch;
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
+	/** Initialize the Drive Train systems **/
 	public void robotInit() {
-		/* Initialize the Drive Train systems */
-		
-		// Motor Controllers
-		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);
-		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);
+
+		/** Motor Controllers **/
+		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);// .setInverted(true);
+		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);// .setInverted(true);
+		RobotMap.cClimb = new VictorSP(RobotMap.climbPWM);
 		RobotMap.lLift = new VictorSP(RobotMap.liftPWM);
-		//RobotMap.dtRight.setInverted(true);
-		// Encoders
+
+		/** Encoders **/
 		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB, RobotMap.dtrEncL);
 		RobotMap.dtrEnc = new Encoder(RobotMap.dtrEncPA, RobotMap.dtrEncPB, RobotMap.dtlEncR);
-		RobotMap.dtlEnc.setDistancePerPulse(0.0074536447630841);
-		RobotMap.dtrEnc.setDistancePerPulse(0.0074074074074074); // TODO, move to RobotMap
-		
-		// PID Controllers
-		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, 
-				RobotMap.dtD, RobotMap.dtF, RobotMap.dtlEnc, RobotMap.dtLeft, 0.01);
-		RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, 
-				RobotMap.dtD, RobotMap.dtF, RobotMap.dtrEnc, RobotMap.dtRight, 0.01);
+		RobotMap.dtlEnc.setDistancePerPulse(RobotMap.lDPP);
+		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
+
+		/** PID Controllers **/
+		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
+				RobotMap.dtlEnc, RobotMap.dtLeft, 0.01);
+		RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
+				RobotMap.dtrEnc, RobotMap.dtRight, 0.01);
 		RobotMap.dtLeftController.setPIDSourceType(PIDSourceType.kRate);
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
-		
 
-		//robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
-		
+		/** LCD **/
 		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
 		lcdController = new LCDController();
 		lcdController.initLCD(RobotMap.lcd);
 		LCDController.print(RobotMap.lcd, "Hello World", 1);
-		
-		// Gyro and controller
-        RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz); 
-        navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
-        		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
-        positionEstimator = new PositionEstimator();
-        
-        // Add the drive train last since it depends on robotDrive and navController
-		//Drive System
-		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight,
-						RobotMap.dtLeftController, RobotMap.dtRightController,
-						navController);
-		//robotDrive.stopMotors();
-        
-        driveTrain = new DriveTrain(robotDrive, navController);
-        driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-        driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
-        
-		/* Add items to live windows */
-        LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
-		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
-		LiveWindow.addActuator("RightRobotDrive", "Victor", RobotMap.dtRight);
-		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtlEnc);
-	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtrEnc);
-	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
-	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
-	    
-	    topLimitSwitch = new DigitalInput(RobotMap.topLs);
-	    bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs);
-	    gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
-	    
-	    // Add the distance controller
-	    distanceController = new DistanceController("DistanceController", RobotMap.distP, 
-	    		RobotMap.distI, RobotMap.distD, driveTrain);
 
+		/** Limit Switch's **/
+		topLimitSwitch = new DigitalInput(RobotMap.topLs);
+		bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs);
+		gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
+
+		/** Gyro and navController **/
+		RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz);
+		navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
+				RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
+		positionEstimator = new PositionEstimator();
+
+		/** Lift **/
+		lift = new LiftController();
+
+		/** Climber **/
+		climber = new ClimberController();
+
+		/** Robot Drive **/
+		// robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
+		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftController,
+				RobotMap.dtRightController, navController);
+		// robotDrive.stopMotors();
+
+		/** Drive Train **/
+		// Add the drive train last since it depends on robotDrive and
+		driveTrain = new DriveTrain(robotDrive, navController);
+		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
+		driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
+
+		/** Auto Chooser **/
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new TestAuto();
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("Test", new TestAuto());
 		autoChooser.addObject("PositionDrive", new AutoPositionDrive());
-		SmartDashboard.putData("Auto Chooser", autoChooser); 	    
-	    
-	    
-//	    new Thread(() -> {
-//            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-//            camera.setResolution(640, 480);
-//            
-//            CvSink cvSink = CameraServer.getInstance().getVideo();
-//            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-//            
-//            Mat source = new Mat();
-//            Mat output = new Mat();
-//            
-//            while(!Thread.interrupted()) {
-//                cvSink.grabFrame(source);
-//                Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-//                outputStream.putFrame(output);
-//            }
-//        }).start();
-	    
-	    // Create the OI
-	    oi = new OI();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		/** Live Window **/
+		/* Add items to live windows */
+		LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
+		LiveWindow.addActuator("LeftRobotDrive", "Victor", RobotMap.dtLeft);
+		LiveWindow.addActuator("RightRobotDrive", "Victor", RobotMap.dtRight);
+		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtlEnc);
+		LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtrEnc);
+		LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
+		LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);
+
+		/** Distance Controller **/
+		distanceController = new DistanceController("DistanceController", RobotMap.distP, RobotMap.distI,
+				RobotMap.distD, driveTrain);
+
+		// new Thread(() -> {
+		// UsbCamera camera =
+		// CameraServer.getInstance().startAutomaticCapture();
+		// camera.setResolution(640, 480);
+		//
+		// CvSink cvSink = CameraServer.getInstance().getVideo();
+		// CvSource outputStream = CameraServer.getInstance().putVideo("Blur",
+		// 640, 480);
+		//
+		// Mat source = new Mat();
+		// Mat output = new Mat();
+		//
+		// while(!Thread.interrupted()) {
+		// cvSink.grabFrame(source);
+		// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+		// outputStream.putFrame(output);
+		// }
+		// }).start();
+
+		/** Create the OI **/
+		oi = new OI();
 	}
 
 	@Override
@@ -152,34 +162,37 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		robotDrive.enablePID(); // TODO Make enablePID reset gyro so the robot doesn't spin
-		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
-		// is started multiple times.
+		robotDrive.enablePID();
+
+		/*
+		 * Gyro is only reset when the mode changes, so shut the it off then
+		 * back on in case auto is started multiple times.
+		 */
+
 		RobotMap.navx.zeroYaw();
 		positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-    	autonomousCommand = (CommandGroup) autoChooser.getSelected();
-    	//autonomousCommand.addCommands();
-    	autonomousCommand.start();
+		autonomousCommand = (CommandGroup) autoChooser.getSelected();
+		// autonomousCommand.addCommands();
+		autonomousCommand.start();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-        printSmartDashboard();
+		Scheduler.getInstance().run();
 	}
 
 	@Override
 	public void teleopInit() {
 		robotDrive.enablePID();
-		// Gyro is only reset when the  mode changes, so shut the it off then back on in case teleop
-		// is started multiple times.
+		/*
+		 * Gyro is only reset when the mode changes, so shut the it off then
+		 * back on in case teleop is started multiple times.
+		 */
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
-	
-	
 	@Override
 	public void robotPeriodic() {
 		printSmartDashboard();
@@ -190,40 +203,43 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		LiveWindow.run();
 	}
-	
+
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
 	}
-	
-	private void printSmartDashboard()
-	{
-//		out.printf("'%s' Worked.\n", this.getClass().getName());
-		
-		// Limit switch stuff
+
+	private void printSmartDashboard() {
+		// out.printf("'%s.printSmartDashboard()' Worked.\n",
+		// this.getClass().getName());
+
+		/** Limit switch stuff **/
 		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
 		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
 		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
-		
-		// Navx stuff
-		SmartDashboard.putNumber("Yaw",RobotMap.navx.getYaw());
+
+		/** Navx stuff **/
+		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());
 		navController.updateSmartDashboard();
 		distanceController.updateSmartDashboard();
 		positionEstimator.updateSmartDashboard();
-//		SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
-//		SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
-//		SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());
-//		SmartDashboard.putNumber("DisplacementX",RobotMap.navx.getDisplacementX());
-//		SmartDashboard.putNumber("DisplacementY",RobotMap.navx.getDisplacementY());
-//		SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
-//		SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
-				
-		// Controller stuff
+		// SmartDashboard.putNumber("Angle",RobotMap.navx.getAngle());
+		// SmartDashboard.putNumber("CompassHeading",RobotMap.navx.getCompassHeading());
+		// SmartDashboard.putNumber("Altitude",RobotMap.navx.getAltitude());
+		// SmartDashboard.putNumber("DisplacementX",RobotMap.navx.getDisplacementX());
+		// SmartDashboard.putNumber("DisplacementY",RobotMap.navx.getDisplacementY());
+		// SmartDashboard.putNumber("DisplacementZ",RobotMap.navx.getDisplacementZ());
+		// SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
+
+		/** Controller stuff **/
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
-//		SmartDashboard.putNumber("Joystick Two YAxis", OI.jsticks[1].getTwist());
-		
-		// PID stuff
+
+		SmartDashboard.putNumber("Operator LY Axis", OI.jOp.getRawAxis(RobotMap.gamepadLYaxis));
+		SmartDashboard.putNumber("Operator Left Trigger", OI.jOp.getRawAxis(RobotMap.gamepadLTrigger));
+		SmartDashboard.putNumber("Operator Right Trigger", OI.jOp.getRawAxis(RobotMap.gamepadRTrigger));
+
+		/** PID stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 	}
 }

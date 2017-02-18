@@ -22,12 +22,17 @@ public class DriveInTeleop extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-		if (OI.jsticks.length == 1) // TODO Make a robot mode so this looks better
-    		Robot.driveTrain.jInput(OI.jsticks[0]);
-		else if (OI.jsticks.length == 2)
-			Robot.driveTrain.jInput(OI.jsticks[0], OI.jsticks[1]);
-		else
-			out.printf("Tell Zachary to look in '%s.java'\n", this.getClass().getName());
+    	switch(RobotMap.controllerMode) {
+	    	case arcadeMode:
+	    		Robot.driveTrain.jInput(OI.jsticks[0]);
+	    		break;
+	    	case tankMode:
+	    		Robot.driveTrain.jInput(OI.jsticks[0], OI.jsticks[1]);
+	    		break;
+    		default:
+    			out.printf("Tell Zachary to look in '%s.java'\n", this.getClass().getName());
+    			break;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

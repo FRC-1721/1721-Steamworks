@@ -126,11 +126,11 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Steam10Red", new AutoDepositSteam(2.0, -10.0, RobotMap.redTeam, false));
 		autoChooser.addObject("Steam15Red", new AutoDepositSteam(2.0, -15.0, RobotMap.redTeam, false));
 		autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
-		autoChooser.addObject("DepositSteam15Red", new AutoDepositSteam(2.0, -15.0, RobotMap.redTeam, true));
+		autoChooser.addObject("DepositSteam15Red", new AutoDepositSteam(2.0, -13.5, RobotMap.redTeam, true));
 		autoChooser.addObject("Steam10Blue", new AutoDepositSteam(2.0, 10.0, RobotMap.blueTeam, false));
 		autoChooser.addObject("Steam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, false));
 		autoChooser.addObject("DepositSteam10Blue", new AutoDepositSteam(2.0, 9.5, RobotMap.blueTeam, true));
-		autoChooser.addObject("DepositSteam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, true));
+		autoChooser.addObject("DepositSteam15Blue", new AutoDepositSteam(2.0, 13.5, RobotMap.blueTeam, true));
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		/** Live Window **/

@@ -120,4 +120,5 @@ public class NavxController extends CustomPIDSubsystem  {
 	  SmartDashboard.putNumber("NavControllerPIDOutput", pidOut);
 	  SmartDashboard.putNumber("NavControllerAvgError", m_controller.getAvgError());
   }
+  
 }

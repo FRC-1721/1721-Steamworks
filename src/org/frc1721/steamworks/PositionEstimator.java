@@ -30,6 +30,11 @@ public class PositionEstimator {
 	private double encGain = 1.0;
 	private double gyroGain = 0.0;
 	private double deltaT = 0.0;
+	private boolean collisionDetected = false;
+	private float lastAccelX = 0;
+	private float lastAccelY = 0;
+	private static float kCollisionThreshold = 1;
+	private static float maxJerk = 0;
 	
 	public PositionEstimator (double period) {
 
@@ -109,6 +114,7 @@ public class PositionEstimator {
 			  m_resetTimer.reset();
 			  return;
 		  }
+		  detectCollision();
 		  synchronized(this) {
 			  // Treate the gyro heading as gospel
 			  double curHeading = getHeading();
@@ -208,12 +214,34 @@ public class PositionEstimator {
 	    	double distance = Math.sqrt(dx*dx + dy*dy);
 	    	return distance;
 	    }
+	    
+	    private void detectCollision () {
+	      collisionDetected = false;
+	      
+	  	  float accelX = RobotMap.navx.getWorldLinearAccelX();
+	  	  float jerkX = Math.abs(accelX - lastAccelX);
+	  	  lastAccelX = accelX;
+	  	  float accelY = RobotMap.navx.getWorldLinearAccelY();
+	  	  float jerkY = Math.abs(accelY - lastAccelY);
+	  	  lastAccelY = accelY;
+	  	  maxJerk = jerkX;
+	  	  if (jerkY > maxJerk) maxJerk = jerkY;
+	  	  
+	  	  if ( maxJerk > kCollisionThreshold) collisionDetected = true;
+	  	  
+	    }
+	    
+	    public boolean checkCollision () {
+	    	return collisionDetected;
+	    }
+	    
 	    public void updateSmartDashboard(){
 	  	  // Left side
-	      SmartDashboard.putBoolean("PositionEstCalibrating", m_navx.isCalibrating());
+	      //SmartDashboard.putBoolean("PositionEstCalibrating", m_navx.isCalibrating());
 	  	  SmartDashboard.putNumber("PositionEstX", getDisplacementX());
 	  	  SmartDashboard.putNumber("PositionEstY", getDisplacementY());
-	  	  //SmartDashboard.putNumber("PositionEstVelX", getVelocityX());
+	  	  SmartDashboard.putNumber("PositionEstJerk", maxJerk);
+	  	  
 	  	 // SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	 // SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	 // SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  

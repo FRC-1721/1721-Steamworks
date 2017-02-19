@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * This class is designed to handle the case where there is a {@link Subsystem}
@@ -225,7 +226,17 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
   public void setAbsoluteTolerance(double t) {
     m_controller.setAbsoluteTolerance(t);
   }
-
+ 
+  /**
+   * Set the range of valid displacements, needed for rate control that uses
+   * the underlying displacement
+   *$
+   * @param minimumInput - the minimum displacement
+   * @param maximumInput - the maximum displacmement
+   */
+  public synchronized void setDisplacementRange(double minimumInput, double maximumInput) {
+	    m_controller.setDisplacementRange(minimumInput, maximumInput);
+	  }
   /**
    * Set the percentage error which is considered tolerable for use with
    * OnTarget. (Value of 15.0 == 15 percent)

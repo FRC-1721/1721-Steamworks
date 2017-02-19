@@ -1,29 +1,38 @@
 package org.frc1721.steamworks.commands;
 
-import org.frc1721.steamworks.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.frc1721.steamworks.Robot;
+/**
+ *
+ */
+public class SetCoordinates extends Command {
 
-public class IsGear extends Command {
+	protected boolean complete = false;
+	protected double m_X, m_Y;
 
-    public IsGear() {
+
+	
+    public SetCoordinates(double X, double Y) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	m_X = X;
+    	m_Y = Y;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-		SmartDashboard.putBoolean("Limit Switch", Robot.gearLimitSwitch.get());
+    	complete = false;
     }
-    
+
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.positionEstimator.setPosition(m_X, m_Y);
+    	complete = true;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return complete;
     }
 
     // Called once after isFinished returns true

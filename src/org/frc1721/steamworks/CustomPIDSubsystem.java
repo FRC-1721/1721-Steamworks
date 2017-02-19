@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
 
   /** The internal {@link CustomPIDController} */
-  protected CustomPIDController controller;
+  protected CustomPIDController m_controller;
   protected PIDSourceType m_pidSourceType = PIDSourceType.kDisplacement;
   /** An output which calls {@link PIDCommand#usePIDOutput(double)} */
   private PIDOutput output = new PIDOutput() {
@@ -65,7 +65,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    */
   public CustomPIDSubsystem(String name, double p, double i, double d) {
     super(name);
-    controller = new CustomPIDController(p, i, d, source, output);
+    m_controller = new CustomPIDController(p, i, d, source, output);
   }
 
   /**
@@ -80,7 +80,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    */
   public CustomPIDSubsystem(String name, double p, double i, double d, double f) {
     super(name);
-    controller = new CustomPIDController(p, i, d, f, source, output);
+    m_controller = new CustomPIDController(p, i, d, f, source, output);
   }
 
   /**
@@ -96,7 +96,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    */
   public CustomPIDSubsystem(String name, double p, double i, double d, double f, double period) {
     super(name);
-    controller = new CustomPIDController(p, i, d, f, source, output, period);
+    m_controller = new CustomPIDController(p, i, d, f, source, output, period);
   }
 
   /**
@@ -108,7 +108,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param d the derivative value
    */
   public CustomPIDSubsystem(double p, double i, double d) {
-    controller = new CustomPIDController(p, i, d, source, output);
+    m_controller = new CustomPIDController(p, i, d, source, output);
   }
 
   /**
@@ -123,7 +123,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param period the time (in seconds) between calculations
    */
   public CustomPIDSubsystem(double p, double i, double d, double period, double f) {
-    controller = new CustomPIDController(p, i, d, f, source, output, period);
+    m_controller = new CustomPIDController(p, i, d, f, source, output, period);
   }
 
   /**
@@ -137,7 +137,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param period the time (in seconds) between calculations
    */
   public CustomPIDSubsystem(double p, double i, double d, double period) {
-    controller = new CustomPIDController(p, i, d, source, output, period);
+    m_controller = new CustomPIDController(p, i, d, source, output, period);
   }
 
   /**
@@ -147,7 +147,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @return the {@link CustomPIDController} used by this {@link CustomPIDSubsystem}
    */
   public CustomPIDController getPIDController() {
-    return controller;
+    return m_controller;
   }
 
   public PIDSourceType returnPIDSourceType() {
@@ -175,7 +175,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param setpoint the new setpoint
    */
   public void setSetpoint(double setpoint) {
-    controller.setSetpoint(setpoint);
+    m_controller.setSetpoint(setpoint);
   }
 
   /**
@@ -184,7 +184,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @return the setpoint
    */
   public double getSetpoint() {
-    return controller.getSetpoint();
+    return m_controller.getSetpoint();
   }
 
   /**
@@ -203,7 +203,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param maximumInput the maximum value expected from the output
    */
   public void setInputRange(double minimumInput, double maximumInput) {
-    controller.setInputRange(minimumInput, maximumInput);
+    m_controller.setInputRange(minimumInput, maximumInput);
   }
 
   /**
@@ -213,7 +213,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param maximumOutput the maximum value to write to the output
    */
   public void setOutputRange(double minimumOutput, double maximumOutput) {
-    controller.setOutputRange(minimumOutput, maximumOutput);
+    m_controller.setOutputRange(minimumOutput, maximumOutput);
   }
 
   /**
@@ -223,7 +223,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param t the absolute tolerance
    */
   public void setAbsoluteTolerance(double t) {
-    controller.setAbsoluteTolerance(t);
+    m_controller.setAbsoluteTolerance(t);
   }
 
   /**
@@ -233,7 +233,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param p the percent tolerance
    */
   public void setPercentTolerance(double p) {
-    controller.setPercentTolerance(p);
+    m_controller.setPercentTolerance(p);
   }
 
   /**
@@ -244,17 +244,17 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @return true if the error is less than the tolerance
    */
   public boolean onTarget() {
-    return controller.onTarget();
+    return m_controller.onTarget();
   }
 
   
   public void setToleranceBuffer(int bufLength) {
-	  controller.setToleranceBuffer(bufLength);
+	  m_controller.setToleranceBuffer(bufLength);
   }
 
   protected void setPIDSourceType(PIDSourceType pidSourceType) {
 	  m_pidSourceType = pidSourceType;
-	  controller.setPIDSourceType(m_pidSourceType);
+	  m_controller.setPIDSourceType(m_pidSourceType);
   }
   /**
    * Returns the input for the pid loop.
@@ -273,13 +273,16 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
   protected abstract double returnPIDInput();
 
   public boolean onTargetDuringTime () {
-	  if( controller.onTargetDuringTime()) {
+	  if( m_controller.onTargetDuringTime()) {
 		  return true;
 	  } else {
 		  return false;
 	  }
   }  
   
+  public int getIterOnTarget() {
+	  return m_controller.getIterOnTarget();
+  }
   /**
    * Uses the value that the pid loop calculated. The calculated value is the
    * "output" parameter. This method is a good time to set motor values, maybe
@@ -298,14 +301,14 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * Enables the internal {@link CustomPIDController}
    */
   public void enable() {
-    controller.enable();
+    m_controller.enable();
   }
 
   /**
    * Disables the internal {@link CustomPIDController}
    */
   public void disable() {
-    controller.disable();
+    m_controller.disable();
   }
 
   public String getSmartDashboardType() {
@@ -313,7 +316,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
   }
 
   public void initTable(ITable table) {
-    controller.initTable(table);
+    m_controller.initTable(table);
     super.initTable(table);
   }
 }

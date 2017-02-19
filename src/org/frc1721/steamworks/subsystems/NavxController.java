@@ -7,26 +7,17 @@
 
 package org.frc1721.steamworks.subsystems;
 
+import org.frc1721.steamworks.CustomPIDController;
 import org.frc1721.steamworks.CustomPIDSubsystem;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-/**
- * This class is designed to handle the case where there is a {@link Subsystem}
- * which uses a single {@link PIDController} almost constantly (for instance, an
- * elevator which attempts to stay at a constant height).
- *
- * <p>
- * It provides some convenience methods to run an internal {@link PIDController}
- * . It also allows access to the internal {@link PIDController} in order to
- * give total control to the programmer.
- * </p>
- *
- * @author Joe Grinstead
- */
+
+
 public class NavxController extends CustomPIDSubsystem  {
 
   double pidOut = 0.0;
@@ -37,16 +28,6 @@ public class NavxController extends CustomPIDSubsystem  {
   private final double kMinPeriod = 0.01;
   private double gyroRate = 0.0;
 
-
-  /**
-   * Instantiates a {@link NavxController} that will use the given p, i and d
-   * values.
-   *$
-   * @param name the name
-   * @param p the proportional value
-   * @param i the integral value
-   * @param d the derivative value
-   */
   public NavxController(String name, double p, double i, double d, double f, AHRS gyro, PIDSourceType pidSourceType) {
     super(name, p, i, d, f);
     mGyro = gyro;
@@ -57,13 +38,13 @@ public class NavxController extends CustomPIDSubsystem  {
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
 	  super.setPIDSourceType(pidSourceType);
-	  controller.setOutputRange(-0.8, 0.8);
+	  m_controller.setOutputRange(-0.8, 0.8);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
-		  controller.setInputRange(-180.0, 180.0);
-		  controller.setContinuous();
+		  m_controller.setInputRange(-180.0, 180.0);
+		  m_controller.setContinuous(true);
 	  } else {
-		  controller.setInputRange(0.0, 0.0);
-		  controller.setContinuous(false);
+		  m_controller.setInputRange(0.0, 0.0);
+		  m_controller.setContinuous(false);
 		  lastHeading = mGyro.getYaw();
 		  gyroTimer.reset();
 		  gyroRate = 0.0;
@@ -103,8 +84,8 @@ public class NavxController extends CustomPIDSubsystem  {
   }
   
  public void zeroOutput() {
-	controller.zeroOutput();
-	pidOut = 0.0;
+	 m_controller.zeroOutput();
+	 pidOut = 0.0;
  }
   
   public void setSetpointRelative(double deltaSetpoint) {
@@ -118,7 +99,7 @@ public class NavxController extends CustomPIDSubsystem  {
   }
   
   public void reset() {
-  	controller.reset();
+  	m_controller.reset();
   	lastHeading = mGyro.getYaw();
   	gyroTimer.reset();
   	
@@ -135,8 +116,9 @@ public class NavxController extends CustomPIDSubsystem  {
 	  } else {
 		  SmartDashboard.putNumber("NavControllerHeadinRate", gyroRate);
 	  }
-	  SmartDashboard.putNumber("NavControllerPIDSetPoint", controller.getSetpoint());
+	  SmartDashboard.putNumber("NavControllerPIDSetPoint", m_controller.getSetpoint());
 	  SmartDashboard.putNumber("NavControllerPIDOutput", pidOut);
-	  SmartDashboard.putNumber("NavControllerAvgError", controller.getAvgError());
+	  SmartDashboard.putNumber("NavControllerAvgError", m_controller.getAvgError());
   }
+  
 }

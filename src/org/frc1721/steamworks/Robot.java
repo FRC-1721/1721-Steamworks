@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -109,6 +110,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz);
 		navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
 				RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
+		navController.setDisplacementRange(-180.0,180.0);
 		positionEstimator = new PositionEstimator();
 
 		/** Lift **/

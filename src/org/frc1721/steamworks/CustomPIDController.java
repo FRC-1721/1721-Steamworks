@@ -39,8 +39,11 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   private double m_minimumOutput = -1.0; // |minimum output|
   private double m_maximumInput = 0.0; // maximum input - limit setpoint to this
   private double m_minimumInput = 0.0; // minimum input - limit setpoint to this
+  private double m_maximumDisplacement = 0.0; // maximum input for displacement 
+  private double m_minimumDisplacement = 0.0; // minimum input for displacement  
   private boolean m_continuous = false; // do the endpoints wrap around? eg.
-                                        // Absolute encoder
+                                        // Absolute encoder.  For rate control, this only applies
+  										// to the outputs
   private boolean m_enabled = false; // is the pid controller enabled
   private double m_prevError = 0.0; // the prior error (used to compute
                                     // velocity)
@@ -284,21 +287,34 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         m_error = m_setpoint - input;
         
         dsdt = m_setpoint - m_prevSetpoint;
+        // Rate based control still uses position.  For rate control, m_continuous 
+        // should be applied only to the position, not the rate.
         if (m_continuous) {
-          if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
-            if (m_error > 0) {
-              m_error = m_error - m_maximumInput + m_minimumInput;
-            } else {
-              m_error = m_error + m_maximumInput - m_minimumInput;
-            }
-          }
-          if (Math.abs(dsdt) > (m_maximumInput - m_minimumInput) / 2) {
-              if (dsdt > 0) {
-                dsdt = dsdt - m_maximumInput + m_minimumInput;
+          if (rateControl) {
+              if (Math.abs(m_error) > (m_maximumDisplacement - m_minimumDisplacement) / 2) {
+                  if (m_error > 0) {
+                    m_error = m_error - m_maximumDisplacement + m_minimumDisplacement;
+                  } else {
+                    m_error = m_error + m_maximumDisplacement - m_minimumDisplacement;
+                  }
+                }         
               } else {
-                dsdt = dsdt + m_maximumInput - m_minimumInput;
+            	  // Displacement control
+                  if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
+                      if (m_error > 0) {
+                        m_error = m_error - m_maximumInput + m_minimumInput;
+                      } else {
+                        m_error = m_error + m_maximumInput - m_minimumInput;
+                      }
+                    } 
+                  if (Math.abs(dsdt) > (m_maximumInput - m_minimumInput) / 2) {
+                      if (dsdt > 0) {
+                        dsdt = dsdt - m_maximumInput + m_minimumInput;
+                      } else {
+                        dsdt = dsdt + m_maximumInput - m_minimumInput;
+                      }
+                    }  
               }
-            }
         }
         if (rateControl) {
         	dsdt = m_setpoint;
@@ -308,12 +324,22 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         	dsdt = dsdt/m_period;
         	dxdt = (input - m_prevPosition);
         	if (m_continuous) {
-        		if (Math.abs(dxdt) > (m_maximumInput - m_minimumInput) / 2) {
-                    if (dxdt > 0) {
-                        dxdt = dxdt - m_maximumInput + m_minimumInput;
-                      } else {
-                        dxdt = dxdt + m_maximumInput - m_minimumInput;
-                      }
+        		if (rateControl) {
+            		if (Math.abs(dxdt) > (m_maximumDisplacement - m_minimumDisplacement) / 2) {
+                        if (dxdt > 0) {
+                            dxdt = dxdt - m_maximumDisplacement + m_minimumDisplacement;
+                          } else {
+                            dxdt = dxdt + m_maximumDisplacement - m_minimumDisplacement;
+                          }
+            		}
+        		} else {
+            		if (Math.abs(dxdt) > (m_maximumInput - m_minimumInput) / 2) {
+                        if (dxdt > 0) {
+                            dxdt = dxdt - m_maximumInput + m_minimumInput;
+                          } else {
+                            dxdt = dxdt + m_maximumInput - m_minimumInput;
+                          }
+            		}
         		}
         	}
         	dxdt = dxdt/m_period;
@@ -566,6 +592,21 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     setSetpoint(m_setpoint);
   }
 
+  /**
+   * Sets the maximum and minimum values expected from the input and setpoint.
+   *
+   * @param minimumInput the minimum value expected from the input
+   * @param maximumInput the maximum value expected from the input
+   */
+  public synchronized void setDisplacementRange(double minimumInput, double maximumInput) {
+    if (minimumInput > maximumInput) {
+      throw new BoundaryException("Lower bound is greater than upper bound");
+    }
+    m_minimumDisplacement = minimumInput;
+    m_maximumDisplacement = maximumInput;
+    setSetpoint(m_setpoint);
+  }
+  
   /**
    * Sets the minimum and maximum values to write.
    *

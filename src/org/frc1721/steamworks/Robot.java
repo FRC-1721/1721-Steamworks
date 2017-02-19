@@ -10,7 +10,9 @@ import org.frc1721.steamworks.subsystems.DriveTrain;
 import org.frc1721.steamworks.subsystems.LCDController;
 import org.frc1721.steamworks.subsystems.LiftController;
 import org.frc1721.steamworks.subsystems.NavxController;
+import org.frc1721.steamworks.GripPipeline;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -31,6 +33,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
 public class Robot extends IterativeRobot {
 
@@ -56,7 +59,13 @@ public class Robot extends IterativeRobot {
 	public static DigitalInput topLimitSwitch;
 	public static DigitalInput bottomLimitSwitch;
 	public static DigitalInput gearLimitSwitch;
-
+	public static VisionThread visionThread;
+	private final Object imgLock = new Object();
+	public static double visionCenterX1;
+	public static double visionArea1;
+	public static double visionCenterX2;
+	public static double visionArea2;
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	/** Initialize the Drive Train systems **/
@@ -75,7 +84,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
 
 		/** Network Tables **/
-		RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
+		//RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
 
 		/** PID Controllers **/
 		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
@@ -169,8 +178,24 @@ public class Robot extends IterativeRobot {
 		// }
 		// }).start();
 
-		CameraServer.getInstance().startAutomaticCapture();
-
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+		        if (!pipeline.filterContoursOutput().isEmpty()) {
+		            Rect r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+		            synchronized (imgLock) {
+		                visionCenterX1 = r1.x + (r1.width / 2);
+		                visionArea1 = r1.width*r1.height;
+		            }
+		            if (pipeline.filterContoursOutput().size() > 1) {
+		            	Rect r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
+		            	synchronized (imgLock) {
+			                visionCenterX2 = r2.x + (r2.width / 2);
+			                visionArea2 = r2.width*r2.height;
+			            }
+		            }
+		        }
+		    });
+		visionThread.start();
 		/** Create the OI **/
 		oi = new OI();
 	}
@@ -273,5 +298,12 @@ public class Robot extends IterativeRobot {
 
 		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
+		
+		/** Vision Stuff **/
+		SmartDashboard.putNumber("Vision X1", visionCenterX1);
+		SmartDashboard.putNumber("Vision X2", visionCenterX2);
+		SmartDashboard.putNumber("Vision A1", visionArea1);
+		SmartDashboard.putNumber("Vision A2", visionArea2);
+		
 	}
 }

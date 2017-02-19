@@ -1,5 +1,6 @@
 package org.frc1721.steamworks.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,6 +23,10 @@ public class DriveToCoordinates extends Command {
 	protected static final double angleTol = 10.0;
 	static int kToleranceIterations = 5;
 	protected boolean onHeading = false;
+	protected Timer collisionTimer;
+	protected boolean collision = false;
+	protected static double collisionRecoverTime = 0.2;
+	protected static double collisionRecoverSpeed = 2.0;
 	
     public DriveToCoordinates(double x, double y, double speed) {
         // Use requires() here to declare subsystem dependencies
@@ -30,6 +35,7 @@ public class DriveToCoordinates extends Command {
     	mSpeed = speed;
     	targetX = x;
     	targetY = y;
+    	collisionTimer = new Timer();
     }
     
     
@@ -83,8 +89,29 @@ public class DriveToCoordinates extends Command {
     		}
     	} 
     	if (onHeading) {
+    		if (!collision) {
+    			collision = Robot.positionEstimator.checkCollision();
+    			if (collision) {
+    				collisionTimer.start();
+    			}
+    		}
+    		if (collision) {
+    			if (collisionTimer.hasPeriodPassed(collisionRecoverTime)) {
+    				// Start over, finding a heading
+    				onHeading = false;
+    				Robot.driveTrain.stop();
+    				collision = false;
+    				return;
+    			}
+    			// Drive 'backwards' at the recover speed
+    			if (mSpeed > 0) {
+    				Robot.driveTrain.rateDrive(-collisionRecoverSpeed,0);
+    			} else {
+    				Robot.driveTrain.rateDrive(collisionRecoverSpeed,0);
+    			}	
+    		}
     		// Update the set points
-    		if (Math.abs(distance) > 4.0) {
+    		if (Math.abs(distance) > 2.0) {
     			Robot.navController.setSetpoint(heading);
     			Robot.distanceController.setSetpointRelative(distance);
     		}

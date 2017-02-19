@@ -22,7 +22,13 @@ public class TurnAbsolute extends Command{
 		Robot.driveTrain.setGyroMode(GyroMode.heading);
 		Robot.navController.reset();
 		Robot.navController.enable();
-		Robot.navController.setSetpoint(m_targetHeading);
+		double heading = m_targetHeading + RobotMap.yawOffset;
+		if (heading > 180.0) {
+			heading -= 360.0;
+		} else if (heading < -180.0) {
+			heading += 360.0;
+		}
+		Robot.navController.setSetpoint(heading);
 		Robot.navController.setAbsoluteTolerance(10.0);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
 		

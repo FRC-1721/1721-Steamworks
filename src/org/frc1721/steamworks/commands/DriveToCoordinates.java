@@ -19,14 +19,23 @@ public class DriveToCoordinates extends Command {
 	protected double m_startDistance;
 	protected double mSpeed;
 	protected static final double kRad2Deg = 57.3;
-	protected static final double kDistTol = 1.0;
-	protected static final double angleTol = 10.0;
+	protected static double kDistTol = 1.0;
+	protected static double angleTol = 10.0;
 	static int kToleranceIterations = 5;
 	protected boolean onHeading = false;
 	protected Timer collisionTimer;
 	protected boolean collision = false;
 	protected static double collisionRecoverTime = 0.2;
 	protected static double collisionRecoverSpeed = 2.0;
+	
+	
+    public DriveToCoordinates(double x, double y, double speed, double distTol, int toleranceIterations) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	this(x,y,speed);
+    	kDistTol = distTol;
+    	kToleranceIterations = toleranceIterations;
+    }
 	
     public DriveToCoordinates(double x, double y, double speed) {
         // Use requires() here to declare subsystem dependencies
@@ -48,13 +57,13 @@ public class DriveToCoordinates extends Command {
     	if (mSpeed < 0 ) {
     		// Driving backwards
     		heading = heading + 180.0;
-    		if (heading > 180.0) {
-    			heading -= 360.0;
-    		} else if (heading < -180.0) {
-    			heading += 360.0;
-    		}
     		distance = -distance;
     	}
+		if (heading > 180.0) {
+			heading -= 360.0;
+		} else if (heading < -180.0) {
+			heading += 360.0;
+		}
     }
     
 

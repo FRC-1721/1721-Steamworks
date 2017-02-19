@@ -80,12 +80,19 @@ public class RobotMap {
 	public static double yawOffset = 0.0;
 	public static double xStart = 0.0, yStart = 0.0;
 	
+	/** Some field positions **/
+	// Take y = 0 as centerline of field, and x as away from driver team
+	public static double centerStartX = 1.5, centerStartY = 0.0;
+	public static double gearDepositX = 9.5, gearDepositY = 0.0;
+	public static double fieldWidth = 27.0;
+	public static double hopperX = 1.5, hopperY = fieldWidth/2.0 - 1.5;
+	public static double quarterFieldWidth = fieldWidth/4.0;
 	/** NavX PID Controller **/
 	// Time scale of oscillations when using only P term
 	private static final double navTu = 0.5;
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
-	public static double navP = 0.6*0.006;
+	public static double navP = 0.4*0.006;
 	public static double navI = 0.0*navP/(0.5*navTu);
 	public static double navD = navP*navTu/3.0;
 	public static double navF = 0.0;

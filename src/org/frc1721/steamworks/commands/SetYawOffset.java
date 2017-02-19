@@ -2,21 +2,21 @@ package org.frc1721.steamworks.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc1721.steamworks.Robot;
+import org.frc1721.steamworks.RobotMap;
 /**
  *
  */
-public class SetCoordinates extends Command {
+public class SetYawOffset extends Command {
 
 	protected boolean complete = false;
-	protected double m_X, m_Y;
+	protected double m_yawOffset;
 
 
 	
-    public SetCoordinates(double X, double Y) {
+    public SetYawOffset(double yawOffset) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	m_X = X;
-    	m_Y = Y;
+    	m_yawOffset = yawOffset;
     }
 
     // Called just before this Command runs the first time
@@ -26,7 +26,7 @@ public class SetCoordinates extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.positionEstimator.setPosition(m_X, m_Y);
+    	RobotMap.yawOffset = m_yawOffset;
     	complete = true;
     }
 

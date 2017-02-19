@@ -141,7 +141,7 @@ public class RobotMap {
 	public static final String jstick = "Logitech Extreme 3D";
 	
 	// Name the Logitech F310 Gamepad identifies with
-	public static final String gamepad = "Controller (Gamepad F310)";
+	public static final String gamepad = "Gamepad F310 (Controller)";
 	
 	// Number of USB ports to scan
 	/** The Driver Station will now show up to 6 devices in the Setup window.

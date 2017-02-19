@@ -3,24 +3,14 @@ package org.frc1721.steamworks;
 
 import org.frc1721.steamworks.commands.AutoCrossLineStraight;
 import org.frc1721.steamworks.commands.AutoDepositSteam;
+import org.frc1721.steamworks.commands.AutoDepositGear;
 import org.frc1721.steamworks.commands.TestAuto;
-import org.frc1721.steamworks.subsystems.ClimberController;
-import org.frc1721.steamworks.subsystems.DistanceController;
-import org.frc1721.steamworks.subsystems.DriveTrain;
-import org.frc1721.steamworks.subsystems.LCDController;
-import org.frc1721.steamworks.subsystems.LiftController;
-import org.frc1721.steamworks.subsystems.NavxController;
-import org.frc1721.steamworks.GripPipeline;
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
+import org.frc1721.steamworks.subsystems.*;
+
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
@@ -60,12 +50,7 @@ public class Robot extends IterativeRobot {
 	public static DigitalInput topLimitSwitch;
 	public static DigitalInput bottomLimitSwitch;
 	public static DigitalInput gearLimitSwitch;
-	public static VisionThread visionThread;
-	private final Object imgLock = new Object();
-	public static double visionCenterX1;
-	public static double visionArea1;
-	public static double visionCenterX2;
-	public static double visionArea2;
+	public static CameraSystem cameraSystem;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -179,25 +164,8 @@ public class Robot extends IterativeRobot {
 		// outputStream.putFrame(output);
 		// }
 		// }).start();
+		cameraSystem = new CameraSystem();
 
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
-		        if (!pipeline.filterContoursOutput().isEmpty()) {
-		            Rect r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-		            synchronized (imgLock) {
-		                visionCenterX1 = r1.x + (r1.width / 2);
-		                visionArea1 = r1.width*r1.height;
-		            }
-		            if (pipeline.filterContoursOutput().size() > 1) {
-		            	Rect r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
-		            	synchronized (imgLock) {
-			                visionCenterX2 = r2.x + (r2.width / 2);
-			                visionArea2 = r2.width*r2.height;
-			            }
-		            }
-		        }
-		    });
-		visionThread.start();
 		/** Create the OI **/
 		oi = new OI();
 	}
@@ -282,6 +250,7 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 
 		/** Camera Data **/
+		cameraSystem.updateSmartDashboard();
         /*
 		SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
@@ -301,11 +270,7 @@ public class Robot extends IterativeRobot {
 		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
 		
-		/** Vision Stuff **/
-		SmartDashboard.putNumber("Vision X1", visionCenterX1);
-		SmartDashboard.putNumber("Vision X2", visionCenterX2);
-		SmartDashboard.putNumber("Vision A1", visionArea1);
-		SmartDashboard.putNumber("Vision A2", visionArea2);
+
 		
 	}
 }

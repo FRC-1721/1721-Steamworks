@@ -18,7 +18,7 @@ public class LiftDown extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		if(!Robot.topLimitSwitch.get())
-			RobotMap.lLift.set(-0.5);
+			RobotMap.lLift.set(-0.2);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

@@ -280,14 +280,14 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putNumber("Roll",RobotMap.navx.getRoll());
 
 		/** Camera Data **/
-
+        /*
 		SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("centerX", RobotMap.cameraTable.getNumberArray("centerX", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("height", RobotMap.cameraTable.getNumberArray("height", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("width", RobotMap.cameraTable.getNumberArray("width", new double[] { -1 })[0]);
 		SmartDashboard.putNumber("solidity", RobotMap.cameraTable.getNumberArray("solidity", new double[] { -1 })[0]);
-
+		*/
 		/** Controller Stuff **/
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());

@@ -33,8 +33,9 @@ public class PositionEstimator {
 	private boolean collisionDetected = false;
 	private float lastAccelX = 0;
 	private float lastAccelY = 0;
-	private static float kCollisionThreshold = 1;
+	private static float kCollisionThreshold = 0.5F;
 	private static float maxJerk = 0;
+
 	
 	public PositionEstimator (double period) {
 
@@ -226,7 +227,6 @@ public class PositionEstimator {
 	  	  lastAccelY = accelY;
 	  	  maxJerk = jerkX;
 	  	  if (jerkY > maxJerk) maxJerk = jerkY;
-	  	  
 	  	  if ( maxJerk > kCollisionThreshold) collisionDetected = true;
 	  	  
 	    }
@@ -241,7 +241,6 @@ public class PositionEstimator {
 	  	  SmartDashboard.putNumber("PositionEstX", getDisplacementX());
 	  	  SmartDashboard.putNumber("PositionEstY", getDisplacementY());
 	  	  SmartDashboard.putNumber("PositionEstJerk", maxJerk);
-	  	  
 	  	 // SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	 // SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	 // SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  

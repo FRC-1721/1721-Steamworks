@@ -32,7 +32,7 @@ public class CameraSystem extends Subsystem {
 		UsbCamera cam1 = CameraServer.getInstance().startAutomaticCapture(1);
 		cam0.setResolution(320,240);
 		cam0.setFPS(15);
-		cam1.setResolution(320,240);
+		//cam1.setResolution(320,240);
 		cam1.setFPS(15);
 		visionThread = new VisionThread(cam1, new GripPipeline(), pipeline -> {
 		        if (!pipeline.filterContoursOutput().isEmpty()) {
@@ -83,7 +83,7 @@ public class CameraSystem extends Subsystem {
 		SmartDashboard.putNumber("Vision Center1", visionCenterX1);
 		SmartDashboard.putNumber("Vision Center2", visionCenterX2);
 		SmartDashboard.putNumber("Vision W1", visionW1);
-		SmartDashboard.putNumber("Vision H2", visionH1);
+		SmartDashboard.putNumber("Vision H1", visionH1);
 		SmartDashboard.putNumber("Vision W2", visionW2);
 		SmartDashboard.putNumber("Vision H2", visionH2);
 		//SmartDashboard.putNumber("Vision distance", targetDistance);

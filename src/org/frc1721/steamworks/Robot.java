@@ -10,14 +10,9 @@ import org.frc1721.steamworks.subsystems.DriveTrain;
 import org.frc1721.steamworks.subsystems.LCDController;
 import org.frc1721.steamworks.subsystems.LiftController;
 import org.frc1721.steamworks.subsystems.NavxController;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -29,6 +24,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -86,10 +82,10 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
 
 		/** LCD **/
-		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
-		lcdController = new LCDController();
-		lcdController.initLCD(RobotMap.lcd);
-		LCDController.print(RobotMap.lcd, "Hello World", 1);
+//		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
+//		lcdController = new LCDController();
+//		lcdController.initLCD(RobotMap.lcd);
+//		LCDController.print(RobotMap.lcd, "Hello World", 1);
 
 		/** Limit Switch's **/
 		topLimitSwitch = new DigitalInput(RobotMap.topLs);

@@ -19,6 +19,7 @@ public class CameraSystem extends Subsystem {
 	private static double visionArea1;
 	private static double visionCenterX2;
 	private static double visionArea2;
+	private static double visionW1, visionW2, visionH1, visionH2;
 	private static boolean newData = false;
 	private static double targetDistance = 0.0;
 	@Override
@@ -27,17 +28,26 @@ public class CameraSystem extends Subsystem {
 	}
 
 	public CameraSystem () {
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+		UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);
+		UsbCamera cam1 = CameraServer.getInstance().startAutomaticCapture(1);
+		cam0.setResolution(320,240);
+		cam0.setFPS(15);
+		cam1.setResolution(320,240);
+		cam1.setFPS(15);
+		visionThread = new VisionThread(cam1, new GripPipeline(), pipeline -> {
 		        if (!pipeline.filterContoursOutput().isEmpty()) {
 		            Rect r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
 		            synchronized (imgLock) {
+		            	visionW1 = r1.width;
+		            	visionH1 = r1.height;
 		                visionCenterX1 = r1.x + (r1.width / 2);
 		                visionArea1 = r1.width*r1.height;
 		            }
 		            if (pipeline.filterContoursOutput().size() > 1) {
 		            	Rect r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
 		            	synchronized (imgLock) {
+		            		visionW2 = r2.width;
+			            	visionH2 = r2.height;
 			                visionCenterX2 = r2.x + (r2.width / 2);
 			                visionArea2 = r2.width*r2.height;
 			            }
@@ -63,12 +73,19 @@ public class CameraSystem extends Subsystem {
 			targetDistance = 120.0/Math.sqrt(area);
 		}
 	}
+	
+	public double getTargetDistance () {
+		return targetDistance;
+	}
+	
 	public void updateSmartDashboard() {
 		/** Vision Stuff **/
-		SmartDashboard.putNumber("Vision X1", visionCenterX1);
-		SmartDashboard.putNumber("Vision X2", visionCenterX2);
-		SmartDashboard.putNumber("Vision A1", visionArea1);
-		SmartDashboard.putNumber("Vision A2", visionArea2);
-		SmartDashboard.putNumber("Vision distance", targetDistance);
+		SmartDashboard.putNumber("Vision Center1", visionCenterX1);
+		SmartDashboard.putNumber("Vision Center2", visionCenterX2);
+		SmartDashboard.putNumber("Vision W1", visionW1);
+		SmartDashboard.putNumber("Vision H2", visionH1);
+		SmartDashboard.putNumber("Vision W2", visionW2);
+		SmartDashboard.putNumber("Vision H2", visionH2);
+		//SmartDashboard.putNumber("Vision distance", targetDistance);
 	}
 }

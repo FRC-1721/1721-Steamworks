@@ -106,9 +106,9 @@ public class CustomRobotDrive extends RobotDrive {
 
 		if (m_PIDEnabled) {
 			m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * rateScale);
-			// if (Math.abs(leftOutput) < 0.01) m_leftController.zeroOutput();
+			if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
 			m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * rateScale);
-			// if (Math.abs(rightOutput) < 0.01) m_rightController.zeroOutput();
+			if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
 
 			/* Safety updates normally done in super class */
 			// if (this.m_syncGroup != 0) {

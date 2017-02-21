@@ -30,7 +30,6 @@ public class GripPipeline implements VisionPipeline {
 	//Outputs
 	private Mat hsvThresholdOutput = new Mat();
 	private Mat cvErodeOutput = new Mat();
-	private Mat blurOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
@@ -44,9 +43,9 @@ public class GripPipeline implements VisionPipeline {
 	@Override	public void process(Mat source0) {
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = source0;
-		double[] hsvThresholdHue = {37.23021582733813, 51.64685908319184};
-		double[] hsvThresholdSaturation = {73.38129496402877, 255.0};
-		double[] hsvThresholdValue = {0.0, 255.0};
+		double[] hsvThresholdHue = {0.0, 180.0};
+		double[] hsvThresholdSaturation = {0.0, 21.213921901527996};
+		double[] hsvThresholdValue = {245.36870503597123, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:
@@ -58,30 +57,24 @@ public class GripPipeline implements VisionPipeline {
 		Scalar cvErodeBordervalue = new Scalar(-1);
 		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
 
-		// Step Blur0:
-		Mat blurInput = cvErodeOutput;
-		BlurType blurType = BlurType.get("Median Filter");
-		double blurRadius = 16.216216216216214;
-		blur(blurInput, blurType, blurRadius, blurOutput);
-
 		// Step Find_Contours0:
-		Mat findContoursInput = blurOutput;
+		Mat findContoursInput = cvErodeOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
 		double filterContoursMinArea = 100.0;
-		double filterContoursMinPerimeter = 0;
-		double filterContoursMinWidth = 0;
-		double filterContoursMaxWidth = 1000;
-		double filterContoursMinHeight = 0;
-		double filterContoursMaxHeight = 1000;
+		double filterContoursMinPerimeter = 0.0;
+		double filterContoursMinWidth = 0.0;
+		double filterContoursMaxWidth = 1000.0;
+		double filterContoursMinHeight = 0.0;
+		double filterContoursMaxHeight = 1000.0;
 		double[] filterContoursSolidity = {0, 100};
-		double filterContoursMaxVertices = 1000000;
-		double filterContoursMinVertices = 0;
-		double filterContoursMinRatio = 0;
-		double filterContoursMaxRatio = 1000;
+		double filterContoursMaxVertices = 1000000.0;
+		double filterContoursMinVertices = 0.0;
+		double filterContoursMinRatio = 0.0;
+		double filterContoursMaxRatio = 1000.0;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
@@ -100,14 +93,6 @@ public class GripPipeline implements VisionPipeline {
 	 */
 	public Mat cvErodeOutput() {
 		return cvErodeOutput;
-	}
-
-	/**
-	 * This method is a generated getter for the output of a Blur.
-	 * @return Mat output from Blur.
-	 */
-	public Mat blurOutput() {
-		return blurOutput;
 	}
 
 	/**
@@ -165,71 +150,6 @@ public class GripPipeline implements VisionPipeline {
 			borderValue = new Scalar(-1);
 		}
 		Imgproc.erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
-	}
-
-	/**
-	 * An indication of which type of filter to use for a blur.
-	 * Choices are BOX, GAUSSIAN, MEDIAN, and BILATERAL
-	 */
-	enum BlurType{
-		BOX("Box Blur"), GAUSSIAN("Gaussian Blur"), MEDIAN("Median Filter"),
-			BILATERAL("Bilateral Filter");
-
-		private final String label;
-
-		BlurType(String label) {
-			this.label = label;
-		}
-
-		public static BlurType get(String type) {
-			if (BILATERAL.label.equals(type)) {
-				return BILATERAL;
-			}
-			else if (GAUSSIAN.label.equals(type)) {
-			return GAUSSIAN;
-			}
-			else if (MEDIAN.label.equals(type)) {
-				return MEDIAN;
-			}
-			else {
-				return BOX;
-			}
-		}
-
-		@Override
-		public String toString() {
-			return this.label;
-		}
-	}
-
-	/**
-	 * Softens an image using one of several filters.
-	 * @param input The image on which to perform the blur.
-	 * @param type The blurType to perform.
-	 * @param doubleRadius The radius for the blur.
-	 * @param output The image in which to store the output.
-	 */
-	private void blur(Mat input, BlurType type, double doubleRadius,
-		Mat output) {
-		int radius = (int)(doubleRadius + 0.5);
-		int kernelSize;
-		switch(type){
-			case BOX:
-				kernelSize = 2 * radius + 1;
-				Imgproc.blur(input, output, new Size(kernelSize, kernelSize));
-				break;
-			case GAUSSIAN:
-				kernelSize = 6 * radius + 1;
-				Imgproc.GaussianBlur(input,output, new Size(kernelSize, kernelSize), radius);
-				break;
-			case MEDIAN:
-				kernelSize = 2 * radius + 1;
-				Imgproc.medianBlur(input, output, kernelSize);
-				break;
-			case BILATERAL:
-				Imgproc.bilateralFilter(input, output, -1, radius, radius);
-				break;
-		}
 	}
 
 	/**

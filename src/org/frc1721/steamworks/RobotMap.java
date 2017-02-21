@@ -61,12 +61,12 @@ public class RobotMap {
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 	
 	/** PID Control Variables **/
-	public static final double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
+	public static final double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 	// Distance controller
 	public static double distTu = 0.2;
-	public static double distP = 2.0;
+	public static double distP = 0.75;
 	public static double distI = 0.0*distP*2.0/distTu;
-	public static double distD = distP*distTu/3.0;
+	public static double distD = distP*distTu/8.0;
 	
 	/** Encoder reversals **/
 	public static final boolean dtlEncR = false,
@@ -157,8 +157,8 @@ public class RobotMap {
 	public static final int pidStick = 0, // Note: This will crash if the Joystick doesn't exist, I recommend only making it controller two (1) if you know you're going to use tank drive
 							pidDisableButton = 1,
 							pidEnableButton = 8,
-							forwardDriveButton = 7,
-							reverseDriveButton = 11;
+							forwardDriveButton = 6,
+							reverseDriveButton = 4;
 	
 	public static final int gamepadLYaxis = 1;
 	

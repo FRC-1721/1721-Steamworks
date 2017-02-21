@@ -20,7 +20,7 @@ public class DriveToCoordinates extends Command {
 	protected double mSpeed;
 	protected static final double kRad2Deg = 57.3;
 	protected static double kDistTol = 1.0;
-	protected static double angleTol = 10.0;
+	protected static double angleTol = 5.0;
 	static int kToleranceIterations = 5;
 	protected boolean onHeading = false;
 	protected Timer collisionTimer;
@@ -74,7 +74,11 @@ public class DriveToCoordinates extends Command {
     	Robot.driveTrain.setGyroMode(GyroMode.heading);
     	Robot.navController.setSetpoint(heading);
     	Robot.navController.setAbsoluteTolerance(angleTol);
-    	Robot.navController.setToleranceBuffer(kToleranceIterations);
+    	Robot.navController.setToleranceBuffer(5);
+    	Robot.distanceController.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
+    	Robot.distanceController.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
+		Robot.distanceController.setToleranceBuffer(kToleranceIterations);
+		Robot.distanceController.setAbsoluteTolerance(kDistTol);
 
     }
 
@@ -90,16 +94,16 @@ public class DriveToCoordinates extends Command {
     			// Start the distance controller
     			onHeading = true;
     			m_startDistance = Robot.driveTrain.getDistance();
+        		Robot.distanceController.reset();
         		Robot.distanceController.enable();
         		Robot.distanceController.setSetpointRelative(distance);
-        		Robot.distanceController.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
-        		Robot.distanceController.setToleranceBuffer(kToleranceIterations);
-        		Robot.distanceController.setAbsoluteTolerance(1.0);
     		}
     	} 
     	if (onHeading) {
     		if (!collision) {
     			collision = Robot.positionEstimator.checkCollision();
+    			// ToDo Double check this and re-enable
+    			collision = false;
     			if (collision) {
     				collisionTimer.start();
     			}

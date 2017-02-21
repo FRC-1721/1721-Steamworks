@@ -148,8 +148,8 @@ public class OI {
 
 		/** Driver Buttons **/
 		try {
-			disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
-			disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
+			//disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
+			//disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
 			enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
 			enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
 			forwardDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.forwardDriveButton);

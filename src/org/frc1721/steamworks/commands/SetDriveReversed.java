@@ -1,5 +1,6 @@
 package org.frc1721.steamworks.commands;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc1721.steamworks.Robot;
@@ -25,6 +26,11 @@ public class SetDriveReversed extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	newDirection = Robot.driveTrain.setDriveReversed(m_reversed);
+    	if (m_reversed > 0) {
+    		CameraServer.getInstance().startAutomaticCapture(0);
+    	} else {
+    		CameraServer.getInstance().startAutomaticCapture(1);
+    	}
 		newDirectionTimer = new Timer();
 		newDirectionTimer.start();
     }

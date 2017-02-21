@@ -1,10 +1,7 @@
 
 package org.frc1721.steamworks;
 
-import org.frc1721.steamworks.commands.AutoCrossLineStraight;
-import org.frc1721.steamworks.commands.AutoDepositSteam;
-import org.frc1721.steamworks.commands.AutoDepositGear;
-import org.frc1721.steamworks.commands.TestAuto;
+import org.frc1721.steamworks.commands.*;
 import org.frc1721.steamworks.subsystems.*;
 
 
@@ -122,14 +119,17 @@ public class Robot extends IterativeRobot {
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("CrossLineStraight", new AutoCrossLineStraight());
 		// center of robot about 2 feet off wall
-		autoChooser.addObject("Steam10Red", new AutoDepositSteam(2.0, -10.0, RobotMap.redTeam, false));
-		autoChooser.addObject("Steam15Red", new AutoDepositSteam(2.0, -15.0, RobotMap.redTeam, false));
+		autoChooser.addObject("TestVision", new AutoTestVision());
+		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));
+		autoChooser.addObject("AutoGearLeft", new AutoDepositGear(-1.0));
 		autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
-		autoChooser.addObject("DepositSteam15Red", new AutoDepositSteam(2.0, -13.5, RobotMap.redTeam, true));
+		/*
+
 		autoChooser.addObject("Steam10Blue", new AutoDepositSteam(2.0, 10.0, RobotMap.blueTeam, false));
 		autoChooser.addObject("Steam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, false));
 		autoChooser.addObject("DepositSteam10Blue", new AutoDepositSteam(2.0, 9.5, RobotMap.blueTeam, true));
 		autoChooser.addObject("DepositSteam15Blue", new AutoDepositSteam(2.0, 13.5, RobotMap.blueTeam, true));
+		*/
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		/** Live Window **/

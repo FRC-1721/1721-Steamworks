@@ -32,8 +32,8 @@ public class CameraSystem extends Subsystem {
 		UsbCamera cam1 = CameraServer.getInstance().startAutomaticCapture(1);
 		cam0.setResolution(320,240);
 		cam0.setFPS(15);
-		//cam1.setResolution(320,240);
-		cam1.setFPS(15);
+		cam1.setResolution(320,240);
+		cam1.setFPS(10);
 		visionThread = new VisionThread(cam1, new GripPipeline(), pipeline -> {
 		        if (!pipeline.filterContoursOutput().isEmpty()) {
 		            Rect r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));

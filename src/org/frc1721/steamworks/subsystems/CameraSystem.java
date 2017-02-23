@@ -15,44 +15,44 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
 public class CameraSystem extends Subsystem {
 	public static VisionThread visionThread;
 	private final Object imgLock = new Object();
-	private static double visionCenterX1;
-	private static double visionArea1;
-	private static double visionCenterX2;
-	private static double visionArea2;
-	private static double visionW1, visionW2, visionH1, visionH2;
+	private static double visionArea;
+	private static double visionCenter;
+	private static final double gearAR = 2.2, gearARTol = 0.2;
 	private static boolean newData = false;
 	private static double targetDistance = 0.0;
+	private static UsbCamera gearCamera, ballCamera;
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ProcessCameraData ());
 	}
 
 	public CameraSystem () {
-		UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture(0);
-		UsbCamera cam1 = CameraServer.getInstance().startAutomaticCapture(1);
-		cam0.setResolution(320,240);
-		cam0.setFPS(15);
-		cam1.setResolution(320,240);
-		cam1.setFPS(10);
-		visionThread = new VisionThread(cam1, new GripPipeline(), pipeline -> {
-		        if (!pipeline.filterContoursOutput().isEmpty()) {
-		            Rect r1 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
-		            synchronized (imgLock) {
-		            	visionW1 = r1.width;
-		            	visionH1 = r1.height;
-		                visionCenterX1 = r1.x + (r1.width / 2);
-		                visionArea1 = r1.width*r1.height;
+		UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+		UsbCamera gearCamera = CameraServer.getInstance().startAutomaticCapture(1);
+		ballCamera.setResolution(320,240);
+		ballCamera.setFPS(15);
+		gearCamera.setResolution(640,480);
+		gearCamera.setFPS(10);
+		visionThread = new VisionThread(gearCamera, new GripPipeline(), pipeline -> {
+				int n = pipeline.filterContoursOutput().size()
+		        if (n > 1) {
+		        	synchronized (imgLock) {
+		        		// Assume the first two sets of countours are the correct ones
+		        		visionArea = 0.0;
+		        		visionCenter = 0.0;
+		        		// assume the data is good to begin with
+		        		newData = true;
+		        		for (int i=0; i<2; i++) {
+		        			Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
+		        			// Check the aspect ratio is within tolerance
+		        			if (Math.abs(r.height/r.width - gearAR) < gearARTol) {
+		        				visionArea += r.width*r.height;
+		        				visionCenter += r.x;
+		        			} else {
+		        				newData = False;
+		        			}
+		        		}
 		            }
-		            if (pipeline.filterContoursOutput().size() > 1) {
-		            	Rect r2 = Imgproc.boundingRect(pipeline.filterContoursOutput().get(1));
-		            	synchronized (imgLock) {
-		            		visionW2 = r2.width;
-			            	visionH2 = r2.height;
-			                visionCenterX2 = r2.x + (r2.width / 2);
-			                visionArea2 = r2.width*r2.height;
-			            }
-		            }
-		            newData  = true;
 		        }
 		    });
 		visionThread.start();
@@ -68,9 +68,7 @@ public class CameraSystem extends Subsystem {
 	
 	public void processData () {
 		if (newData) {
-			double area = visionArea1;
-			if (visionArea2 > visionArea1) area = visionArea2;
-			targetDistance = 120.0/Math.sqrt(area);
+			// ToDo add stuff here
 		}
 	}
 	
@@ -80,12 +78,8 @@ public class CameraSystem extends Subsystem {
 	
 	public void updateSmartDashboard() {
 		/** Vision Stuff **/
-		SmartDashboard.putNumber("Vision Center1", visionCenterX1);
-		SmartDashboard.putNumber("Vision Center2", visionCenterX2);
-		SmartDashboard.putNumber("Vision W1", visionW1);
-		SmartDashboard.putNumber("Vision H1", visionH1);
-		SmartDashboard.putNumber("Vision W2", visionW2);
-		SmartDashboard.putNumber("Vision H2", visionH2);
+		SmartDashboard.putNumber("Vision Center", visionCenter);
+		SmartDashboard.putNumber("Vision Area", visionArea);
 		//SmartDashboard.putNumber("Vision distance", targetDistance);
 	}
 }

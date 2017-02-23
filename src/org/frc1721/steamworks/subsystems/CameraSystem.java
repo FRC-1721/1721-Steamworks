@@ -13,14 +13,19 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
 
 @SuppressWarnings("unused")
 public class CameraSystem extends Subsystem {
-	public static VisionThread visionThread;
+	public  VisionThread visionThread;
 	private final Object imgLock = new Object();
-	private static double visionArea;
-	private static double visionCenter;
-	private static final double gearAR = 2.2, gearARTol = 0.2;
-	private static boolean newData = false;
-	private static double targetDistance = 0.0;
-	private static UsbCamera gearCamera, ballCamera;
+	private  double visionArea;
+	private  double visionCenter;
+	private  final double gearAR = 2.2, gearARTol = 0.2;
+	public  boolean newData = false;
+	private  double camWidth = 640.0;
+	public  double rawDist, rawAngle, realDist, realAngle;
+	private  double targetDistance = 0.0;
+	private  UsbCamera gearCamera, ballCamera;
+	public  double distM, distC;
+	public  double angleM, angleC;
+	
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new ProcessCameraData ());
@@ -34,7 +39,7 @@ public class CameraSystem extends Subsystem {
 		gearCamera.setResolution(640,480);
 		gearCamera.setFPS(10);
 		visionThread = new VisionThread(gearCamera, new GripPipeline(), pipeline -> {
-				int n = pipeline.filterContoursOutput().size()
+				int n = pipeline.filterContoursOutput().size();
 		        if (n > 1) {
 		        	synchronized (imgLock) {
 		        		// Assume the first two sets of countours are the correct ones
@@ -49,7 +54,7 @@ public class CameraSystem extends Subsystem {
 		        				visionArea += r.width*r.height;
 		        				visionCenter += r.x;
 		        			} else {
-		        				newData = False;
+		        				newData = false;
 		        			}
 		        		}
 		            }
@@ -59,18 +64,30 @@ public class CameraSystem extends Subsystem {
 	}
 	
 	public void stop() {
-		visionThread.suspend();
+		//visionThread.suspend();
 	}
 	
 	public void start() {
-		visionThread.resume();
+		//visionThread.resume();
+		newData = false;
 	}
 	
-	public void processData () {
+	public boolean processData () {
 		if (newData) {
-			// ToDo add stuff here
+			synchronized(this){
+				rawDist = 1.0/Math.sqrt(visionArea);
+				rawAngle = (visionCenter - camWidth)/rawDist;
+				newData = false;
+				realDist = distM*rawDist + distC;
+				realAngle = angleM*rawAngle + angleC;
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
+	
+
 	
 	public double getTargetDistance () {
 		return targetDistance;
@@ -78,8 +95,15 @@ public class CameraSystem extends Subsystem {
 	
 	public void updateSmartDashboard() {
 		/** Vision Stuff **/
-		SmartDashboard.putNumber("Vision Center", visionCenter);
-		SmartDashboard.putNumber("Vision Area", visionArea);
+		SmartDashboard.putNumber("Vision distM", distM);
+		SmartDashboard.putNumber("Vision distC", distC);
+		SmartDashboard.putNumber("Vision angleM", angleM);
+		SmartDashboard.putNumber("Vision angleC", angleC);
+		SmartDashboard.putNumber("Vision realDist", realDist);
+		SmartDashboard.putNumber("Vision realAngle", realAngle);
+		SmartDashboard.putNumber("Vision rawDist", rawDist);
+		SmartDashboard.putNumber("Vision rawAngle", rawAngle);
+		//SmartDashboard.putNumber("Vision Area", visionArea);
 		//SmartDashboard.putNumber("Vision distance", targetDistance);
 	}
 }

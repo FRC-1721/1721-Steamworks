@@ -10,24 +10,21 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCalibrateVision extends CommandGroup {
     public  AutoCalibrateVision(double dir) {
 
-    	// Set the position
-    	addSequential(new SetCoordinates(RobotMap.centerStartX, RobotMap.centerStartY));
+    	// Set the position - use a coordinate system centered on gear drop-off.  Robot center is at -1.5 ft.
+    	double targetX = -1.5;
+    	addSequential(new SetCoordinates(targetX, 0.0));
     	addSequential(new SetYawOffset(180.0));
     	addSequential(new EnableDrivePIDCommand());
-    	double targetX = RobotMap.gearDepositX - 5.0;
+    	targetX -= 1.0; // Move backwards a foot first before taking data
+		addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
+    	addParallel(new CalibrateVision());
+    	for (int i = 0; i < 6; i++){
+    		targetX -= 1.0; // Move backwards in 1 foot increments.
+    		addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
+    		addSequential(new TurnAbsolute(5.0, 5, 2));
+    		addSequential(new TurnAbsolute(-5.0, 5, 2));
+    	}
     	// Drive to a point in line with the gear deposit
-    	addSequential(new DriveToCoordinates(targetX, 0.0, -2.0));
-    	targetX = RobotMap.gearDepositX - 1.0;
-    	// Drive slowly final portion, increase tolerance to give it time on target
-    	addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
-    	addSequential(new DrivePause(1.50));
-    	//addSequential(new DistanceDriveStraight(1.0, 0.5, 0.2));
-    	//addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
-    	//addSequential(new DrivePause(1.5));
-    	addSequential(new DistanceDriveStraight(1.0, 0.5));
-    	addSequential(new DistanceDriveStraight(3.0, 4.0));
-    	double targetY = dir*RobotMap.quarterFieldWidth;
-    	addSequential(new DriveToCoordinates(5.0, targetY, 5.0, 2.0, 2));
-    	addSequential(new DriveToCoordinates(14.0,targetY, 5.0, 2.0, 2));
+    	addSequential(new ProcessCameraData());
     }
 }

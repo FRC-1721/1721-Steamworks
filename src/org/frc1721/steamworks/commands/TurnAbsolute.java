@@ -10,12 +10,18 @@ import org.frc1721.steamworks.CustomRobotDrive.GyroMode;
 public class TurnAbsolute extends Command{
 	double m_targetHeading;
 	protected int kToleranceIterations = 1;
+	protected double kToleranceAngle = 10.0;
 	
 	public TurnAbsolute(double turnAngle, int tolIter) {
 		requires(Robot.driveTrain);
 		kToleranceIterations = tolIter;
 		if (kToleranceIterations <= 1) kToleranceIterations = 2;
 		m_targetHeading =  turnAngle;
+	}
+	
+	public TurnAbsolute(double turnAngle, int tolIter, double tolAngle) {
+		this(turnAngle, tolIter);
+		kToleranceAngle = tolAngle;
 	}
 	
 	protected void initialize() { 
@@ -29,7 +35,7 @@ public class TurnAbsolute extends Command{
 			heading += 360.0;
 		}
 		Robot.navController.setSetpoint(heading);
-		Robot.navController.setAbsoluteTolerance(10.0);
+		Robot.navController.setAbsoluteTolerance(kToleranceAngle);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
 		
 	}

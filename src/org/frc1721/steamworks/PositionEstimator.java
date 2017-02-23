@@ -216,6 +216,14 @@ public class PositionEstimator {
 	    	return distance;
 	    }
 	    
+	    public double getHeadingToPoint(double x, double y, boolean relHeading) {
+	    	double dx = getDisplacementX() - x;
+	    	double dy = getDisplacementY() - y;
+	    	double heading =  Math.toDegrees(Math.atan2(dy, dx));
+	    	if (relHeading) heading -= m_navx.getYaw() + RobotMap.yawOffset;
+	    	return heading;
+	    }
+	    
 	    private void detectCollision () {
 	      collisionDetected = false;
 	      

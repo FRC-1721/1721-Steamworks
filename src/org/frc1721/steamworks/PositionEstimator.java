@@ -12,6 +12,49 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class PositionEstimator {
 
+	public class FieldTarget {
+		public double[] position;
+		public double[] normal;
+		
+		FieldTarget() {
+			position = new double[2];
+			normal = new double[2];
+		}
+		
+		public void set(double X, double Y, double angle) {
+			position[0] = X; position[1] = Y;
+			normal[0] = Math.cos(Math.toRadians(angle));
+			normal[1] = Math.sin(Math.toRadians(angle));
+		}
+		
+	
+		
+		boolean inCone(double X, double Y, double angle) {
+			double[] delX = new double[2];
+			delX[0] = X - position[0];
+			delX[1] = Y - position[1];
+			double dotP = delX[0]*normal[0] + delX[1]*normal[1];
+			// Check if it's on the correct side of the target
+			if (dotP > 0.0) {
+				double dist = Math.sqrt(delX[0]*delX[0] + delX[1]*delX[1]);
+				if (Math.acos(dotP/dist) < Math.toRadians(angle)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public double[] getApproachPoint(double dist) {
+			double[] pt = new double[2];
+			pt[0] = position[0] + normal[0]*dist;
+			pt[1] = position[1] + normal[1]*dist;
+			return pt;
+		}
+		
+	}	
+	
+	private static FieldTarget[] gearTargets;
+	private static FieldTarget curTarget;
 	public static final double kDefaultPeriod = .05;
 	public static final double kGravity = 32.174;
 	// ToDo get actual wheel base
@@ -37,11 +80,19 @@ public class PositionEstimator {
 	private static float maxJerk = 0;
 
 	
+
+	
 	public PositionEstimator (double period) {
 
 		m_ltEncoder = RobotMap.dtlEnc;
 		m_rtEncoder = RobotMap.dtrEnc;
 		m_navx = RobotMap.navx;
+		// Setup gear targets
+		gearTargets = new FieldTarget[3];
+		gearTargets[0].set(RobotMap.cGearDepositX, RobotMap.cGearDepositX, 180.0);
+		gearTargets[1].set(RobotMap.sideGearDepositX, RobotMap.sideGearDepositY, 120.0);
+		gearTargets[2].set(RobotMap.sideGearDepositX, -RobotMap.sideGearDepositY, -120.0);
+		curTarget = gearTargets[0];
 		
 	      m_peLoop = new java.util.Timer();
 	      m_resetTimer = new Timer();
@@ -168,6 +219,22 @@ public class PositionEstimator {
 			  lastHeading = curHeading;
 		  }
 	  }
+	  
+	  // Find the gear target that is in a 30 degree cone
+	  public boolean setBestGearTarget() {
+		  for (int i = 0; i<3; i++) {
+			  if (gearTargets[i].inCone(lastPosEst[0], lastPosEst[1], 30.0)) {
+				  curTarget = gearTargets[i];
+				  return true;
+			  }
+		  }
+		  return false;
+	  }
+	  
+	  public double[] getTargetApproachPoint(double dist) {
+		  return curTarget.getApproachPoint(dist);
+	  }
+	  
 	  public void setPosition(double x, double y) {
 		  lastPosEst[0] = x;
 		  lastPosEst[1] = y;

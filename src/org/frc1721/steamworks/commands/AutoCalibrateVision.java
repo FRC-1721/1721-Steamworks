@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoCalibrateVision extends CommandGroup {
-    public  AutoCalibrateVision(double dir) {
+    public  AutoCalibrateVision() {
 
     	// Set the position - use a coordinate system centered on gear drop-off.  Robot center is at -1.5 ft.
     	double targetX = -1.5;

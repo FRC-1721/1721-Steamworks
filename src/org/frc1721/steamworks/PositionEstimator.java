@@ -89,6 +89,9 @@ public class PositionEstimator {
 		m_navx = RobotMap.navx;
 		// Setup gear targets
 		gearTargets = new FieldTarget[3];
+		for (int i = 0; i < 3; i++) {
+			gearTargets[i] = new FieldTarget();
+		}
 		gearTargets[0].set(RobotMap.cGearDepositX, RobotMap.cGearDepositX, 180.0);
 		gearTargets[1].set(RobotMap.sideGearDepositX, RobotMap.sideGearDepositY, 120.0);
 		gearTargets[2].set(RobotMap.sideGearDepositX, -RobotMap.sideGearDepositY, -120.0);

@@ -101,7 +101,8 @@ public class OI {
 					jsTwo = controller.getPort();
 			}
 
-			if (controller.getName().equals(RobotMap.gamepad)) {
+			if (controller.getName().equals(RobotMap.gamepad) ||
+					controller.getName().equals(RobotMap.gamepad2) ){
 				gpOp = controller.getPort();
 			}
 		}

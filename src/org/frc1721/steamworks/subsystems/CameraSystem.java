@@ -32,10 +32,11 @@ public class CameraSystem extends Subsystem {
 	}
 
 	public CameraSystem () {
-		UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-		UsbCamera gearCamera = CameraServer.getInstance().startAutomaticCapture(1);
-		ballCamera.setResolution(320,240);
-		ballCamera.setFPS(15);
+		// ToDo Redo numbering
+		//UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+		UsbCamera gearCamera = CameraServer.getInstance().startAutomaticCapture(0);
+		/* ballCamera.setResolution(320,240);
+		ballCamera.setFPS(15); */
 		gearCamera.setResolution(640,480);
 		gearCamera.setFPS(10);
 		visionThread = new VisionThread(gearCamera, new GripPipeline(), pipeline -> {

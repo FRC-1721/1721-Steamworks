@@ -113,6 +113,8 @@ public class Robot extends IterativeRobot {
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
 		driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
 
+		cameraSystem = new CameraSystem();
+		
 		/** Auto Chooser **/
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new TestAuto();
@@ -165,7 +167,7 @@ public class Robot extends IterativeRobot {
 		// outputStream.putFrame(output);
 		// }
 		// }).start();
-		cameraSystem = new CameraSystem();
+		
 
 		/** Create the OI **/
 		oi = new OI();

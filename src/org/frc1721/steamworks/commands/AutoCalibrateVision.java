@@ -16,15 +16,19 @@ public class AutoCalibrateVision extends CommandGroup {
     	addSequential(new SetYawOffset(180.0));
     	addSequential(new EnableDrivePIDCommand());
     	targetX -= 1.0; // Move backwards a foot first before taking data
-		addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
+		//addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
+    	addSequential(new DistanceDriveStraight(1.5, 0.2, 0.1));
     	addParallel(new CalibrateVision());
-    	for (int i = 0; i < 6; i++){
+    	for (int i = 0; i < 2; i++){
     		targetX -= 1.0; // Move backwards in 1 foot increments.
-    		addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
-    		addSequential(new TurnAbsolute(5.0, 5, 2));
-    		addSequential(new TurnAbsolute(-5.0, 5, 2));
+    		//addSequential(new DriveToCoordinates(targetX, 0.0, 0.2, 0.1, 5));
+    		addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
+    		//addSequential(new TurnAbsolute(-175.0, 5, 2));
+    		//addSequential(new TurnAbsolute(175.0, 5, 2));
     	}
+    	addParallel(new ProcessCameraData());
+    	addSequential(new DistanceDriveStraight(0.0, 0.0, 2.0));
     	// Drive to a point in line with the gear deposit
-    	addSequential(new ProcessCameraData());
+    	
     }
 }

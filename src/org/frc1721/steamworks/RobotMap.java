@@ -118,8 +118,11 @@ public class RobotMap {
 	 * 	Use the formula '(desired/actual)*current' distance pure pulse to calculate the new DPP
 	 * 	
 	 */
-	public static final double 	lDPP = 0.0074536447630841,
-								rDPP = 0.0074074074074074;
+	//ToDo reset dpps
+	//public static final double 	lDPP = 0.0074536447630841,
+	//							rDPP = 0.0074074074074074;
+	public static final double 	lDPP = 0.0074536447630841*1.26,
+								rDPP = 0.0074074074074074*1.26;
 	
 	/** Rate Controller for the NavX **/
 	public static final double navRateP = 0.0, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;
@@ -144,7 +147,8 @@ public class RobotMap {
 	public static final String jstick = "Logitech Extreme 3D";
 	
 	// Name the Logitech F310 Gamepad identifies with
-	public static final String gamepad = "Gamepad F310 (Controller)";
+	public static final String gamepad = "Gamepad F310 (Controller)",
+			gamepad2 = "Controller (Gamepad F310)";
 	//Gamepad F310 (Controller)
 	//Controller (Gamepad F310)
 	

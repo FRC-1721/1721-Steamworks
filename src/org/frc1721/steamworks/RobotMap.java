@@ -144,12 +144,12 @@ public class RobotMap {
 	public static ControllerMode controllerMode;
 	
 	// Name the Logitech Extreme Pro controllers identify with
-	public static final String jstick = "Logitech Extreme 3D";
+	// Put in order of likelihood to get a hit for faster load times
+	public static final String[] jsticks = {"Logitech Extreme 3D"};
 	
 	// Names the Logitech F310 Gamepad identifies with
+	// Put in order of likelihood to get a hit for faster load times
 	public static final String[] gamepads = {"Gamepad F310 (Controller)", "Controller (Gamepad F310)"};
-	//Gamepad F310 (Controller)
-	//Controller (Gamepad F310)
 	
 	// Number of USB ports to scan
 	/** The Driver Station will now show up to 6 devices in the Setup window.

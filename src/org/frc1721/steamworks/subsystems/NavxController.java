@@ -62,8 +62,7 @@ public class NavxController extends CustomPIDSubsystem  {
 	  //ToDo 
 	  
   	if (m_pidSourceType == PIDSourceType.kDisplacement) {
-  		return 0.0;
-  		//return mGyro.getYaw();
+  		return mGyro.getYaw();
   	} else {
   		double deltaT = gyroTimer.get();
   		if (deltaT > kMinPeriod ) {

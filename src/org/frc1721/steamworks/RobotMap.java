@@ -146,9 +146,8 @@ public class RobotMap {
 	// Name the Logitech Extreme Pro controllers identify with
 	public static final String jstick = "Logitech Extreme 3D";
 	
-	// Name the Logitech F310 Gamepad identifies with
-	public static final String gamepad = "Gamepad F310 (Controller)",
-			gamepad2 = "Controller (Gamepad F310)";
+	// Names the Logitech F310 Gamepad identifies with
+	public static final String[] gamepads = {"Gamepad F310 (Controller)", "Controller (Gamepad F310)"};
 	//Gamepad F310 (Controller)
 	//Controller (Gamepad F310)
 	

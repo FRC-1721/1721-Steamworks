@@ -3,6 +3,7 @@ package org.frc1721.steamworks.commands;
 import org.frc1721.steamworks.Robot;
 import org.frc1721.steamworks.RobotMap;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -52,6 +53,7 @@ public class CalibrateVision extends Command {
 	
 	private static lsqFit distFit;
 	private static lsqFit angleFit;
+	private Timer camTimer;
 	
 	public CalibrateVision() {
         // Use requires() here to declare subsystem dependencies
@@ -59,11 +61,13 @@ public class CalibrateVision extends Command {
 		requires(Robot.cameraSystem);
 		distFit = new lsqFit();
 		angleFit = new lsqFit();
+		camTimer = new Timer();
     }
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		//Robot.cameraSystem.start();
+	  camTimer.start();
 		distFit.reset();
 		angleFit.reset();
 	}
@@ -71,7 +75,9 @@ public class CalibrateVision extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		// Check if there is new data for the vision tracker
+	  Robot.cameraSystem.updateSmartDashboard();
 		if (Robot.cameraSystem.processData()) {
+		 
 			double dist = Robot.positionEstimator.getDistanceFromPoint(0.0,0.0);
 			double relAngle = Robot.positionEstimator.getHeadingToPoint(0.0,0.0, true);
 			distFit.addSample(Robot.cameraSystem.rawDist, dist);
@@ -81,7 +87,8 @@ public class CalibrateVision extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return false;
+	     return false;
+		//return (camTimer.hasPeriodPassed(30.0));
 	}
 
 	// Called once after isFinished returns true

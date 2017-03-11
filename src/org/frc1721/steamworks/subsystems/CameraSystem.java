@@ -13,98 +13,112 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
 
 @SuppressWarnings("unused")
 public class CameraSystem extends Subsystem {
-	public  VisionThread visionThread;
-	private final Object imgLock = new Object();
-	private  double visionArea;
-	private  double visionCenter;
-	private  final double gearAR = 2.2, gearARTol = 0.2;
-	public  boolean newData = false;
-	private  double camWidth = 640.0;
-	public  double rawDist, rawAngle, realDist, realAngle;
-	private  double targetDistance = 0.0;
-	private  UsbCamera gearCamera, ballCamera;
-	public  double distM, distC;
-	public  double angleM, angleC;
-	
-	@Override
-	protected void initDefaultCommand() {
-		setDefaultCommand(new ProcessCameraData ());
-	}
+  public VisionThread visionThread;
+  private final Object imgLock = new Object();
+  private double visionArea;
+  private double visionCenter;
+  private final double gearAR = 2.2, gearARTol = 0.3;
+  public boolean newData = false;
+  private double camWidth = 640.0;
+  public double rawDist, rawAngle, realDist, realAngle;
+  private double targetDistance = 0.0;
+  private UsbCamera gearCamera, ballCamera;
+  public double distM = 143.02445924894053, distC = 1.2921405672920312;
+  public double angleM = -0.034640498420080774, angleC = 451.00515056116376;
 
-	public CameraSystem () {
-		// ToDo Redo numbering
-		//UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-		UsbCamera gearCamera = CameraServer.getInstance().startAutomaticCapture(0);
-		/* ballCamera.setResolution(320,240);
-		ballCamera.setFPS(15); */
-		gearCamera.setResolution(640,480);
-		gearCamera.setFPS(10);
-		visionThread = new VisionThread(gearCamera, new GripPipeline(), pipeline -> {
-				int n = pipeline.filterContoursOutput().size();
-		        if (n > 1) {
-		        	synchronized (imgLock) {
-		        		// Assume the first two sets of countours are the correct ones
-		        		visionArea = 0.0;
-		        		visionCenter = 0.0;
-		        		// assume the data is good to begin with
-		        		newData = true;
-		        		for (int i=0; i<2; i++) {
-		        			Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(i));
-		        			// Check the aspect ratio is within tolerance
-		        			if (Math.abs(r.height/r.width - gearAR) < gearARTol) {
-		        				visionArea += r.width*r.height;
-		        				visionCenter += r.x;
-		        			} else {
-		        				newData = false;
-		        			}
-		        		}
-		            }
-		        }
-		    });
-		visionThread.start();
-	}
-	
-	public void stop() {
-		//visionThread.suspend();
-	}
-	
-	public void start() {
-		//visionThread.resume();
-		newData = false;
-	}
-	
-	public boolean processData () {
-		if (newData) {
-			synchronized(this){
-				rawDist = 1.0/Math.sqrt(visionArea);
-				rawAngle = (visionCenter - camWidth)/rawDist;
-				newData = false;
-				realDist = distM*rawDist + distC;
-				realAngle = angleM*rawAngle + angleC;
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+  @Override
+  protected void initDefaultCommand() {
+    setDefaultCommand(new ProcessCameraData());
+  }
 
-	
-	public double getTargetDistance () {
-		return targetDistance;
-	}
-	
-	public void updateSmartDashboard() {
-		/** Vision Stuff **/
-		SmartDashboard.putNumber("Vision distM", distM);
-		SmartDashboard.putNumber("Vision distC", distC);
-		SmartDashboard.putNumber("Vision angleM", angleM);
-		SmartDashboard.putNumber("Vision angleC", angleC);
-		SmartDashboard.putNumber("Vision realDist", realDist);
-		SmartDashboard.putNumber("Vision realAngle", realAngle);
-		SmartDashboard.putNumber("Vision rawDist", rawDist);
-		SmartDashboard.putNumber("Vision rawAngle", rawAngle);
-		//SmartDashboard.putNumber("Vision Area", visionArea);
-		//SmartDashboard.putNumber("Vision distance", targetDistance);
-	}
+  public CameraSystem() {
+    // ToDo Redo numbering
+    // UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+    UsbCamera gearCamera = CameraServer.getInstance().startAutomaticCapture(0);
+    /*
+     * ballCamera.setResolution(320,240); ballCamera.setFPS(15);
+     */
+    gearCamera.setResolution(640, 480);
+    gearCamera.setFPS(10);
+    visionThread =
+        new VisionThread(gearCamera, new GripPipeline(), pipeline -> {
+          int n = pipeline.filterContoursOutput().size();
+          
+          if (n > 1) {
+
+            synchronized (imgLock) {
+              double tmpArea = 0.0;
+              double tmpCenter = 0.0;
+              int nSamples = 0;
+              // Assume the first two sets of countours are the correct ones
+
+              // assume the data is good to begin with
+              for (int i = 0; i < n; i++) {
+                Rect r = Imgproc
+                    .boundingRect(pipeline.filterContoursOutput().get(i));
+                // Check the aspect ratio is within tolerance
+                if (Math.abs(r.height / r.width - gearAR) < gearARTol) {
+                  tmpArea += r.width * r.height;
+                  tmpCenter += r.x;
+                  nSamples += 1;
+                }  
+              }
+              
+              if (nSamples == 2) {
+                newData = true;
+                visionArea = tmpArea;
+                visionCenter = tmpCenter;
+              }
+
+            }
+          }
+
+
+        });
+    visionThread.start();
+  }
+
+  public void stop() {
+    // visionThread.suspend();
+  }
+
+  public void start() {
+    // visionThread.resume();
+    newData = false;
+  }
+
+  public boolean processData() {
+    if (newData) {
+      synchronized (this) {
+        rawDist = 1.0 / Math.sqrt(visionArea);
+        rawAngle = (visionCenter - camWidth) / rawDist;
+        newData = false;
+        realDist = distM * rawDist + distC;
+        realAngle = angleM * rawAngle + angleC;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+
+  public double getTargetDistance() {
+    return targetDistance;
+  }
+
+  public void updateSmartDashboard() {
+    /** Vision Stuff **/
+    SmartDashboard.putNumber("Vision distM", distM);
+    SmartDashboard.putNumber("Vision distC", distC);
+    SmartDashboard.putNumber("Vision angleM", angleM);
+    SmartDashboard.putNumber("Vision angleC", angleC);
+    SmartDashboard.putNumber("Vision realDist", realDist);
+    SmartDashboard.putNumber("Vision realAngle", realAngle);
+    SmartDashboard.putNumber("Vision rawDist", rawDist);
+    SmartDashboard.putNumber("Vision rawAngle", rawAngle);
+    SmartDashboard.putNumber("Vision Area", visionArea);
+    SmartDashboard.putNumber("Vision Center", visionCenter);
+  }
 }

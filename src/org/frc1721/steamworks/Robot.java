@@ -179,6 +179,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+	  //cameraSystem.processData();
 	}
 
 	@Override
@@ -201,6 +202,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		//printSmartDashboard();
 	}
 
 	@Override
@@ -216,7 +218,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotPeriodic() {
+	 // cameraSystem.processData();
 		printSmartDashboard();
+		
 	}
 
 	@Override

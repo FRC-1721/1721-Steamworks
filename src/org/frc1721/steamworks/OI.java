@@ -95,8 +95,8 @@ public class OI {
 
       Joystick controller = new Joystick(i);
 
-      for (int j = 0; j < jsticks.length; j++) {
-        if (controller.getName().equals(RobotMap.jsticks[j])) {
+//      for (int j = 0; j < jsticks.length; j++) {
+        if (controller.getName().equals(RobotMap.jsticks[0])) {
           if (jsOne == -1) {
             jsOne = controller.getPort();
           } else {
@@ -105,7 +105,7 @@ public class OI {
             break;
           }
         }
-      }
+//      }
 
       for (int j = 0; j < RobotMap.gamepads.length; j++) {
         if (controller.getName().equalsIgnoreCase(RobotMap.gamepads[j])) {

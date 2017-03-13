@@ -19,16 +19,16 @@ class GripPipeline:
         self.resize_image_output = None
 
         self.__hsv_threshold_input = self.resize_image_output
-        self.__hsv_threshold_hue = [33.99280575539568, 64.8122866894198]
+        self.__hsv_threshold_hue = [40, 50.0]
         self.__hsv_threshold_saturation = [0.0, 39.59897610921501]
-        self.__hsv_threshold_value = [224.73021582733816, 255.0]
+        self.__hsv_threshold_value = [180, 255.0]
 
         self.hsv_threshold_output = None
 
         self.__cv_erode_src = self.hsv_threshold_output
         self.__cv_erode_kernel = None
         self.__cv_erode_anchor = (-1, -1)
-        self.__cv_erode_iterations = 1.0
+        self.__cv_erode_iterations = 0.0
         self.__cv_erode_bordertype = cv2.BORDER_CONSTANT
         self.__cv_erode_bordervalue = (-1)
 
@@ -46,7 +46,7 @@ class GripPipeline:
         self.__filter_contours_max_width = 1000.0
         self.__filter_contours_min_height = 0.0
         self.__filter_contours_max_height = 1000.0
-        self.__filter_contours_solidity = [0, 100]
+        self.__filter_contours_solidity = [75, 100]
         self.__filter_contours_max_vertices = 1000000.0
         self.__filter_contours_min_vertices = 0.0
         self.__filter_contours_min_ratio = 0.0
@@ -56,13 +56,14 @@ class GripPipeline:
 
 
         self.__cv_rectangle_pt1 = (0, 0)
-        self.__cv_rectangle_pt2 = (0, 0)
+        self.__cv_rectangle_pt2 = (10, 0)
         self.__cv_rectangle_color = (0.0, 0.0, 0.0, 0.0)
         self.__cv_rectangle_thickness = 0
-        self.__cv_rectangle_linetype = cv2.LINE_8
+        #self.__cv_rectangle_linetype = cv2.LINE_8
         self.__cv_rectangle_shift = 0
 
         self.cv_rectangle_output = None
+
 
 
     def process(self, source0):
@@ -87,11 +88,16 @@ class GripPipeline:
 
         # Step Filter_Contours0:
         self.__filter_contours_contours = self.find_contours_output
-        (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, self.__filter_contours_min_area, self.__filter_contours_min_perimeter, self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
-
+        (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, 
+                                                               self.__filter_contours_min_area,
+                                                                self.__filter_contours_min_perimeter,
+                                                                 self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
+        
+            
         # Step CV_rectangle0:
         self.__cv_rectangle_src = source0
-        (self.cv_rectangle_output) = self.__cv_rectangle(self.__cv_rectangle_src, self.__cv_rectangle_pt1, self.__cv_rectangle_pt2, self.__cv_rectangle_color, self.__cv_rectangle_thickness, self.__cv_rectangle_linetype, self.__cv_rectangle_shift)
+
+
 
 
     @staticmethod
@@ -150,7 +156,7 @@ class GripPipeline:
         else:
             mode = cv2.RETR_LIST
         method = cv2.CHAIN_APPROX_SIMPLE
-        im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
+        contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
         return contours
 
     @staticmethod

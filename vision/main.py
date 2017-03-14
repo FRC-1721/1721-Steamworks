@@ -20,7 +20,8 @@ from imutils.video import FPS
 import imutils
 import Queue
 from networktables import NetworkTables
-NetworkTables.initialize(server='192.168.1.57')
+NetworkTables.setTeam(1721)
+NetworkTables.initialize()
 BUF_SIZE=8
 q = Queue.Queue(BUF_SIZE)
 qOut = Queue.Queue(BUF_SIZE)    
@@ -242,7 +243,7 @@ def main():
     else:
         cs = CameraSystem()
     try:
-        server = ThreadedHTTPServer(('192.168.1.59', 8080), MyHandler)
+        server = ThreadedHTTPServer(('raspberrypi.local', 8080), MyHandler)
         print 'started httpserver...'
         server.serve_forever()
     except KeyboardInterrupt:

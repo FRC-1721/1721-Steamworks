@@ -107,8 +107,8 @@ public class RobotMap {
 	 * 
 	 * 1.
 	 * 	Check Directions of the motors and the encoders.
-	 * 		left motor should move forward with a positive value, and the left encoder should grow.
-	 * 		right motor should move backwards with a positive value, and the right encoder should shrink.
+	 * 		left motor should move forward with a positive value, and the left encoder should grow (+).
+	 * 		right motor should move backwards with a positive value, and the right encoder should grow (+).
 	 * 2.
 	 * 	Put robot in test mode in Driver Station, move robot forward a few feet.
 	 * 3.
@@ -123,6 +123,9 @@ public class RobotMap {
 	//							rDPP = 0.0074074074074074;
 	public static final double 	lDPP = 0.0074536447630841*1.26,
 								rDPP = 0.0074074074074074*1.26;
+	
+	// Whether we are using a raspberry pi for vision processing
+	public static final boolean visionPi = true;
 	
 	/** Rate Controller for the NavX **/
 	public static final double navRateP = 0.0, navRateI = 0.0, navRateD = 0.0, navRateF = 0.001;

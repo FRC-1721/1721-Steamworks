@@ -51,6 +51,15 @@ public class PositionEstimator {
 			return pt;
 		}
 		
+        public double[] getPositionFromHeading(double dist, double heading) {
+          
+          double[] pt = new double[2];
+          double rAngle = Math.toRadians(heading + 180.0);
+          pt[0] = position[0] + Math.cos(rAngle)*dist;
+          pt[1] = position[1] + Math.sin(rAngle)*dist;
+          return pt;
+      }		
+		
 	}	
 	
 	private static FieldTarget[] gearTargets;
@@ -292,6 +301,15 @@ public class PositionEstimator {
 	    	double heading =  Math.toDegrees(Math.atan2(dy, dx));
 	    	if (relHeading) heading -= m_navx.getYaw() + RobotMap.yawOffset;
 	    	return heading;
+	    }
+	    
+	    public void updatePositionFromVision(double dist, double heading) {
+	      setBestGearTarget();
+	      double[] newPosition = curTarget.getPositionFromHeading(dist, heading);
+	      // Only take 10% of the correction due to sensor error
+	      lastPosEst[0] = lastPosEst[0] + 0.1*(newPosition[0] - lastPosEst[0]);
+	      lastPosEst[1] = lastPosEst[1] + 0.1*(newPosition[1] - lastPosEst[1]);
+	        
 	    }
 	    
 	    private void detectCollision () {

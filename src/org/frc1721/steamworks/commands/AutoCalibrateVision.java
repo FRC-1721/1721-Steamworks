@@ -12,8 +12,8 @@ public class AutoCalibrateVision extends CommandGroup {
 
     // Set the position - use a coordinate system centered on gear drop-off. Robot center is at -1.5
     // ft.
-    double targetX = -1.5;
-    addSequential(new SetCoordinates(targetX, 0.0));
+    double targetX = RobotMap.centerStartX - 1.5;
+    addSequential(new SetCoordinates(targetX, RobotMap.centerStartY));
     addSequential(new SetYawOffset(180.0));
     addSequential(new EnableDrivePIDCommand());
     targetX -= 1.0; // Move backwards a foot first before taking data

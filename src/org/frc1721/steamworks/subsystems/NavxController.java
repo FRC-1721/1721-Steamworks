@@ -60,7 +60,6 @@ public class NavxController extends CustomPIDSubsystem  {
       // Return your input value for the PID loop
       // e.g. a sensor, like a potentiometer:
       // yourPot.getAverageVoltage() / kYourMaxVoltage;
-	  //ToDo 
 	  
   	if (m_pidSourceType == PIDSourceType.kDisplacement) {
   		return mGyro.getYaw();

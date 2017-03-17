@@ -18,6 +18,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 // TODO CLEAN ALL THE THINGS UP
 public class RobotMap {
 	
+    // Variables to change Robot
+   public static boolean practiceBot = false;
+  
 	// --------- DRIVE TRAIN ----------
 	
 	/** VictorSPs for drive (left, right) **/
@@ -118,11 +121,14 @@ public class RobotMap {
 	 * 	Use the formula '(desired/actual)*current' distance pure pulse to calculate the new DPP
 	 * 	
 	 */
-	//ToDo reset dpps
-	//public static final double 	lDPP = 0.0074536447630841,
-	//							rDPP = 0.0074074074074074;
-	public static final double 	lDPP = 0.0074536447630841*1.26,
-								rDPP = 0.0074074074074074*1.26;
+	
+    public static double rDPP =  0.0074536447630841;
+	public static double lDPP =  0.0074536447630841;
+
+	/* Practice bot parameters
+	  lDPP = lDPP*1.26;
+	  rDPP = rDPP*1.26;
+	*/
 	
 	// Whether we are using a raspberry pi for vision processing
 	public static final boolean visionPi = true;

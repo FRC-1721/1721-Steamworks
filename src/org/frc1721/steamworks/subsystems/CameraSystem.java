@@ -35,9 +35,12 @@ public class CameraSystem extends Subsystem {
   }
 
   public CameraSystem() {
-    // ToDo Redo numbering
-    // UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-    // ballCamera.setResolution(320,240); ballCamera.setFPS(15);
+    
+    if (! RobotMap.practiceBot) {
+      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
+    }
+    
     if (!RobotMap.visionPi) {
       UsbCamera gearCamera =
           CameraServer.getInstance().startAutomaticCapture(0);

@@ -20,8 +20,11 @@ public class ProcessCameraData extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+	    if(!Robot.cameraSystem.calibrated) return;
+	    
 		if (Robot.cameraSystem.processData()) {
-		  double headingToTarget = Robot.navController.getHeading(); //+ Robot.cameraSystem.realAngle;
+		  double headingToTarget = Robot.navController.getHeading() + 
+		      Robot.cameraSystem.realAngle + 180.0; // add 180.0 since camera is on the back
 		  Robot.positionEstimator.updatePositionFromVision(Robot.cameraSystem.realDist, headingToTarget);
 		}
 	}

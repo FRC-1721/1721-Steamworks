@@ -20,11 +20,11 @@ from imutils.video import FPS
 import imutils
 import Queue
 from networktables import NetworkTables
-NetworkTables.setTeam(1721)
-NetworkTables.initialize()
-BUF_SIZE=8
+#NetworkTables.setTeam(1721)
+NetworkTables.initialize(server='roboRIO-1721-FRC.local')
+BUF_SIZE=6
 q = Queue.Queue(BUF_SIZE)
-qOut = Queue.Queue(BUF_SIZE)    
+qOut = Queue.Queue(2)    
 visionSample = 0
 
         
@@ -91,16 +91,20 @@ class RobotGripPipeline(GripPipeline):
         return frame 
          
     def publishNT(self, areaTot, center):
-        pass
         global visionSample
         visionSample+=1
-        rawDist = 1.0/np.sqrt(areaTot)
+        
+        rawDist = 25.0/np.sqrt(float(areaTot))
+        rawAngle = 10.0*(float(center)/640.0 - 1.0)
         if self.sd is None:
             self.sd = NetworkTables.getTable('SmartDashboard')
         if self.sd is not None:
-            self.sd.putNumber('visionRawDist',areaTot )
-            self.sd.putNumber('visionRawAngle',center)
-            self.sd.putNumber('visionSample',visionSample)
+            try:
+                self.sd.putNumber('visionRawDist',rawDist )
+                self.sd.putNumber('visionRawAngle',rawAngle)
+                self.sd.putNumber('visionSample',visionSample)
+            except:
+                print('unable to publish data')
         
         
 class ProducerThread(threading.Thread):
@@ -116,7 +120,7 @@ class ProducerThread(threading.Thread):
                 frame = self.cam.read()
                 q.put(frame)
                 self.fps.update()
-            sleep(0.01)
+            sleep(0.03) # For roughly 30 fps
         
         return
 
@@ -195,13 +199,13 @@ class MyHandler(BaseHTTPRequestHandler):
                     if not qOut.empty():
                         img = qOut.get() 
                         rv, cv2mat=cv2.imencode(".jpg",img, [cv2.IMWRITE_JPEG_QUALITY, cameraQuality])
-                        JpegData=cv2mat.tobytes()
+                        JpegData=cv2mat.tostring()
                         self.wfile.write("--aaboundary\r\n")
                         self.wfile.write("Content-Type: image/jpeg\r\n")
                         self.wfile.write("Content-length: "+str(len(JpegData))+"\r\n\r\n" )
                         self.wfile.write(JpegData)
                         self.wfile.write("\r\n\r\n\r\n")
-                    time.sleep(0.05)
+                    time.sleep(0.05) # Roughtly controls fps of mjpeg server
                 return
             if self.path.endswith(".jpeg"):
                 f = open(curdir + sep + self.path)
@@ -248,9 +252,11 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         print '^C received, shutting down server'
+        cs.wrapup()
+        sleep(0.1) #Allow threads to stop
         server.socket.close()  
-    cs.loop()
-    cs.wrapup()
+    #cs.loop()
+    #cs.wrapup()
 
 if __name__ == '__main__':
     main()

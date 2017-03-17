@@ -25,9 +25,10 @@ public class CameraSystem extends Subsystem {
   private double targetDistance = 0.0;
   private int visionSample = 0;
   private UsbCamera gearCamera, ballCamera;
-  public double distM = 143.02445924894053, distC = 1.2921405672920312;
-  public double angleM = -0.034640498420080774, angleC = 451.00515056116376;
-
+  public double distM = 1.0, distC = 0.0;
+  public double angleM = 0.0, angleC = 0.0;
+  public boolean calibrated = true;
+  
   @Override
   protected void initDefaultCommand() {
     setDefaultCommand(new ProcessCameraData());
@@ -103,8 +104,8 @@ public class CameraSystem extends Subsystem {
         }
       } else {
         if (newData) {
-          rawDist = 1.0 / Math.sqrt(visionArea);
-          rawAngle = (visionCenter - camWidth) / rawDist;
+          rawDist = 25.0 / Math.sqrt(visionArea);
+          rawAngle = 10.0*(visionCenter/camWidth - 1.0) ;
         }
       }
       if (newData) {

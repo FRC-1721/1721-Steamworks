@@ -78,8 +78,10 @@ public class CalibrateVision extends Command {
 	  Robot.cameraSystem.updateSmartDashboard();
 		if (Robot.cameraSystem.processData()) {
 		 
-			double dist = Robot.positionEstimator.getDistanceFromPoint(0.0,0.0);
-			double relAngle = Robot.positionEstimator.getHeadingToPoint(0.0,0.0, true);
+			double dist = Robot.positionEstimator.getDistanceFromPoint(RobotMap.centerStartX,
+                RobotMap.centerStartY);
+			double relAngle = Robot.positionEstimator.getHeadingToPoint(RobotMap.centerStartX,
+			    RobotMap.centerStartY, true);
 			distFit.addSample(Robot.cameraSystem.rawDist, dist);
 			angleFit.addSample(Robot.cameraSystem.rawAngle, relAngle);
 		}

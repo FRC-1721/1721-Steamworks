@@ -24,11 +24,12 @@ public class DrivePause extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	pauseTimer.start();
+    	Robot.driveTrain.rateDrive(0.0, 0.0);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.driveTrain.rateDrive(0, 0);
+    	Robot.driveTrain.stop();
     }
 
     // Make this return true when this Command no longer needs to run execute()

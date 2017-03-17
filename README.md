@@ -41,4 +41,16 @@ This code is maintained and written by the following people
 - Testing AutoDepositGear
 -- Make sure this still works ok with vision active. I changed it to automatically find the closest gear target and use the geometry of the gear target to do the approach (see command DriveToGearTarget).  If this doesn't work, the old code is commented out below the new stuff, so you can try that. If this does work, we could write a similar set of commands to activate in teleop.
 
+P.S. For running a script at startup
+
+You could make your /etc/rc.local look like this:
+/home/pi/runcam.sh &
+
+Then in runcam.sh put:
+#!/bin/sh
+cd /home/pi
+sleep 10
+./main.py &> server.out
+
+And do "chmod +x runcam.sh"
 

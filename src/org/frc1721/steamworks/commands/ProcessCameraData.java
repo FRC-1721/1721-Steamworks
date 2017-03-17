@@ -21,7 +21,7 @@ public class ProcessCameraData extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		if (Robot.cameraSystem.processData()) {
-		  double headingToTarget = Robot.navController.getHeading() + Robot.cameraSystem.realAngle;
+		  double headingToTarget = Robot.navController.getHeading(); //+ Robot.cameraSystem.realAngle;
 		  Robot.positionEstimator.updatePositionFromVision(Robot.cameraSystem.realDist, headingToTarget);
 		}
 	}

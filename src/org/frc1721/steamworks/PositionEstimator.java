@@ -54,7 +54,7 @@ public class PositionEstimator {
         public double[] getPositionFromHeading(double dist, double heading) {
           
           double[] pt = new double[2];
-          double rAngle = Math.toRadians(heading + 180.0);
+          double rAngle = Math.toRadians(heading);
           pt[0] = position[0] + Math.cos(rAngle)*dist;
           pt[1] = position[1] + Math.sin(rAngle)*dist;
           return pt;

@@ -207,7 +207,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		robotDrive.enablePID();
+		robotDrive.disablePID();
 		/*
 		 * Gyro is only reset when the mode changes, so shut the it off then
 		 * back on in case teleop is started multiple times.

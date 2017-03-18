@@ -153,7 +153,7 @@ class ProducerThread(threading.Thread):
                 angleM = self.sd.getNumber("Vision angleM", 0.0)                         
                 distRSquared = self.sd.getNumber("distRSquared", 0.0)
                 angleRSquared = self.sd.getNumber("angleRSquared",0.0)
-                self.fArea.write('%s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, angle, rawDist, rawAngle,
+                self.fd.write('%s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, angle, rawDist, rawAngle,
                                                   distM, distC, angleC, angleM, distRSquared, angleRSquared))
             except:
                 print('unable to write data')

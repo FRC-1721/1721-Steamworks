@@ -43,14 +43,6 @@ public class AutoCalibrateVision extends CommandGroup {
     addParallel(new ProcessCameraData());
     addParallel(new DrivePause(180.0));
 
-    //
-    // // Drive to a point in line with the gear deposit
-
-    // addParallel(new CalibrateVision());
-    // addSequential(new SetCoordinates(targetX, RobotMap.centerStartY));
-    // addSequential(new DrivePause(30.0));
-    // addParallel(new ProcessCameraData());
-    // addSequential(new DrivePause(30.0));
 
   }
 }

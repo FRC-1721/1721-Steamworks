@@ -280,11 +280,11 @@ def main():
     else:
         cs = CameraSystem()
     try:
-        server = ThreadedHTTPServer(('camerapi1721.local', 80), MyHandler)
+        server = ThreadedHTTPServer(('camerapi1721.local', 5808), MyHandler)
         print 'started httpserver...'
         server.serve_forever()
-    except KeyboardInterrupt:
-        print '^C received, shutting down server'
+    except:
+        print '^ Server failed or shut down'
         cs.wrapup()
         sleep(0.1) #Allow threads to stop
         server.socket.close()  

@@ -38,7 +38,7 @@ public class PositionEstimator {
       // Check if it's on the correct side of the target
       if (dotP > 0.0) {
         double dist = Math.sqrt(delX[0] * delX[0] + delX[1] * delX[1]);
-        if (Math.acos(dotP / dist) < Math.toRadians(angle)) {
+        if ( (dotP / dist) > Math.cos( Math.toRadians(angle))) {
           return true;
         }
       }
@@ -103,7 +103,7 @@ public class PositionEstimator {
     for (int i = 0; i < 3; i++) {
       gearTargets[i] = new FieldTarget();
     }
-    gearTargets[0].set(RobotMap.cGearDepositX, RobotMap.cGearDepositX, 180.0);
+    gearTargets[0].set(RobotMap.cGearDepositX, RobotMap.cGearDepositY, 180.0);
     gearTargets[1].set(RobotMap.sideGearDepositX, RobotMap.sideGearDepositY,
         120.0);
     gearTargets[2].set(RobotMap.sideGearDepositX, -RobotMap.sideGearDepositY,

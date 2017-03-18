@@ -117,7 +117,7 @@ class ProducerThread(threading.Thread):
         self.fps = fps
         self.running = True
         self.sd = None
-        fileName = 'vision' + datetime.datetime() + '.dat'
+        fileName = 'vision' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ '.dat'
         self.fd = open(fileName,'w')
         self.fd.write('# visionSample, x, y, angle, rawDist, rawAngle, ' + 
                       'distM, distC, angleC, angleM, distRSquared, angleRSquared')

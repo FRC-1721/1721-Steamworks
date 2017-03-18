@@ -97,6 +97,7 @@ public class DriveTrain extends Subsystem {
 	public void setDriveScale(double driveRate, double turnRate) {
 		m_rateScale = driveRate;
 		m_turnRateScale = turnRate;
+		m_robotDrive.setDriveScale(driveRate,turnRate);
 	}
 
 }

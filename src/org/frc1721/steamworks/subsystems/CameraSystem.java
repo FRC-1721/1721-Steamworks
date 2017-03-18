@@ -27,7 +27,7 @@ public class CameraSystem extends Subsystem {
   private UsbCamera gearCamera, ballCamera;
   public double distM = 1.0, distC = 0.0;
   public double angleM = 0.0, angleC = 0.0;
-  public boolean calibrated = true;
+  public boolean calibrated = false;
   
   @Override
   protected void initDefaultCommand() {

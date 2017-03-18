@@ -117,7 +117,7 @@ public class NavxController extends CustomPIDSubsystem  {
   
   public void updateSmartDashboard() {
 	  if (m_pidSourceType == PIDSourceType.kDisplacement) {
-		  SmartDashboard.putNumber("NavControllerHeading", mGyro.getYaw());
+		  SmartDashboard.putNumber("NavControllerHeading", getHeading());
 	  } else {
 		  SmartDashboard.putNumber("NavControllerHeadinRate", gyroRate);
 	  }

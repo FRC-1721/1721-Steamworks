@@ -20,6 +20,7 @@ from imutils.video import FPS
 import imutils
 import Queue
 from networktables import NetworkTables
+import datetime
 #NetworkTables.setTeam(1721)
 NetworkTables.initialize(server='roboRIO-1721-FRC.local')
 BUF_SIZE=6
@@ -54,13 +55,13 @@ class VideoOutThread(threading.Thread):
 #videoOut = VideoOutThread()
 
 # Performance improvement from http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
-class RobotGripPipeline(GripPipeline):
+class RobotGripPipeline(GripPipeline, fd):
     def __init__(self):
         GripPipeline.__init__(self)
         self.iSample = 0
         self.centers = []
         self.areas = []
-        self.fArea = open('area.dat','w')
+        self.fArea = fd 
         self.sd = NetworkTables.getTable('SmartDashboard')
         
     def process(self, frame):
@@ -75,7 +76,7 @@ class RobotGripPipeline(GripPipeline):
             AR = h/w
             if (AR<1.8) or (AR> 2.5):
                 continue
-            if (y < 180) or (y >300):
+            if (y < 100) or (y >380):
                 continue
             rawData.append([x,y,w,h])
             center += x  
@@ -84,7 +85,7 @@ class RobotGripPipeline(GripPipeline):
         if nSamples == 2:
             color = (0,255,0)
             self.publishNT(areaTot,center)
-            #self.fArea.write(str(1.0/np.sqrt(areaTot/nSamples)) + '\n')
+            self.fArea.write(str(1.0/np.sqrt(areaTot/nSamples)) + '\n')
         else:
             color = (255,0,0)
         for i in range(len(rawData)):
@@ -99,6 +100,7 @@ class RobotGripPipeline(GripPipeline):
         
         rawDist = 25.0/np.sqrt(float(areaTot))
         rawAngle = 10.0*(float(center)/640.0 - 1.0)
+        
         if self.sd is None:
             self.sd = NetworkTables.getTable('SmartDashboard')
         if self.sd is not None:
@@ -108,8 +110,14 @@ class RobotGripPipeline(GripPipeline):
                 self.sd.putNumber('visionSample',visionSample)
             except:
                 print('unable to publish data')
-        
-        
+            try:
+                x = self.sd.getNumber('PositionEstX')
+                y = self.sd.getNumber('PositionEstY')
+                angle = self.sd.getNumber('NavControllerHeading')
+                self.fArea.write('%s %s %s %s %s %s\n'%(visionSample, x, y, angle, rawDist, rawAngle))
+            except:
+                print('failed to write date to file')
+                
 class ProducerThread(threading.Thread):
     def __init__(self,cam,fps):
         super(ProducerThread,self).__init__()
@@ -150,17 +158,19 @@ class CameraSystem:
         #self.cap.stream.set(3,640)
         #self.cap.stream.set(4,480)
         self.fps = FPS().start()
+        fileName = 'vision' + datetime.datetime() + '.dat'
+        self.fArea = open(fileName,'w')
         # old method cv2.VideoCapture(file)
         self.file = file
         self.fArea = open('area.dat','w')
-        self.pipeline = RobotGripPipeline()
         self.producer = ProducerThread(self.cap,self.fps)
         self.producer.start()
         self.consumers = []
         for i in range(BUF_SIZE):
-            consumer = ConsumerThread(RobotGripPipeline())
+            consumer = ConsumerThread(RobotGripPipeline(self.fArea))
             consumer.start()
             self.consumers.append(consumer)
+
         #videoOut.start()  
     
     def loop(self):

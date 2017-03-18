@@ -30,7 +30,7 @@ public class CustomRobotDrive extends RobotDrive {
 	// Gyro parameters
 	protected NavxController m_turnController;
 	protected double m_turnDeadzone = 0.02;
-	public double turnRateScale = 180.0;
+	public double turnRateScale = RobotMap.turnRateScale;
 	protected static GyroMode gyroMode = GyroMode.off;
 
 	public CustomRobotDrive(int leftMotorChannel, int rightMotorChannel) {

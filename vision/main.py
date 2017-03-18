@@ -109,14 +109,7 @@ class RobotGripPipeline(GripPipeline):
                 self.sd.putNumber('visionSample',visionSample)
             except:
                 print('unable to publish data')
-            try:
-                x = self.sd.getNumber('PositionEstX')
-                y = self.sd.getNumber('PositionEstY')
-                angle = self.sd.getNumber('NavControllerHeading')
-                self.fArea.write('%s %s %s %s %s %s\n'%(visionSample, x, y, angle, rawDist, rawAngle))
-            except:
-                print('failed to write date to file')
-                
+
 class ProducerThread(threading.Thread):
     def __init__(self,cam,fps):
         super(ProducerThread,self).__init__()

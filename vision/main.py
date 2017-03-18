@@ -124,6 +124,11 @@ class ProducerThread(threading.Thread):
         self.cam = cam 
         self.fps = fps
         self.running = True
+        self.sd = None
+        fileName = 'vision' + datetime.datetime() + '.dat'
+        self.fd = open(fileName,'w')
+        self.fd.write('# visionSample, x, y, angle, rawDist, rawAngle, ' + 
+                      'distM, distC, angleC, angleM, distRSquared, angleRSquared')
         
     def run(self):
         while self.running:
@@ -131,9 +136,37 @@ class ProducerThread(threading.Thread):
                 frame = self.cam.read()
                 q.put(frame)
                 self.fps.update()
+                self.writeData()
             sleep(0.03) # For roughly 30 fps
-        
+        self.fd.close()
         return
+
+    def writeData(self):
+        if self.sd is None:
+            self.sd = NetworkTables.getTable('SmartDashboard')
+        if self.sd is not None:
+            try:
+                rawDist = self.sd.getNumber('visionRawDist', -1.0)
+                rawAngle = self.sd.getNumber('visionRawAngle',-1000.0)
+                sampleID = self.sd.getNumber('visionSample',-1.0)
+                x = self.sd.getNumber('PositionEstX', -1000.0)
+                y = self.sd.getNumber('PositionEstY', -1000.0)
+                angle = self.sd.getNumber('NavControllerHeading', -370.0)
+                # if not getting angle, not point in writing data, maybe robot is off, or disabled
+                #if angle < -360.0:
+                #    return
+                distM = self.sd.getNumber("Vision distM", 0.0)
+                distC = self.sd.getNumber("Vision distC", 0.0)
+                angleC = self.sd.getNumber("Vision angleC", 0.0)
+                angleM = self.sd.getNumber("Vision angleM", 0.0)                         
+                distRSquared = self.sd.getNumber("distRSquared", 0.0)
+                angleRSquared = self.sd.getNumber("angleRSquared",0.0)
+                self.fArea.write('%s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, angle, rawDist, rawAngle,
+                                                  distM, distC, angleC, angleM, distRSquared, angleRSquared))
+            except:
+                print('unable to write data')
+
+        
 
 class ConsumerThread(threading.Thread):
     def __init__(self,gp):
@@ -149,7 +182,6 @@ class ConsumerThread(threading.Thread):
                 if not qOut.full():
                     qOut.put(frame)
             sleep(0.01)
-        self.gp.fArea.close()
 
           
 class CameraSystem:
@@ -158,13 +190,12 @@ class CameraSystem:
         #self.cap.stream.set(3,640)
         #self.cap.stream.set(4,480)
         self.fps = FPS().start()
-        fileName = 'vision' + datetime.datetime()
         # old method cv2.VideoCapture(file)
         self.producer = ProducerThread(self.cap,self.fps)
         self.producer.start()
         self.consumers = []
         for i in range(BUF_SIZE):
-            consumer = ConsumerThread(RobotGripPipeline(fileName + str(i) + 'dat'))
+            consumer = ConsumerThread(RobotGripPipeline())
             consumer.start()
             self.consumers.append(consumer)
 
@@ -257,7 +288,7 @@ def main():
     else:
         cs = CameraSystem()
     try:
-        server = ThreadedHTTPServer(('camerapi.local', 8080), MyHandler)
+        server = ThreadedHTTPServer(('camerapi1721.local', 80), MyHandler)
         print 'started httpserver...'
         server.serve_forever()
     except KeyboardInterrupt:

@@ -55,13 +55,12 @@ class VideoOutThread(threading.Thread):
 #videoOut = VideoOutThread()
 
 # Performance improvement from http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
-class RobotGripPipeline(GripPipeline, fileName):
+class RobotGripPipeline(GripPipeline):
     def __init__(self):
         GripPipeline.__init__(self)
         self.iSample = 0
         self.centers = []
         self.areas = []
-        self.fArea = open(filename,'w')
         self.sd = NetworkTables.getTable('SmartDashboard')
         
     def process(self, frame):

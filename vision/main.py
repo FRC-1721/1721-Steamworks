@@ -55,13 +55,13 @@ class VideoOutThread(threading.Thread):
 #videoOut = VideoOutThread()
 
 # Performance improvement from http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
-class RobotGripPipeline(GripPipeline, fd):
+class RobotGripPipeline(GripPipeline, fileName):
     def __init__(self):
         GripPipeline.__init__(self)
         self.iSample = 0
         self.centers = []
         self.areas = []
-        self.fArea = fd 
+        self.fArea = open(filename,'w')
         self.sd = NetworkTables.getTable('SmartDashboard')
         
     def process(self, frame):
@@ -149,7 +149,7 @@ class ConsumerThread(threading.Thread):
                 if not qOut.full():
                     qOut.put(frame)
             sleep(0.01)
-
+        self.gp.fArea.close()
 
           
 class CameraSystem:
@@ -158,16 +158,13 @@ class CameraSystem:
         #self.cap.stream.set(3,640)
         #self.cap.stream.set(4,480)
         self.fps = FPS().start()
-        fileName = 'vision' + datetime.datetime() + '.dat'
-        self.fArea = open(fileName,'w')
+        fileName = 'vision' + datetime.datetime()
         # old method cv2.VideoCapture(file)
-        self.file = file
-        self.fArea = open('area.dat','w')
         self.producer = ProducerThread(self.cap,self.fps)
         self.producer.start()
         self.consumers = []
         for i in range(BUF_SIZE):
-            consumer = ConsumerThread(RobotGripPipeline(self.fArea))
+            consumer = ConsumerThread(RobotGripPipeline(fileName + str(i) + 'dat'))
             consumer.start()
             self.consumers.append(consumer)
 

@@ -84,7 +84,6 @@ class RobotGripPipeline(GripPipeline):
         if nSamples == 2:
             color = (0,255,0)
             self.publishNT(areaTot,center)
-            self.fArea.write(str(1.0/np.sqrt(areaTot/nSamples)) + '\n')
         else:
             color = (255,0,0)
         for i in range(len(rawData)):
@@ -134,6 +133,7 @@ class ProducerThread(threading.Thread):
         return
 
     def writeData(self):
+        global visionSample
         if self.sd is None:
             self.sd = NetworkTables.getTable('SmartDashboard')
         if self.sd is not None:

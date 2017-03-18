@@ -71,14 +71,17 @@ class RobotGripPipeline(GripPipeline):
         rawData = []
         for contour in self.filter_contours_output:
             x,y,w,h = cv2.boundingRect(contour)
-            rawData.append([x,y,w,h])
+            
             AR = h/w
             if (AR<1.8) or (AR> 2.5):
                 continue
+            if (y < 180) or (y >300):
+                continue
+            rawData.append([x,y,w,h])
             center += x  
             areaTot += w*h 
             nSamples +=1
-        if nSamples== 2:
+        if nSamples == 2:
             color = (0,255,0)
             self.publishNT(areaTot,center)
             #self.fArea.write(str(1.0/np.sqrt(areaTot/nSamples)) + '\n')
@@ -247,7 +250,7 @@ def main():
     else:
         cs = CameraSystem()
     try:
-        server = ThreadedHTTPServer(('raspberrypi.local', 8080), MyHandler)
+        server = ThreadedHTTPServer(('camerapi.local', 8080), MyHandler)
         print 'started httpserver...'
         server.serve_forever()
     except KeyboardInterrupt:

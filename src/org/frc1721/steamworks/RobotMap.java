@@ -131,7 +131,7 @@ public class RobotMap {
 
   /** Rate Conversion for drive train **/
   public static double driveRateScale = 6.0; // feet per second
-  public static double turnRateScale = 90.0; // Degrees per second
+  public static double turnRateScale = 450.0; // Degrees per second
 
   // ---------> OI <----------
 

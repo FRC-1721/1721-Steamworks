@@ -170,7 +170,6 @@ public class OI {
       reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick],
           RobotMap.reverseDriveButton);
       reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
-
     } catch (RuntimeException e) {
       DriverStation.reportError(
           String.format("The Driver Buttons in '%s.java' broke again.\n"

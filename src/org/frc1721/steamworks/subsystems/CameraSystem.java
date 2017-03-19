@@ -37,11 +37,13 @@ public class CameraSystem extends Subsystem {
   public CameraSystem() {
     
     if (! RobotMap.practiceBot) {
-      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
+//      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+//      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
     }
     
     if (!RobotMap.visionPi) {
+      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
       UsbCamera gearCamera =
           CameraServer.getInstance().startAutomaticCapture(0);
       gearCamera.setResolution(640, 480);

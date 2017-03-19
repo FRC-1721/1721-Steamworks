@@ -48,7 +48,7 @@ public class DriveTrain extends Subsystem {
 				CustomPIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
 				gyroController.setOutputRange(-0.3, 0.3);
-				DriverStation.reportWarning("GyroMode is heading!", false);
+//				DriverStation.reportWarning("GyroMode is heading!", false);
 
 			} else {
 				m_navController.reset();
@@ -57,7 +57,7 @@ public class DriveTrain extends Subsystem {
 				CustomPIDController gyroController = m_navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 				gyroController.setOutputRange(-0.8, 0.8);
-				DriverStation.reportWarning("GyroMode is not heading!", false);
+//				DriverStation.reportWarning("GyroMode is not heading!", false);
 			}
 		}
 		m_robotDrive.setGyroMode(gMode);

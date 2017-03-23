@@ -119,7 +119,7 @@ public class RobotMap {
 	public static double	rDPP	= 0.0074536447630841;
 	public static double	lDPP	= 0.0074536447630841;
 
-	// Whether we are using a raspberry pi for vision processing
+	/** Whether we are using a raspberry pi for vision processing **/
 	public static final boolean visionPi = true;
 
 	/** Rate Controller for the NavX **/
@@ -128,15 +128,16 @@ public class RobotMap {
 			navRateD = 0.0,
 			navRateF = 0.001;
 
-	// public static final double navRateP = 0.001;
-	// public static final double navRateI = 0.0;
-	// public static final double navRateD = 0.0;
-	// public static final double navRateF = 0.001;
+	// public static final double navRateP = 0.001,
+	// navRateI = 0.0,
+	// navRateD = 0.0,
+	// navRateF = 0.001;
 
-	// public static final double navRateP = 0.0005;
-	// public static final double navRateI = 0.0;
-	// public static final double navRateD = 0.0005;
-	// public static final double navRateF = 0.0;
+	// public static final double navRateP = 0.0005,
+	// navRateI = 0.0,
+	// navRateD = 0.0005,
+	// navRateF = 0.0;
+
 
 	/** Drive Train PID Rate controllers **/
 	public static CustomPIDController	dtLeftController;
@@ -148,7 +149,7 @@ public class RobotMap {
 
 	// ---------> OI <----------
 
-	/** Joysticks, Input, and Buttons **/
+	/* Joysticks, Input, and Buttons */
 
 	public static ControllerMode controllerMode;
 
@@ -175,11 +176,11 @@ public class RobotMap {
 	 * Joystick to have PID buttons on, and the buttons to use Note: This will crash if the Joystick doesn't exist, I
 	 * recommend only making it controller two (1) if you know you're going to use tank drive
 	 */
-	public static final int	pidStick			= 0;
-	public static final int	pidDisableButton	= 1;
-	public static final int	pidEnableButton		= 8;
-	public static final int	forwardDriveButton	= 6;
-	public static final int	reverseDriveButton	= 4;
+	public static final int pidStick = 0,
+			pidDisableButton = 1,
+			pidEnableButton = 8,
+			forwardDriveButton = 6,
+			reverseDriveButton = 4;
 
 	public static final int gamepadLYaxis = 1;
 

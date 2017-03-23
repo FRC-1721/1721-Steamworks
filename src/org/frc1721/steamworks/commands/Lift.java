@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Lift extends Command {
 
 	protected boolean complete = false;
-	private Timer liftTimer;
+	// private Timer liftTimer;
 	private boolean canUp = true, canDown = true;
 
 	public Lift() {

@@ -7,24 +7,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc1721.steamworks.CustomRobotDrive.GyroMode;
 
-public class TurnAbsolute extends Command{
-	double m_targetHeading;
-	protected int kToleranceIterations = 1;
-	protected double kToleranceAngle = 10.0;
-	
+public class TurnAbsolute extends Command {
+	double				m_targetHeading;
+	protected int		kToleranceIterations	= 1;
+	protected double	kToleranceAngle			= 10.0;
+
 	public TurnAbsolute(double turnAngle, int tolIter) {
 		requires(Robot.driveTrain);
 		kToleranceIterations = tolIter;
-		if (kToleranceIterations <= 1) kToleranceIterations = 2;
-		m_targetHeading =  turnAngle;
+		if (kToleranceIterations <= 1)
+			kToleranceIterations = 2;
+		m_targetHeading = turnAngle;
 	}
-	
+
 	public TurnAbsolute(double turnAngle, int tolIter, double tolAngle) {
 		this(turnAngle, tolIter);
 		kToleranceAngle = tolAngle;
 	}
-	
-	protected void initialize() { 
+
+	protected void initialize() {
 		Robot.driveTrain.setGyroMode(GyroMode.heading);
 		Robot.navController.reset();
 		Robot.navController.enable();
@@ -37,28 +38,32 @@ public class TurnAbsolute extends Command{
 		Robot.navController.setSetpoint(heading);
 		Robot.navController.setAbsoluteTolerance(kToleranceAngle);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
-		
+
 	}
-	protected void execute() { 
-		Robot.driveTrain.rateDrive(0, 0); 
+
+	protected void execute() {
+		Robot.driveTrain.rateDrive(0, 0);
 		SmartDashboard.putNumber("TargetHeading", m_targetHeading);
-		//SmartDashboard.putNumber("IterOnTarget", Robot.navController.getIterOnTarget());
-		}
+		// SmartDashboard.putNumber("IterOnTarget", Robot.navController.getIterOnTarget());
+	}
+
 	// Just set to run tank.
-	protected void end() { 
-		Robot.driveTrain.stop(); 
-		} // Just set to tank.
-	
-	protected void interrupted() { end(); }
-	
+	protected void end() {
+		Robot.driveTrain.stop();
+	} // Just set to tank.
+
+	protected void interrupted() {
+		end();
+	}
+
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
-		//return finished;
-		if ( Robot.navController.onTargetDuringTime()) {
+		// return finished;
+		if (Robot.navController.onTargetDuringTime()) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 }

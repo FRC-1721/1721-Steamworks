@@ -17,187 +17,149 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * and command groups that allow control of the robot.
  */
 public class OI {
-  //// CREATING BUTTONS
-  // One type of button is a joystick button which is any button on a
-  //// joystick.
-  // You create one by telling it which joystick it's on and which button
-  // number it is.
-  // Joystick stick = new Joystick(port);
-  // Button button = new JoystickButton(stick, buttonNumber);
 
-  // There are a few additional built in buttons you can use. Additionally,
-  // by subclassing Button you can create custom triggers and bind those to
-  // commands the same as any other Button.
+	/** Driver Joysticks **/
+	public static Joystick[]	jsticks;	// Declares an array of Joystick(s)
+	/** Operator Controller **/
+	public static Joystick		jOp;
 
-  //// TRIGGERING COMMANDS WITH BUTTONS
-  // Once you have a button, it's trivial to bind it to a button in one of
-  // three ways:
+	/** Drive Buttons **/
+	public static JoystickButton enableDrivePIDButton,
+	        disableDrivePIDButton,
+	        forwardDriveButton,
+	        reverseDriveButton;
 
-  // Start the command when the button is pressed and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenPressed(new ExampleCommand());
+	/** Private DriverStation Instance **/
+	private final DriverStation m_ds = DriverStation.getInstance();
 
-  // Run the command while the button is being held down and interrupt it once
-  // the button is released.
-  // button.whileHeld(new ExampleCommand());
+	/* */
+	private int jsOne = -1, jsTwo = -1, gpOp = -1;
 
-  // Start the command when the button is released and let it run the command
-  // until it is finished as determined by it's isFinished method.
-  // button.whenReleased(new ExampleCommand());
+	/** Controller mode **/
+	public enum ControllerMode {
+		tankMode("Tank Mode"), arcadeMode("Arcade Mode"), noMode("No Mode");
 
-  public static Joystick[] jsticks; // Declares an array of Joystick(s)
-  public static Joystick jOp;
+		private final String text;
 
-  // Drive controls
-  public static JoystickButton enableDrivePIDButton;
-  public static JoystickButton disableDrivePIDButton;
-  public static JoystickButton forwardDriveButton;
-  public static JoystickButton reverseDriveButton;
+		/**
+		 * @param text
+		 */
+		private ControllerMode(final String text) {
+			this.text = text;
+		}
 
-  // Print buttons
-  public static JoystickButton printLimitSwitch;
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
 
-  private final DriverStation m_ds = DriverStation.getInstance();
+	// TODO Find out why controllers don't init 100% of the time. ~FIXED, Kinda
+	// TODO Find out why switching from tank to arcade is sketch sometimes. ~FIXED, Kinda
+	// TODO Make code automatically detect deadzone and scale output for it.
 
-  private int jsOne = -1, jsTwo = -1, gpOp = -1;
+	public OI() {
+		for (int i = 0; i < RobotMap.numUSB; i++) {
+			// out.println("ABC: " + i);
 
-  /** Controller mode **/
-  public enum ControllerMode {
-    tankMode("Tank Mode"), arcadeMode("Arcade Mode"), noMode("No Mode");
+			Joystick controller = new Joystick(i);
 
-    private final String text;
+			// for (int j = 0; j < jsticks.length; j++) {
+			if (controller.getName().equals(RobotMap.jsticks[0])) {
+				if (jsOne == -1) {
+					jsOne = controller.getPort();
+				} else {
+					jsTwo = controller.getPort();
+					// If both of the controllers get assigned break from the loop
+					break;
+				}
+			}
+			// }
 
-    /**
-     * @param text
-     */
-    private ControllerMode(final String text) {
-      this.text = text;
-    }
+			for (int j = 0; j < RobotMap.gamepads.length; j++) {
+				if (controller.getName().equalsIgnoreCase(RobotMap.gamepads[j])) {
+					gpOp = controller.getPort();
+					break;
+				}
+			}
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString() {
-      return text;
-    }
-  }
+		RobotMap.controllerMode = ControllerMode.arcadeMode;
 
-  // TODO Find out why controllers don't init 100% of the time. ~FIXED, Kinda
-  // TODO Find out why switching from tank to arcade is sketch sometimes. ~FIXED, Kinda
-  // TODO Make code automatically detect deadzone and scale output for it.
+		// /** Set Joystick mode **/
+		// switch (jsticks.length) {
+		// case 1:
+		// RobotMap.controllerMode = ControllerMode.arcadeMode;
+		// break;
+		// case 2:
+		// RobotMap.controllerMode = ControllerMode.tankMode;
+		// break;
+		//
+		// default:
+		// DriverStation.reportError("No controller mode selected!!!", false);
+		// RobotMap.controllerMode = ControllerMode.noMode;
+		// break;
+		//
+		// }
 
-  public OI() {
-    for (int i = 0; i < RobotMap.numUSB; i++) {
-      // out.println("ABC: " + i);
+		// allocates memory for Joystick
+		switch (RobotMap.controllerMode) {
+			case arcadeMode:
+				jsticks = new Joystick[1];
+				jsticks[0] = new Joystick(jsOne);
+				break;
+			case tankMode:
+				jsticks = new Joystick[2];
+				jsticks[0] = new Joystick(jsOne);
+				jsticks[1] = new Joystick(jsTwo);
+				break;
+			case noMode:
+				// TODO Maybe do something with this?
+				break;
+		}
 
-      Joystick controller = new Joystick(i);
+		out.println("Number of Joysticks: " + jsticks.length);
 
-//      for (int j = 0; j < jsticks.length; j++) {
-        if (controller.getName().equals(RobotMap.jsticks[0])) {
-          if (jsOne == -1) {
-            jsOne = controller.getPort();
-          } else {
-            jsTwo = controller.getPort();
-            // If both of the controllers get assigned break from the loop
-            break;
-          }
-        }
-//      }
+		jOp = new Joystick(gpOp);
 
-      for (int j = 0; j < RobotMap.gamepads.length; j++) {
-        if (controller.getName().equalsIgnoreCase(RobotMap.gamepads[j])) {
-          gpOp = controller.getPort();
-          break;
-        }
-      }
-    }
+		SmartDashboard.putString("Joystick Mode", RobotMap.controllerMode.toString());
 
-    RobotMap.controllerMode = ControllerMode.arcadeMode;
+		/** Driver Buttons **/
+		try {
+			disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
+			disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
+			enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
+			enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+			forwardDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.forwardDriveButton);
+			forwardDriveButton.whenPressed(new SetDriveReversed(1.0));
+			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
+			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
+		} catch (RuntimeException e) {
+			DriverStation.reportError(String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()), true);
+			// e.printStackTrace();
+			System.exit(RobotMap.roboError.BtnErr.getExitCode());
+		}
 
-    // /** Set Joystick mode **/
-    // switch (jsticks.length) {
-    // case 1:
-    // RobotMap.controllerMode = ControllerMode.arcadeMode;
-    // break;
-    // case 2:
-    // RobotMap.controllerMode = ControllerMode.tankMode;
-    // break;
-    //
-    // default:
-    // DriverStation.reportError("No controller mode selected!!!", false);
-    // RobotMap.controllerMode = ControllerMode.noMode;
-    // break;
-    //
-    // }
+		// for (int i = 0; i < jsticks.length; i++)
+		// out.print(joystickInfo(jsticks[i]));
 
-    // allocates memory for Joystick
-    switch (RobotMap.controllerMode) {
-      case arcadeMode:
-        jsticks = new Joystick[1];
-        jsticks[0] = new Joystick(jsOne);
-        break;
-      case tankMode:
-        jsticks = new Joystick[2];
-        jsticks[0] = new Joystick(jsOne);
-        jsticks[1] = new Joystick(jsTwo);
-        break;
-      case noMode:
-        // TODO Maybe do something with this?
-        break;
-    }
+		for (int i = 0; i < 3; i++) // TODO see how this works out.
+			out.print(driverstationInfo(i));
 
-    out.println("Number of Joysticks: " + jsticks.length);
+	}
 
-    jOp = new Joystick(gpOp);
+	private String joystickInfo(Joystick jstick) {
+		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(),
+		        jstick.getPort());
+	}
 
-    SmartDashboard.putString("Joystick Mode",
-        RobotMap.controllerMode.toString());
-
-    /** Driver Buttons **/
-    try {
-      disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick],
-          RobotMap.pidDisableButton);
-      disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
-      enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick],
-          RobotMap.pidEnableButton);
-      enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
-      forwardDriveButton = new JoystickButton(jsticks[RobotMap.pidStick],
-          RobotMap.forwardDriveButton);
-      forwardDriveButton.whenPressed(new SetDriveReversed(1.0));
-      reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick],
-          RobotMap.reverseDriveButton);
-      reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
-    } catch (RuntimeException e) {
-      DriverStation.reportError(
-          String.format("The Driver Buttons in '%s.java' broke again.\n"
-              + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()),
-          true);
-      // e.printStackTrace();
-      System.exit(RobotMap.roboError.BtnErr.getExitCode());
-    }
-
-    // for (int i = 0; i < jsticks.length; i++)
-    // out.print(joystickInfo(jsticks[i]));
-
-    for (int i = 0; i < 3; i++) // TODO see how this works out.
-      out.print(driverstationInfo(i));
-
-  }
-
-  private String joystickInfo(Joystick jstick) {
-    return String.format(
-        "The number of buttons this joystick has is %d\n"
-            + "The name of the joystick is %s\n"
-            + "The port of this joystick is %s\n",
-        jstick.getButtonCount(), jstick.getName(), jstick.getPort());
-  }
-
-  private String driverstationInfo(int stick) {
-    return String.format("The driverstation joystick type is %d\n",
-        m_ds.getJoystickType(stick));
-  }
+	private String driverstationInfo(int stick) {
+		return String.format("The driverstation joystick type is %d\n", m_ds.getJoystickType(stick));
+	}
 
 }

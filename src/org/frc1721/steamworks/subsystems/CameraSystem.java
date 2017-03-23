@@ -28,26 +28,28 @@ public class CameraSystem extends Subsystem {
   public double distM = 1.0, distC = 0.0;
   public double angleM = 0.0, angleC = 0.0;
   public boolean calibrated = false;
-  
+
   @Override
   protected void initDefaultCommand() {
     setDefaultCommand(new ProcessCameraData());
   }
 
   public CameraSystem() {
-    
-    if (! RobotMap.practiceBot) {
-//      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-//      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
+
+    if (!RobotMap.practiceBot) {
+      // UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
+      // ballCamera.setResolution(320,240); ballCamera.setFPS(15);
     }
-    
+
     if (!RobotMap.visionPi) {
-      UsbCamera ballCamera = CameraServer.getInstance().startAutomaticCapture(0);
-      ballCamera.setResolution(320,240); ballCamera.setFPS(15);
-      UsbCamera gearCamera =
+      UsbCamera ballCamera =
           CameraServer.getInstance().startAutomaticCapture(0);
-      gearCamera.setResolution(640, 480);
-      gearCamera.setFPS(10);
+      ballCamera.setResolution(320, 240);
+      ballCamera.setFPS(15);
+      UsbCamera gearCamera =
+          CameraServer.getInstance().startAutomaticCapture(1);
+      gearCamera.setResolution(320, 240);
+      gearCamera.setFPS(15);
       visionThread =
           new VisionThread(gearCamera, new GripPipeline(), pipeline -> {
             int n = pipeline.filterContoursOutput().size();
@@ -110,7 +112,7 @@ public class CameraSystem extends Subsystem {
       } else {
         if (newData) {
           rawDist = 25.0 / Math.sqrt(visionArea);
-          rawAngle = 10.0*(visionCenter/camWidth - 1.0) ;
+          rawAngle = 10.0 * (visionCenter / camWidth - 1.0);
         }
       }
       if (newData) {
@@ -138,12 +140,12 @@ public class CameraSystem extends Subsystem {
     SmartDashboard.putNumber("Vision angleC", angleC);
     SmartDashboard.putNumber("Vision realDist", realDist);
     SmartDashboard.putNumber("Vision realAngle", realAngle);
-    if (! RobotMap.visionPi) {
+    if (!RobotMap.visionPi) {
       SmartDashboard.putNumber("Vision rawDist", rawDist);
       SmartDashboard.putNumber("Vision rawAngle", rawAngle);
       SmartDashboard.putNumber("Vision Area", visionArea);
       SmartDashboard.putNumber("Vision Center", visionCenter);
     }
-    
+
   }
 }

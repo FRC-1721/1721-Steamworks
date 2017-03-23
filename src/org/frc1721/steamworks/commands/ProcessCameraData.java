@@ -7,43 +7,43 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ProcessCameraData extends Command {
 
-  public ProcessCameraData() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Robot.cameraSystem);
-  }
+	public ProcessCameraData() {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
+		requires(Robot.cameraSystem);
+	}
 
-  // Called just before this Command runs the first time
-  protected void initialize() {
-    Robot.cameraSystem.start();
-  }
+	// Called just before this Command runs the first time
+	protected void initialize() {
+		Robot.cameraSystem.start();
+	}
 
-  // Called repeatedly when this Command is scheduled to run
-  protected void execute() {
-    if (Robot.cameraSystem.processData()) {
-      if (Robot.cameraSystem.calibrated) {
-        // Only update the position if calibration is done
-        double headingToTarget = Robot.navController.getHeading()
-            + Robot.cameraSystem.realAngle + 180.0; // add 180.0 since camera is on the back
-        Robot.positionEstimator.updatePositionFromVision(
-            Robot.cameraSystem.realDist, headingToTarget);
-      }
-    }
-  }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		if (Robot.cameraSystem.processData()) {
+			if (Robot.cameraSystem.calibrated) {
+				// Only update the position if calibration is done
+				double headingToTarget = Robot.navController.getHeading()
+						+ Robot.cameraSystem.realAngle + 180.0; // add 180.0 since camera is on the back
+				Robot.positionEstimator.updatePositionFromVision(
+						Robot.cameraSystem.realDist, headingToTarget);
+			}
+		}
+	}
 
-  // Make this return true when this Command no longer needs to run execute()
-  protected boolean isFinished() {
-    return false;
-  }
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		return false;
+	}
 
-  // Called once after isFinished returns true
-  protected void end() {
+	// Called once after isFinished returns true
+	protected void end() {
 
-  }
+	}
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  protected void interrupted() {
-    Robot.cameraSystem.stop();
-  }
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+		Robot.cameraSystem.stop();
+	}
 }

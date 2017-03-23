@@ -123,10 +123,10 @@ public class RobotMap {
 	public static final boolean visionPi = false;
 
 	/** Rate Controller for the NavX **/
-	public static final double	navRateP	= 0.0;
-	public static final double	navRateI	= 0.0;
-	public static final double	navRateD	= 0.0;
-	public static final double	navRateF	= 0.001;
+	public static final double navRateP = 0.0,
+			navRateI = 0.0,
+			navRateD = 0.0,
+			navRateF = 0.001;
 
 	// public static final double navRateP = 0.001;
 	// public static final double navRateI = 0.0;

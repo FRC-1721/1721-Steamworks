@@ -1,4 +1,5 @@
 package org.frc1721.steamworks;
+//@formatter:off
 
 import java.io.File;
 import java.io.FileWriter;

@@ -41,8 +41,8 @@ public class AutoCalibrateVision extends CommandGroup {
       addSequential(new DrivePause(30.0));
     }
     addParallel(new ProcessCameraData());
-    addParallel(new DrivePause(180.0));
+		addParallel(new DrivePause(180.0));
 
 
-  }
+	}
 }

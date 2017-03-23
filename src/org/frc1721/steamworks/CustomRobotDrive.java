@@ -18,20 +18,20 @@ public class CustomRobotDrive extends RobotDrive {
 	}
 
 	// Default PID parameters
-	protected CustomPIDController m_leftController;
-	protected CustomPIDController m_rightController;
-	protected boolean m_PIDPresent = false;
-	protected boolean m_NAVPresent = false;
+	protected CustomPIDController	m_leftController;
+	protected CustomPIDController	m_rightController;
+	protected boolean				m_PIDPresent	= false;
+	protected boolean				m_NAVPresent	= false;
 
 	protected boolean m_PIDEnabled = true;
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
 	protected double rateScale = 10.0;
 
 	// Gyro parameters
-	protected NavxController m_turnController;
-	protected double m_turnDeadzone = 0.02;
-	public double turnRateScale = RobotMap.turnRateScale;
-	protected static GyroMode gyroMode = GyroMode.off;
+	protected NavxController	m_turnController;
+	protected double			m_turnDeadzone	= 0.02;
+	public double				turnRateScale	= RobotMap.turnRateScale;
+	protected static GyroMode	gyroMode		= GyroMode.off;
 
 	public CustomRobotDrive(int leftMotorChannel, int rightMotorChannel) {
 		super(leftMotorChannel, rightMotorChannel);
@@ -106,9 +106,11 @@ public class CustomRobotDrive extends RobotDrive {
 
 		if (m_PIDEnabled) {
 			m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * rateScale);
-			if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
+			if (Math.abs(leftOutput) < 0.001)
+				m_leftController.zeroOutput();
 			m_rightController.setSetpoint(-limit(rightOutput) * m_maxOutput * rateScale);
-			if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
+			if (Math.abs(rightOutput) < 0.001)
+				m_rightController.zeroOutput();
 
 			/* Safety updates normally done in super class */
 			// if (this.m_syncGroup != 0) {
@@ -130,13 +132,13 @@ public class CustomRobotDrive extends RobotDrive {
 	 * directly provide joystick values from any source.
 	 *
 	 * @param moveValue
-	 *            The value to use for forwards/backwards
+	 *        The value to use for forwards/backwards
 	 * @param rotateValue
-	 *            The value to use for the rotate right/left
+	 *        The value to use for the rotate right/left
 	 * @param squaredMoveValue
-	 *            If set, decreases the sensitivity at low speeds on moveValue
+	 *        If set, decreases the sensitivity at low speeds on moveValue
 	 * @param squaredRotateValue
-	 *            if set, decreases the sensitivity at low speeds on rotataValue
+	 *        if set, decreases the sensitivity at low speeds on rotataValue
 	 */
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredMoveValue, boolean squaredRotateValue) {
 		if (squaredMoveValue) {

@@ -12,14 +12,14 @@ public class CalibrateVision extends Command {
 	public class lsqFit {
 		// Linear least squares method
 		// Method from http://mathworld.wolfram.com/LeastSquaresFitting.html
-		private double ssxx, ssyy, ssxy, xavg, yavg;
-		private int nSamples;
-		public double slope, constant, rSquared;
-		
-		public lsqFit () {
+		private double	ssxx, ssyy, ssxy, xavg, yavg;
+		private int		nSamples;
+		public double	slope, constant, rSquared;
+
+		public lsqFit() {
 			reset();
 		}
-		
+
 		public void reset() {
 			ssxx = 0.0;
 			ssyy = 0.0;
@@ -28,46 +28,46 @@ public class CalibrateVision extends Command {
 			yavg = 0.0;
 			nSamples = 0;
 		}
-		
+
 		public void addSample(double x, double y) {
-			ssxx += x*x;
-			ssyy += y*y;
-			ssxy += x*y;
+			ssxx += x * x;
+			ssyy += y * y;
+			ssxy += x * y;
 			xavg += x;
 			yavg += y;
-			nSamples += 1;	
+			nSamples += 1;
 		}
-		
+
 		public void calculate() {
 			double n = (double) nSamples;
-			xavg = xavg/n;
-			yavg = yavg/n;
-			ssxx -= n*xavg*xavg;
-			ssyy -= n*yavg*yavg;
-			ssxy -= n*xavg*yavg;
-			slope = ssxy/ssxx;
-			constant = yavg - slope*xavg;
-			rSquared = ssxy*ssxy/(ssxx*ssyy);
+			xavg = xavg / n;
+			yavg = yavg / n;
+			ssxx -= n * xavg * xavg;
+			ssyy -= n * yavg * yavg;
+			ssxy -= n * xavg * yavg;
+			slope = ssxy / ssxx;
+			constant = yavg - slope * xavg;
+			rSquared = ssxy * ssxy / (ssxx * ssyy);
 		}
 	}
-	
-	private static lsqFit distFit;
-	private static lsqFit angleFit;
-	private Timer camTimer;
-	
+
+	private static lsqFit	distFit;
+	private static lsqFit	angleFit;
+	private Timer			camTimer;
+
 	public CalibrateVision() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
 		requires(Robot.cameraSystem);
 		distFit = new lsqFit();
 		angleFit = new lsqFit();
 		camTimer = new Timer();
-    }
+	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		//Robot.cameraSystem.start();
-	  camTimer.start();
+		// Robot.cameraSystem.start();
+		camTimer.start();
 		distFit.reset();
 		angleFit.reset();
 	}
@@ -75,13 +75,13 @@ public class CalibrateVision extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		// Check if there is new data for the vision tracker
-	  Robot.cameraSystem.updateSmartDashboard();
+		Robot.cameraSystem.updateSmartDashboard();
 		if (Robot.cameraSystem.processData()) {
-		 
+
 			double dist = Robot.positionEstimator.getDistanceFromPoint(RobotMap.centerStartX,
-                RobotMap.centerStartY);
+					RobotMap.centerStartY);
 			double relAngle = Robot.positionEstimator.getHeadingToPoint(RobotMap.centerStartX,
-			    RobotMap.centerStartY, true);
+					RobotMap.centerStartY, true);
 			distFit.addSample(Robot.cameraSystem.rawDist, dist);
 			angleFit.addSample(Robot.cameraSystem.rawAngle, relAngle);
 		}
@@ -89,8 +89,8 @@ public class CalibrateVision extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-	     return false;
-		//return (camTimer.hasPeriodPassed(30.0));
+		return false;
+		// return (camTimer.hasPeriodPassed(30.0));
 	}
 
 	// Called once after isFinished returns true

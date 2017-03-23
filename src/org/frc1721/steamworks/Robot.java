@@ -1,12 +1,9 @@
-
 package org.frc1721.steamworks;
 
 import org.frc1721.steamworks.commands.*;
 import org.frc1721.steamworks.subsystems.*;
 
-
 import com.kauailabs.navx.frc.AHRS;
-
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -33,23 +30,23 @@ public class Robot extends IterativeRobot {
 	 * robotInit()
 	 */
 
-	public static ClimberController climber;
-	public static LiftController lift;
-	public static DriveTrain driveTrain;
-	public static CustomRobotDrive robotDrive;
-	public static NavxController navController;
-	public static LCDController lcdController;
-	public static CommandGroup autonomousCommand;
+	public static ClimberController		climber;
+	public static LiftController		lift;
+	public static DriveTrain			driveTrain;
+	public static CustomRobotDrive		robotDrive;
+	public static NavxController		navController;
+	public static LCDController			lcdController;
+	public static CommandGroup			autonomousCommand;
 	@SuppressWarnings("rawtypes")
-	public static SendableChooser autoChooser;
-	public static DistanceController distanceController;
-	public static PositionEstimator positionEstimator;
-	public static DigitalInput topLimitSwitch;
-	public static DigitalInput bottomLimitSwitch;
-	public static DigitalInput gearLimitSwitch;
-	public static CameraSystem cameraSystem;
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static SendableChooser		autoChooser;
+	public static DistanceController	distanceController;
+	public static PositionEstimator		positionEstimator;
+	public static DigitalInput			topLimitSwitch;
+	public static DigitalInput			bottomLimitSwitch;
+	public static DigitalInput			gearLimitSwitch;
+	public static CameraSystem			cameraSystem;
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	/** Initialize the Drive Train systems **/
 	public void robotInit() {
@@ -67,7 +64,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
 
 		/** Network Tables **/
-		//RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
+		// RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
 
 		/** PID Controllers **/
 		RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
@@ -92,7 +89,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz);
 		navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
 				RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
-		navController.setDisplacementRange(-180.0,180.0);
+		navController.setDisplacementRange(-180.0, 180.0);
 		positionEstimator = new PositionEstimator();
 
 		/** Lift **/
@@ -114,7 +111,7 @@ public class Robot extends IterativeRobot {
 		driveTrain.setDriveScale(RobotMap.driveRateScale, RobotMap.turnRateScale);
 
 		cameraSystem = new CameraSystem();
-		
+
 		/** Auto Chooser **/
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new TestAuto();
@@ -125,15 +122,15 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));
 		autoChooser.addObject("AutoGearLeft", new AutoDepositGear(-1.0));
 		autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
-		autoChooser.addObject("CalibrateVision",  new AutoCalibrateVision());
+		autoChooser.addObject("CalibrateVision", new AutoCalibrateVision());
 		autoChooser.addObject("Do Nothing", new DoNothing());
 		/*
-
-		autoChooser.addObject("Steam10Blue", new AutoDepositSteam(2.0, 10.0, RobotMap.blueTeam, false));
-		autoChooser.addObject("Steam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, false));
-		autoChooser.addObject("DepositSteam10Blue", new AutoDepositSteam(2.0, 9.5, RobotMap.blueTeam, true));
-		autoChooser.addObject("DepositSteam15Blue", new AutoDepositSteam(2.0, 13.5, RobotMap.blueTeam, true));
-		*/
+		 * 
+		 * autoChooser.addObject("Steam10Blue", new AutoDepositSteam(2.0, 10.0, RobotMap.blueTeam, false));
+		 * autoChooser.addObject("Steam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, false));
+		 * autoChooser.addObject("DepositSteam10Blue", new AutoDepositSteam(2.0, 9.5, RobotMap.blueTeam, true));
+		 * autoChooser.addObject("DepositSteam15Blue", new AutoDepositSteam(2.0, 13.5, RobotMap.blueTeam, true));
+		 */
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		/** Live Window **/
@@ -168,19 +165,18 @@ public class Robot extends IterativeRobot {
 		// outputStream.putFrame(output);
 		// }
 		// }).start();
-		
+
 
 		/** Create the OI **/
 		oi = new OI();
 	}
 
 	@Override
-	public void disabledInit() {
-	}
+	public void disabledInit() {}
 
 	@Override
 	public void disabledPeriodic() {
-	  //cameraSystem.processData();
+		// cameraSystem.processData();
 	}
 
 	@Override
@@ -203,7 +199,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		//printSmartDashboard();
+		// printSmartDashboard();
 	}
 
 	@Override
@@ -219,9 +215,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotPeriodic() {
-	 // cameraSystem.processData();
+		// cameraSystem.processData();
 		printSmartDashboard();
-		
+
 	}
 
 	@Override
@@ -259,14 +255,14 @@ public class Robot extends IterativeRobot {
 
 		/** Camera Data **/
 		cameraSystem.updateSmartDashboard();
-        /*
-		SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
-		SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
-		SmartDashboard.putNumber("centerX", RobotMap.cameraTable.getNumberArray("centerX", new double[] { -1 })[0]);
-		SmartDashboard.putNumber("height", RobotMap.cameraTable.getNumberArray("height", new double[] { -1 })[0]);
-		SmartDashboard.putNumber("width", RobotMap.cameraTable.getNumberArray("width", new double[] { -1 })[0]);
-		SmartDashboard.putNumber("solidity", RobotMap.cameraTable.getNumberArray("solidity", new double[] { -1 })[0]);
-		*/
+		/*
+		 * SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
+		 * SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
+		 * SmartDashboard.putNumber("centerX", RobotMap.cameraTable.getNumberArray("centerX", new double[] { -1 })[0]);
+		 * SmartDashboard.putNumber("height", RobotMap.cameraTable.getNumberArray("height", new double[] { -1 })[0]);
+		 * SmartDashboard.putNumber("width", RobotMap.cameraTable.getNumberArray("width", new double[] { -1 })[0]);
+		 * SmartDashboard.putNumber("solidity", RobotMap.cameraTable.getNumberArray("solidity", new double[] { -1 })[0]);
+		 */
 		/** Controller Stuff **/
 		SmartDashboard.putNumber("Joystick One YAxis", OI.jsticks[0].getY());
 		SmartDashboard.putNumber("Joystick One Twist", OI.jsticks[0].getTwist());
@@ -277,8 +273,8 @@ public class Robot extends IterativeRobot {
 
 		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());
-		
 
-		
+
+
 	}
 }

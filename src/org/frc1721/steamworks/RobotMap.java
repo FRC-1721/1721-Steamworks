@@ -120,7 +120,7 @@ public class RobotMap {
 	public static double	lDPP	= 0.0074536447630841;
 
 	// Whether we are using a raspberry pi for vision processing
-	public static final boolean visionPi = false;
+	public static final boolean visionPi = true;
 
 	/** Rate Controller for the NavX **/
 	public static final double	navRateP	= 0.0;

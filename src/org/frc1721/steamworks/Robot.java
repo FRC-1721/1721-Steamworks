@@ -121,10 +121,11 @@ public class Robot extends IterativeRobot {
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("CrossLineStraight", new AutoCrossLineStraight());
 		// center of robot about 2 feet off wall
-		autoChooser.addObject("TestVision", new AutoTestVision());
+		//autoChooser.addObject("TestVision", new AutoTestVision());
 		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));
 		autoChooser.addObject("AutoGearLeft", new AutoDepositGear(-1.0));
-		autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
+		autoChooser.addObject("AutoGearStraight", new AutoDepositGear(0.0));
+		//autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
 		autoChooser.addObject("CalibrateVision",  new AutoCalibrateVision());
 		autoChooser.addObject("Do Nothing", new DoNothing());
 		/*

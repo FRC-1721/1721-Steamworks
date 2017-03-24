@@ -142,7 +142,7 @@ public class OI {
 			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
 			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
 			teleopDepositGearButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.runTeleopDepositGearButton);
-			teleopDepositGearButton.whileHeld(new TeleopDepositGear()); // TODO Make this a two button system
+			teleopDepositGearButton.whileHeld(new TeleopDepositGear()); // TODO Maybe make this a two button system
 
 		} catch (RuntimeException e) {
 			DriverStation.reportError(String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()), true);

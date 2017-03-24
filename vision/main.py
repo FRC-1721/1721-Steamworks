@@ -119,7 +119,7 @@ class ProducerThread(threading.Thread):
         fileName = 'vision' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ '.dat'
         self.fd = open(fileName,'w')
         self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
-                      'distM, distC, angleC, angleM, distRSquared, angleRSquared')
+                      'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
         
     def run(self):
         while self.running:
@@ -151,8 +151,8 @@ class ProducerThread(threading.Thread):
                 distC = self.sd.getNumber("Vision distC", 0.0)
                 angleC = self.sd.getNumber("Vision angleC", 0.0)
                 angleM = self.sd.getNumber("Vision angleM", 0.0)     
-                visX = self.sd.getNumber("visionEstX", 0.0)
-                visY = self.sd.getNumber("visionEstY", 0.0)                    
+                visX = self.sd.getNumber("VisionEstX", -1000.0)
+                visY = self.sd.getNumber("VisionEstY", -1000.0)                    
                 distRSquared = self.sd.getNumber("distRSquared", 0.0)
                 angleRSquared = self.sd.getNumber("angleRSquared",0.0)
                 self.fd.write('%s %s %s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, visX, visY, angle, rawDist, rawAngle,

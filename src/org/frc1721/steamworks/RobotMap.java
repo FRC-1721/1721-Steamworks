@@ -180,7 +180,9 @@ public class RobotMap {
 			pidDisableButton = 1,
 			pidEnableButton = 8,
 			forwardDriveButton = 6,
-			reverseDriveButton = 4;
+			reverseDriveButton = 4,
+			runTeleopDepositGearButton = 3;
+
 
 	public static final int gamepadLYaxis = 1;
 

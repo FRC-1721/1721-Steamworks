@@ -6,6 +6,7 @@ import static java.lang.System.out;
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
 import org.frc1721.steamworks.commands.SetDriveReversed;
+import org.frc1721.steamworks.commands.TeleopDepositGear;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -25,9 +26,10 @@ public class OI {
 
 	/** Drive Buttons **/
 	public static JoystickButton enableDrivePIDButton,
-	        disableDrivePIDButton,
-	        forwardDriveButton,
-	        reverseDriveButton;
+			disableDrivePIDButton,
+			forwardDriveButton,
+			reverseDriveButton,
+			teleopDepositGearButton;
 
 	/** Private DriverStation Instance **/
 	private final DriverStation m_ds = DriverStation.getInstance();
@@ -139,6 +141,9 @@ public class OI {
 			forwardDriveButton.whenPressed(new SetDriveReversed(1.0));
 			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
 			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
+			teleopDepositGearButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.runTeleopDepositGearButton);
+			teleopDepositGearButton.whileHeld(new TeleopDepositGear()); // TODO Make this a two button system
+
 		} catch (RuntimeException e) {
 			DriverStation.reportError(String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()), true);
 			// e.printStackTrace();
@@ -155,7 +160,7 @@ public class OI {
 
 	private String joystickInfo(Joystick jstick) {
 		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(),
-		        jstick.getPort());
+				jstick.getPort());
 	}
 
 	private String driverstationInfo(int stick) {

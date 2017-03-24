@@ -26,15 +26,15 @@ public class AutoCalibrateVision extends CommandGroup {
       targetX -= 1.0; // Move backwards in 1 foot increments.
       addSequential(new DriveToCoordinates(targetX, 0.0, 0.1, 0.1, 5));
       // addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
-      addSequential(new TurnAbsolute(175.0, 5, 2));
-      addSequential(new TurnAbsolute(-175.0, 5, 2));
+      //addSequential(new TurnAbsolute(175.0, 5, 2));
+     // addSequential(new TurnAbsolute(-175.0, 5, 2));
 
       for (int i = 0; i < 2; i++) {
         targetX -= 1.0; // Move backwards in 1 foot increments.
         addSequential(new DriveToCoordinates(targetX, 0.0, -0.1, 0.1, 5));
         // // addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
-        addSequential(new TurnAbsolute(175.0, 5, 2));
-        addSequential(new TurnAbsolute(-175.0, 5, 2));
+        //addSequential(new TurnAbsolute(175.0, 5, 2));
+       // addSequential(new TurnAbsolute(-175.0, 5, 2));
         // }
       }
     } else {

@@ -4,6 +4,7 @@ package org.frc1721.steamworks;
 import static java.lang.System.out;
 
 import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
+import org.frc1721.steamworks.commands.DriveToGearTarget;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
 import org.frc1721.steamworks.commands.SetDriveReversed;
 import org.frc1721.steamworks.commands.TeleopDepositGear;
@@ -133,6 +134,9 @@ public class OI {
 
 		/** Driver Buttons **/
 		try {
+			double[] approachPoints = new double[2];
+			approachPoints[0] = 3.0;
+			approachPoints[1] = 1.0;
 			disableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidDisableButton);
 			disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
 			enableDrivePIDButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.pidEnableButton);
@@ -142,7 +146,7 @@ public class OI {
 			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
 			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
 			teleopDepositGearButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.runTeleopDepositGearButton);
-			teleopDepositGearButton.whileHeld(new TeleopDepositGear()); // TODO Maybe make this a two button system
+			teleopDepositGearButton.whileHeld(new DriveToGearTarget(approachPoints,-3.0,0.1)); // TODO Maybe make this a two button system
 
 		} catch (RuntimeException e) {
 			DriverStation.reportError(String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()), true);

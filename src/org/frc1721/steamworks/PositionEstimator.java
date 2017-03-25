@@ -239,7 +239,7 @@ public class PositionEstimator {
 	// Find the gear target that is in a 30 degree cone
 	public boolean setBestGearTarget() {
 		for (int i = 0; i < 3; i++) {
-			if (gearTargets[i].inCone(lastPosEst[0], lastPosEst[1], 30.0)) {
+			if (gearTargets[i].inCone(lastPosEst[0], lastPosEst[1], 45.0)) {
 				curTarget = gearTargets[i];
 				return true;
 			}

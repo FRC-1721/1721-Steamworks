@@ -41,9 +41,10 @@ public class AutoDepositGear extends CommandGroup {
 					new SetCoordinates(RobotMap.centerStartX, RobotMap.centerStartY));
 			addSequential(new SetYawOffset(180.0));
 			addSequential(new EnableDrivePIDCommand());
-			addSequential(new DriveToGearTarget(5.0, -2.0, 1.0));
-			addSequential(new DriveToGearTarget(3.0, -2.0, 1.0));
-			addSequential(new DriveToGearTarget(1.0, -1.0, 0.1));
+			double[] approachPoints = new double[2];
+			approachPoints[0] = 3.0;
+			approachPoints[1] = 1.0;
+			addSequential(new DriveToGearTarget(approachPoints, -2.0, 1.0));
 			addSequential(new DrivePause(1.50));
 			addSequential(new DistanceDriveStraight(1.0, 0.5));
 			if (dir != 0.0) {

@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class TeleopDepositGear extends CommandGroup {
     public  TeleopDepositGear() {
-    	
-    	addSequential(new DriveToGearTarget(2.5, -2.0, 1.0));
-    	addSequential(new DriveToGearTarget(1.5, -2.0, 0.1));
+    	double[] approachPoints = new double[2];
+		approachPoints[0] = 3.0;
+		approachPoints[1] = 1.0;
+    	addSequential(new DriveToGearTarget(approachPoints, -3.0, 1.0));
     	addSequential(new DrivePause(1.50));
     	addSequential(new DistanceDriveStraight(1.0, 0.5));
     }

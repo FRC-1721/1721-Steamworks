@@ -154,4 +154,10 @@ public class DriveToCoordinates extends Command {
 	protected void interrupted() {
 		end();
 	}
+	
+	public void updateSmartDashboard() {
+		SmartDashboard.putNumber("targetX", targetX);
+		SmartDashboard.putNumber("targetY", targetY);
+	}
+	
 }

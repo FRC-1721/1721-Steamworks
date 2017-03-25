@@ -13,7 +13,7 @@ public class TeleopDepositGear extends CommandGroup {
 		approachPoints[0] = 3.0;
 		approachPoints[1] = 1.0;
     	addSequential(new DriveToGearTarget(approachPoints, -3.0, 1.0));
-    	addSequential(new DrivePause(1.50));
+    	addSequential(new DrivePause(4.0));
     	addSequential(new DistanceDriveStraight(1.0, 0.5));
     }
 }

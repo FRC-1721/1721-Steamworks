@@ -69,24 +69,30 @@ class RobotGripPipeline(GripPipeline):
         center = 0.0
         nSamples = 0
         rawData = []
+        badData = []
         for contour in self.filter_contours_output:
             x,y,w,h = cv2.boundingRect(contour)
             
             AR = h/w
-            if (AR<1.8) or (AR> 2.5):
-                continue
-            if (y < 100) or (y >380):
+            if (AR<1.8) or (AR> 2.5) or (y < 100) or (y >380):
+                badData.append([x,y,w,h])
                 continue
             rawData.append([x,y,w,h])
             center += x  
             areaTot += w*h 
             nSamples +=1
         if nSamples == 2:
-            color = (0,255,0)
+            
             self.publishNT(areaTot,center)
         else:
-            color = (255,0,0)
+            badData.extend(rawData)
+            rawData = []
+        color = (0,255,0)
         for i in range(len(rawData)):
+            [x,y,w,h] = rawData[i]
+            cv2.rectangle(frame,(x,y),(x+w,y+h),color,2)
+        color = (255,0,0)
+        for i in range(len(badData)):
             [x,y,w,h] = rawData[i]
             cv2.rectangle(frame,(x,y),(x+w,y+h),color,2)
         #print(rawData)

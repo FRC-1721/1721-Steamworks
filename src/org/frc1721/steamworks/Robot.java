@@ -116,8 +116,8 @@ public class Robot extends IterativeRobot {
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new TestAuto();
 		autoChooser = new SendableChooser();
-		autoChooser.addDefault("CrossLineStraightRight", new AutoCrossLineStraight(8.0));
-		autoChooser.addDefault("CrossLineStraightLeft", new AutoCrossLineStraight(-8.0));
+		autoChooser.addDefault("CrossLineStraightRight", new AutoCrossLineStraight(5.5));
+		autoChooser.addDefault("CrossLineStraightLeft", new AutoCrossLineStraight(-5.5));
 		// center of robot about 2 feet off wall
 		autoChooser.addObject("TestVision", new AutoTestVision());
 		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));

@@ -28,26 +28,26 @@ public class Lift extends Command {
 	protected void execute() {
 		// out.printf("'%s.execute()' ran!", this.getClass().getName());
 
-		if (Robot.topLimitSwitch.get()) {
-			// half speed pulse
-			// 100ms
-			RobotMap.lLift.set(0.5);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				DriverStation.reportWarning(String.format("'%s' just had an '%s' ", this.getClass().getName(), e.getLocalizedMessage()), false);
-			}
-			RobotMap.lLift.set(0.0);
-		}
+//		if (Robot.topLimitSwitch.get()) {
+//			// half speed pulse
+//			// 100ms
+//			RobotMap.lLift.set(0.5);
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				DriverStation.reportWarning(String.format("'%s' just had an '%s' ", this.getClass().getName(), e.getLocalizedMessage()), false);
+//			}
+//			RobotMap.lLift.set(0.0);
+//		}
 
 		// If the top limit switch is true and the left motor or the gamepad axis is positive stop the
 		// motor!!
-		if (Robot.topLimitSwitch.get() && ((RobotMap.lLift.get() < 0.0) || (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) < 0.0))) {
+		if (Robot.topLimitSwitch.get() && ((RobotMap.lLift.get() > 0.0) || (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) > 0.0))) {
 			RobotMap.lLift.stopMotor();
 			canUp = false;
 		}
 
-		if (Robot.bottomLimitSwitch.get() && ((RobotMap.lLift.get() > 0.0) || (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) > 0.0))) {
+		if (Robot.bottomLimitSwitch.get() && ((RobotMap.lLift.get() < 0.0) || (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) < 0.0))) {
 			RobotMap.lLift.stopMotor();
 			canDown = false;
 		}
@@ -57,13 +57,13 @@ public class Lift extends Command {
 		} else {
 			if (canUp) {
 				// Force up
-				if (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) < 0.0)
+				if (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) > 0.0)
 					RobotMap.lLift.set(OI.jOp.getRawAxis(RobotMap.gamepadLYaxis));
 			}
 
 			if (canDown) {
 				// Force down
-				if (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) > 0.0)
+				if (OI.jOp.getRawAxis(RobotMap.gamepadLYaxis) < 0.0)
 					RobotMap.lLift.set(OI.jOp.getRawAxis(RobotMap.gamepadLYaxis));
 			}
 		}

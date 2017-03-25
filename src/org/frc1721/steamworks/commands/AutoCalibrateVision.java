@@ -8,39 +8,41 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class AutoCalibrateVision extends CommandGroup {
-  public AutoCalibrateVision() {
+	public AutoCalibrateVision() {
 
-    // // Set the position - use a coordinate system centered on gear drop-off. Robot center is at
-    // -1.5
-    // // ft.
-    boolean autoCalibration = true;
+		// // Set the position - use a coordinate system centered on gear drop-off. Robot center is at
+		// -1.5
+		// // ft.
+		boolean autoCalibration = true;
 
-    double targetX = RobotMap.centerStartX - 1.5;
-    addParallel(new CalibrateVision());
-    addSequential(new SetCoordinates(targetX, RobotMap.centerStartY));
-    addSequential(new SetYawOffset(180.0));
-    if (autoCalibration) {
-      addSequential(new EnableDrivePIDCommand());
-      //
+		double targetX = RobotMap.centerStartX - 1.5;
+		addParallel(new CalibrateVision());
+		addSequential(new SetCoordinates(targetX, RobotMap.centerStartY));
 
-      targetX -= 1.0; // Move backwards in 1 foot increments.
-      addSequential(new DriveToCoordinates(targetX, 0.0, 0.1, 0.1, 5));
-      // addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
-      //addSequential(new TurnAbsolute(175.0, 5, 2));
-     // addSequential(new TurnAbsolute(-175.0, 5, 2));
 
-      for (int i = 0; i < 2; i++) {
-        targetX -= 1.0; // Move backwards in 1 foot increments.
-        addSequential(new DriveToCoordinates(targetX, 0.0, -0.1, 0.1, 5));
-        // // addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
-        //addSequential(new TurnAbsolute(175.0, 5, 2));
-       // addSequential(new TurnAbsolute(-175.0, 5, 2));
-        // }
-      }
-    } else {
-      addSequential(new DrivePause(30.0));
-    }
-    addParallel(new ProcessCameraData());
+
+		if (autoCalibration) {
+			addSequential(new EnableDrivePIDCommand());
+			//
+
+			targetX -= 1.0; // Move backwards in 1 foot increments.
+			addSequential(new DriveToCoordinates(targetX, 0.0, 0.1, 0.1, 5));
+			// addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
+			// addSequential(new TurnAbsolute(175.0, 5, 2));
+			// addSequential(new TurnAbsolute(-175.0, 5, 2));
+
+			for (int i = 0; i < 2; i++) {
+				targetX -= 1.0; // Move backwards in 1 foot increments.
+				addSequential(new DriveToCoordinates(targetX, 0.0, -0.1, 0.1, 5));
+				// // addSequential(new DistanceDriveStraight(1.0, 0.2, 0.1));
+				// addSequential(new TurnAbsolute(175.0, 5, 2));
+				// addSequential(new TurnAbsolute(-175.0, 5, 2));
+				// }
+			}
+		} else {
+			addSequential(new DrivePause(30.0));
+		}
+		addParallel(new ProcessCameraData());
 		addParallel(new DrivePause(180.0));
 
 

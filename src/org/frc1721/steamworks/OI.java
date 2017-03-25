@@ -129,7 +129,15 @@ public class OI {
 
 		jOp = new Joystick(gpOp);
 
+		out.println("Op Controller: " + gpOp);
+
 		SmartDashboard.putString("Joystick Mode", RobotMap.controllerMode.toString());
+
+//		for (int i = 0; i < jsticks.length; i++)
+//			out.print(joystickInfo(jsticks[i]));
+
+//		for (int i = 0; i < 3; i++) // TODO see how this works out.
+//			out.print(driverstationInfo(i));
 
 		/** Driver Buttons **/
 		try {
@@ -150,17 +158,11 @@ public class OI {
 			System.exit(RobotMap.roboError.BtnErr.getExitCode());
 		}
 
-		// for (int i = 0; i < jsticks.length; i++)
-		// out.print(joystickInfo(jsticks[i]));
-
-		for (int i = 0; i < 3; i++) // TODO see how this works out.
-			out.print(driverstationInfo(i));
-
 	}
 
 	private String joystickInfo(Joystick jstick) {
-		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(),
-				jstick.getPort());
+		// TODO Fix
+		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(), jstick.getPort());
 	}
 
 	private String driverstationInfo(int stick) {

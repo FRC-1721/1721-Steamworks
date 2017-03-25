@@ -63,8 +63,8 @@ public class RobotMap {
 
 	// Distance controller
 	public static double	distTu	= 0.2;
-	public static double	distP	= 0.75;
-	public static double	distI	= 0.0 * distP * 2.0 / distTu;
+	public static double	distP	= 1.5;
+	public static double	distI	= 0.1 * distP * 2.0 / distTu;
 	public static double	distD	= distP * distTu / 8.0;
 
 	/** Encoder reversals **/

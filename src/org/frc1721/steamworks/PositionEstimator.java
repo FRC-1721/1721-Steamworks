@@ -316,6 +316,7 @@ public class PositionEstimator {
 
 	public void updatePositionFromVision(double dist, double heading) {
 		// Only update if we are in range of a valid target
+		if (dist < 1.5) return;
 		if (setBestGearTarget()) {
 			double[] newPosition = curTarget.getPositionFromHeading(dist, heading);
 
@@ -323,13 +324,13 @@ public class PositionEstimator {
 				visionPosition[i] = newPosition[i];
 				// Only take 10% of the correction due to sensor error
 				if (Robot.cameraSystem.calibrated) {
-					double delX = 0.1 * (newPosition[i] - lastPosEst[i]);
+					double delX = 0.5 * (newPosition[i] - lastPosEst[i]);
 					// limit the correction in case of bad data. At 10 fps this can get bad quickly.
-					if (delX > 0.2) {
+					/* if (delX > 0.2) {
 						delX = 0.2;
 					} else if (delX < -0.2) {
 						delX = -0.2;
-					}
+					} */
 					lastPosEst[i] = lastPosEst[i] + delX;
 				}
 			}

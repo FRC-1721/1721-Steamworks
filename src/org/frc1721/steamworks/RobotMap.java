@@ -81,7 +81,7 @@ public class RobotMap {
 	/** Some field positions **/
 	// Take y = 0 as centerline of field, and x as away from driver team
 	public static double	centerStartX		= 1.5, centerStartY = 0.0;
-	public static double    sideStartX          = 1.5, sideStartY = 0.0;
+	public static double    sideStartX          = 1.5, sideStartY = 5.5;
 	public static double	cGearDepositX		= 9.5, cGearDepositY = 0.0;
 	public static double	sideGearDepositX	= cGearDepositX + 1.47;
 	public static double	sideGearDepositY	= 2.55;

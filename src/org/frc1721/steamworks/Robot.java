@@ -172,18 +172,23 @@ public class Robot extends IterativeRobot {
 
 		/** Create the OI **/
 		oi = new OI();
+		SmartDashboard.putString("robotMode", "disabled");
 	}
 
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+		SmartDashboard.putString("robotMode", "disabled");
+	}
 
 	@Override
 	public void disabledPeriodic() {
 		// cameraSystem.processData();
+		SmartDashboard.putString("robotMode", "disabled");
 	}
 
 	@Override
 	public void autonomousInit() {
+		SmartDashboard.putString("robotMode", "auto");
 		robotDrive.enablePID();
 
 		/*
@@ -207,13 +212,15 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		SmartDashboard.putString("robotMode", "teleop");
 		robotDrive.disablePID();
+		//robotDrive.enablePID();
 		/*
 		 * Gyro is only reset when the mode changes, so shut the it off then
 		 * back on in case teleop is started multiple times.
 		 */
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		//driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override

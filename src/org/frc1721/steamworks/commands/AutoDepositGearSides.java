@@ -13,29 +13,30 @@ public class AutoDepositGearSides extends CommandGroup {
 		boolean useOldMethod = true;
 		// use a dir of 0 to signal to not j-hook
 		if (useOldMethod) {
+			addSequential(new SetCameraCalibration(true));
 			addSequential(
 					new SetCoordinates(RobotMap.sideStartX, dir*RobotMap.sideStartY));
 			addSequential(new SetYawOffset(180.0));
 			addSequential(new EnableDrivePIDCommand());
-			addSequential(new DistanceDriveStraight(4.5,-4.0, 0.5));
+			addSequential(new DriveToCoordinates(RobotMap.sideStartX + 5.0,dir*RobotMap.sideStartY, -2.0, 0.1, 20));
 			double targetX = RobotMap.sideGearDepositX - 1.0*0.866;
-			double targetY = dir*(RobotMap.sideGearDepositX - 1.0*0.866);
+			double targetY = dir*(RobotMap.sideGearDepositY + 1.0*0.5); //fudge
 			// Drive to a point in line with the gear deposit
-			addSequential(new DriveToCoordinates(targetX, 0.0, -2.0, 0.1, 20));
+			addSequential(new DriveToCoordinates(targetX, targetY, -1.0, 0.1, 20));
 			
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target
 			// addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
-			addSequential(new DrivePause(5.0));
+			//addSequential(new DrivePause(5.0));
 			// addSequential(new DistanceDriveStraight(1.0, 0.5, 0.2));
 			// addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
 			// addSequential(new DrivePause(1.5));
-			addSequential(new DistanceDriveStraight(2.0, 0.5));
-			if (dir != 0.0) {
-				targetX = 14.0;
-				targetY = RobotMap.sideStartY*dir;
-				addSequential(new DriveToCoordinates(targetX, targetY, 5.0, 2.0, 2));
-			}
+			//addSequential(new DistanceDriveStraight(2.0, 0.5));
+			//if (dir != 0.0) {
+			//	targetX = 14.0;
+			//	targetY = RobotMap.sideStartY*dir;
+			//	addSequential(new DriveToCoordinates(targetX, targetY, 5.0, 2.0, 2));
+			//}
 		} else {
 			// Todo Below not working yet.
 			// New method that tries to auto-determine the closest target

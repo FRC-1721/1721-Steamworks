@@ -82,7 +82,6 @@ class RobotGripPipeline(GripPipeline):
             areaTot += w*h 
             nSamples +=1
         if nSamples == 2:
-            
             self.publishNT(areaTot,center)
         else:
             badData.extend(rawData)
@@ -93,7 +92,7 @@ class RobotGripPipeline(GripPipeline):
             cv2.rectangle(frame,(x,y),(x+w,y+h),color,2)
         color = (255,0,0)
         for i in range(len(badData)):
-            [x,y,w,h] = rawData[i]
+            [x,y,w,h] = badData[i]
             cv2.rectangle(frame,(x,y),(x+w,y+h),color,2)
         #print(rawData)
         return frame 
@@ -122,11 +121,18 @@ class ProducerThread(threading.Thread):
         self.fps = fps
         self.running = True
         self.sd = None
-        fileName = 'vision' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ '.dat'
+        self.fd = None
+        self.robotMode = 'disabled'
+
+    
+    def setFile(self, name):
+        if self.fd is not None:
+            self.fd.close()
+        fileName = 'vision.' +name +'.' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ '.dat'
         self.fd = open(fileName,'w')
         self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
                       'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
-        
+         
     def run(self):
         while self.running:
             if not q.full():
@@ -144,6 +150,16 @@ class ProducerThread(threading.Thread):
             self.sd = NetworkTables.getTable('SmartDashboard')
         if self.sd is not None:
             try:
+                robotMode = self.sd.getString('robotMode', 'disabled')
+                if robotMode == 'disabled':
+                    if self.fd is not None:
+                        self.fd.close()
+                        self.fd = None
+                    self.robotMode = robotMode
+                    return
+                if robotMode != self.robotMode:
+                    self.setFile(robotMode)
+                    self.robotMode = robotMode
                 rawDist = self.sd.getNumber('visionRawDist', -1.0)
                 rawAngle = self.sd.getNumber('visionRawAngle',-1000.0)
                 sampleID = self.sd.getNumber('visionSample',-1.0)
@@ -246,7 +262,7 @@ class MyHandler(BaseHTTPRequestHandler):
                         self.wfile.write("Content-length: "+str(len(JpegData))+"\r\n\r\n" )
                         self.wfile.write(JpegData)
                         self.wfile.write("\r\n\r\n\r\n")
-                    time.sleep(0.05) # Roughtly controls fps of mjpeg server
+                    time.sleep(0.1) # Roughtly controls fps of mjpeg server
                 return
             if self.path.endswith(".jpeg"):
                 f = open(curdir + sep + self.path)

@@ -5,6 +5,7 @@ from os import curdir, sep
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
 import re
+
 cameraQuality=75
 from grip2 import GripPipeline
 import cv2
@@ -36,23 +37,107 @@ class VideoOutThread(threading.Thread):
         self.frame = None
         self.jpg = None
         self.frameID = 0
+        self.fd = None
+        self.sd = None
+        self.vout = None
+        self.robotMode = 'disabled'
+        self.sampleID = 0
         
     def run(self):
         while self.running:
             if not qOut.empty():
                 self.frame = qOut.get()  
-                self.frameID += 1           
-                cv2.imshow('frame',self.frame)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    self.running = False
+                self.frameID += 1   
+                self.writeData(self.frame)        
+                #cv2.imshow('frame',self.frame)
+                #if cv2.waitKey(1) & 0xFF == ord('q'):
+                #    self.running = False
                 
-            sleep(0.01)
+            sleep(0.03)
+        if self.fd is not None:
+            self.fd.close()
+        if self.vout is not None:
+            self.vout.release()
             
     def get_jpg(self):
         jpg = cv2.imencode('.jpg',self.frame)
         return jpg.tobytes()
-    
-#videoOut = VideoOutThread()
+
+    def setFile(self, name):
+        if self.fd is not None:
+            self.fd.close()
+        if self.vout is not None:
+            self.vout.release()
+        timeStr =  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        parts = timeStr.split('-')
+        timeStr = '-'.join(parts[3:])
+        fileBase = 'vision.' +name +'.' + timeStr 
+        fileName = fileBase + '.dat'
+        self.fd = open(fileName,'w')
+        self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
+                      'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
+        # Define the codec and create VideoWriter object
+        #fourcc = cv2.VideoWriter_fourcc(*args["codec"])
+        fourcc  = cv2.cv.CV_FOURCC(*'MJPG')
+        self.vout = cv2.VideoWriter(fileBase + '.avi',fourcc, 30, (640,480))
+
+
+    def writeData(self,frame):
+        global visionSample
+        if self.sd is None:
+            self.sd = NetworkTables.getTable('SmartDashboard')
+        if self.sd is not None:
+            try:
+                robotMode = self.sd.getString('robotMode', 'disabled')
+                if robotMode == 'disabled':
+                    if self.fd is not None:
+                        self.fd.close()
+                        self.fd = None
+                    if self.vout is not None:
+                        print ('releasing vout')
+                        self.vout.release()
+                        self.vout = None
+                    self.robotMode = robotMode
+                    return
+                if robotMode != self.robotMode:
+                    self.setFile(robotMode)
+                    self.robotMode = robotMode
+                sampleID = self.sd.getNumber('visionSample',-1.0)
+                cv2.putText(frame,str(sampleID),(10,460), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+                
+                rawDist = self.sd.getNumber('visionRawDist', -1.0)
+                rawAngle = self.sd.getNumber('visionRawAngle',-1000.0)
+
+                
+                x = self.sd.getNumber('PositionEstX', -1000.0)
+                y = self.sd.getNumber('PositionEstY', -1000.0)
+
+                angle = self.sd.getNumber('NavControllerHeading', -370.0)
+                # if not getting angle, not point in writing data, maybe robot is off, or disabled
+                #if angle < -360.0:
+                #    return
+                distM = self.sd.getNumber("Vision distM", 0.0)
+                distC = self.sd.getNumber("Vision distC", 0.0)
+                angleC = self.sd.getNumber("Vision angleC", 0.0)
+                angleM = self.sd.getNumber("Vision angleM", 0.0)     
+                visX = self.sd.getNumber("VisionEstX", -1000.0)
+                visY = self.sd.getNumber("VisionEstY", -1000.0)                    
+                distRSquared = self.sd.getNumber("distRSquared", 0.0)
+                angleRSquared = self.sd.getNumber("angleRSquared",0.0)
+                posString = 'pos: %s,%s'%(x,y)
+                visPosString = 'vis: %s,%s'%(visX,visY)
+                cv2.putText(frame,posString,(10,430), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+                cv2.putText(frame,visPosString,(10,400), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+                self.fd.write('%s %s %s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, visX, visY, angle, rawDist, rawAngle,
+                                                  distM, distC, angleC, angleM, distRSquared, angleRSquared))
+                self.vout.write(frame)
+            except:
+                print('unable to write data')
+
+
+
+
+videoOut = VideoOutThread()
 
 # Performance improvement from http://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/
 class RobotGripPipeline(GripPipeline):
@@ -74,7 +159,7 @@ class RobotGripPipeline(GripPipeline):
             x,y,w,h = cv2.boundingRect(contour)
             
             AR = h/w
-            if (AR<1.8) or (AR> 2.5) or (y < 100) or (y >380):
+            if (AR<1.8) or (AR> 2.5) or (y < 120) or (y >380):
                 badData.append([x,y,w,h])
                 continue
             rawData.append([x,y,w,h])
@@ -128,7 +213,10 @@ class ProducerThread(threading.Thread):
     def setFile(self, name):
         if self.fd is not None:
             self.fd.close()
-        fileName = 'vision.' +name +'.' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")+ '.dat'
+        timeStr =  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        parts = timeStr.split('-')
+        timeStr = '-'.join(parts[3:])
+        fileName = 'vision.' +name +'.' + timeStr + '.dat'
         self.fd = open(fileName,'w')
         self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
                       'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
@@ -139,9 +227,9 @@ class ProducerThread(threading.Thread):
                 frame = self.cam.read()
                 q.put(frame)
                 self.fps.update()
-                self.writeData()
+                #self.writeData()
             sleep(0.03) # For roughly 30 fps
-        self.fd.close()
+        #self.fd.close()
         return
 
     def writeData(self):
@@ -215,12 +303,12 @@ class CameraSystem:
             consumer.start()
             self.consumers.append(consumer)
 
-        #videoOut.start()  
+        videoOut.start()  
     
     def loop(self):
         pass
-        #while videoOut.running:
-        #   sleep(0.5)
+        while videoOut.running:
+           sleep(0.5)
         
 
     def wrapup(self):
@@ -228,7 +316,7 @@ class CameraSystem:
         self.producer.running = False
         for consumer in self.consumers:
             consumer.running = False
-        #videoOut.running = False
+        videoOut.running = False
         print("[INFO] elasped time: {:.2f}".format(self.fps.elapsed()))
         print("[INFO] approx. FPS: {:.2f}".format(self.fps.fps()))
         exit()
@@ -304,14 +392,15 @@ def main():
     else:
         cs = CameraSystem()
     try:
-        server = ThreadedHTTPServer(('camerapi1721.local', 5808), MyHandler)
-        print 'started httpserver...'
-        server.serve_forever()
+        #server = ThreadedHTTPServer(('localhost', 5808), MyHandler)
+        print 'started video saving...'
+        cs.loop()
+        #server.serve_forever()
     except:
         print '^ Server failed or shut down'
         cs.wrapup()
         sleep(0.1) #Allow threads to stop
-        server.socket.close()  
+        #server.socket.close()  
     #cs.loop()
     #cs.wrapup()
 

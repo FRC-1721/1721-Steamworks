@@ -159,7 +159,8 @@ class RobotGripPipeline(GripPipeline):
             x,y,w,h = cv2.boundingRect(contour)
             
             AR = h/w
-            if (AR<1.8) or (AR> 2.5) or (y < 120) or (y >380):
+            if (AR<1.8) or (AR> 2.5) or (y+h < 120) or (y >380) \
+                     or (x < 80) or (x+w > 560):
                 badData.append([x,y,w,h])
                 continue
             rawData.append([x,y,w,h])

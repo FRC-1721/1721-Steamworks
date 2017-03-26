@@ -1,0 +1,1 @@
+rsync -avz -e ssh main.py grip2.py index.html camerapi1721.local:FRC/

@@ -74,7 +74,7 @@ public class DriveTrain extends Subsystem {
 
 	public void jInput(Joystick stick) {
 		m_robotDrive.arcadeDrive(-m_reversed * stick.getY(), 0.70 * (-stick.getTwist()),
-				true, false);
+				true, true);
 	}
 
 	public boolean setDriveReversed(double reversed) {

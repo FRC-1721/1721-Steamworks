@@ -134,6 +134,7 @@ public class OI {
 
 		SmartDashboard.putString("Joystick Mode", RobotMap.controllerMode.toString());
 
+		// TODO This was causing a crash
 //		for (int i = 0; i < jsticks.length; i++)
 //			out.print(joystickInfo(jsticks[i]));
 

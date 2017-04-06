@@ -60,12 +60,13 @@ public class ShooterController extends PIDSubsystem {
 			isSpin = false;
 		}
 
-		spin += Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
+		spin -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
 		spin = limit(spin);
 
 		SmartDashboard.putNumber("Scaled Right Joystick Axis", Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis))));
 		SmartDashboard.putNumber("Spin Value", spin);
 		SmartDashboard.putNumber("Rate", RobotMap.shooterEnc.getRate());
+		SmartDashboard.getBoolean("isSpin", isSpin);
 		// System.out.println("foo");
 		setShooter(spin);
 	}

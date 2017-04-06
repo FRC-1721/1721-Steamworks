@@ -3,6 +3,7 @@ package org.frc1721.steamworks.commands;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.*;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 /**
  *
@@ -23,6 +24,7 @@ public class AutoDepositGearSides extends CommandGroup {
 			double targetY = dir*(RobotMap.sideGearDepositY + 0.5*0.866); //fudge
 			// Drive to a point in line with the gear deposit
 			addSequential(new DriveToCoordinates(targetX, targetY, -2.0, 0.1, 20));
+			addSequential(new SpinUpShooter());
 			
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target

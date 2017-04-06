@@ -1,5 +1,6 @@
 package org.frc1721.steamworks.subsystems;
 
+import org.frc1721.steamworks.OI;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.Climber;
 
@@ -24,7 +25,5 @@ public class ClimberController extends Subsystem {
 
 	public void jInput(Joystick operator) {
 		RobotMap.cClimb.set((operator.getRawAxis(RobotMap.gamepadLTrigger)) - (operator.getRawAxis(RobotMap.gamepadRTrigger)));
-
-		operator.setRumble(RumbleType.kRightRumble, RobotMap.cClimb.get());
 	}
 }

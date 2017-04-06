@@ -289,6 +289,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Operator LY Axis", OI.jOp.getRawAxis(RobotMap.gamepadLYaxis));
 		SmartDashboard.putNumber("Operator Left Trigger", OI.jOp.getRawAxis(RobotMap.gamepadLTrigger));
 		SmartDashboard.putNumber("Operator Right Trigger", OI.jOp.getRawAxis(RobotMap.gamepadRTrigger));
+		
 
 		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());

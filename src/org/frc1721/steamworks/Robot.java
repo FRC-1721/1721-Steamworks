@@ -30,8 +30,9 @@ public class Robot extends IterativeRobot {
 	 * robotInit()
 	 */
 
-	public static ClimberController		climber;
-	public static LiftController		lift;
+	public static ClimberController climber;
+	// public static LiftController lift;
+	public static ShooterController		shooter;
 	public static DriveTrain			driveTrain;
 	public static CustomRobotDrive		robotDrive;
 	public static NavxController		navController;
@@ -55,13 +56,15 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);// .setInverted(true);
 		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);// .setInverted(true);
 		RobotMap.cClimb = new VictorSP(RobotMap.climbPWM);
-		RobotMap.lLift = new VictorSP(RobotMap.liftPWM);
+		RobotMap.sShooter = new VictorSP(RobotMap.shooterPWM);
 
 		/** Encoders **/
 		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB, RobotMap.dtrEncL);
 		RobotMap.dtrEnc = new Encoder(RobotMap.dtrEncPA, RobotMap.dtrEncPB, RobotMap.dtlEncR);
 		RobotMap.dtlEnc.setDistancePerPulse(RobotMap.lDPP);
 		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
+
+		RobotMap.shooterEnc = new Encoder(RobotMap.sEncPA, RobotMap.sEncPB, RobotMap.sEncR);
 
 		/** Network Tables **/
 		// RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
@@ -93,7 +96,10 @@ public class Robot extends IterativeRobot {
 		positionEstimator = new PositionEstimator();
 
 		/** Lift **/
-		lift = new LiftController();
+		// lift = new LiftController();
+
+		/** Shooter **/
+		shooter = new ShooterController();
 
 		/** Climber **/
 		climber = new ClimberController();
@@ -214,13 +220,13 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		SmartDashboard.putString("robotMode", "teleop");
 		robotDrive.disablePID();
-		//robotDrive.enablePID();
+		// robotDrive.enablePID();
 		/*
 		 * Gyro is only reset when the mode changes, so shut the it off then
 		 * back on in case teleop is started multiple times.
 		 */
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
-		//driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		// driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
 	}
 
 	@Override
@@ -244,6 +250,8 @@ public class Robot extends IterativeRobot {
 	private void printSmartDashboard() {
 		// out.printf("'%s.printSmartDashboard()' Worked.\n",
 		// this.getClass().getName());
+
+		SmartDashboard.putNumber("Shooter Encoder", RobotMap.sShooter.getRaw());
 
 		/** Limit Switch Stuff **/
 		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());

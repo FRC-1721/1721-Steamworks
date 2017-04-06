@@ -3,6 +3,7 @@ package org.frc1721.steamworks.subsystems;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.Climber;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -22,8 +23,8 @@ public class ClimberController extends Subsystem {
 	}
 
 	public void jInput(Joystick operator) {
-		RobotMap.cClimb.set(
-				(operator.getRawAxis(RobotMap.gamepadLTrigger)) - (operator.getRawAxis(RobotMap.gamepadRTrigger)));
+		RobotMap.cClimb.set((operator.getRawAxis(RobotMap.gamepadLTrigger)) - (operator.getRawAxis(RobotMap.gamepadRTrigger)));
 
+		operator.setRumble(RumbleType.kRightRumble, RobotMap.cClimb.get());
 	}
 }

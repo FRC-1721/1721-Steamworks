@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
+@Deprecated
 public class AutoDepositSteam extends CommandGroup {
 	public AutoDepositSteam(double startX, double startY, int team, boolean dumpBalls) {
 		double hopperDir = 1.0;
@@ -34,7 +35,7 @@ public class AutoDepositSteam extends CommandGroup {
 			addSequential(new TurnAbsolute(-hopperDir * 135.0, 5));
 			addSequential(new DistanceDriveStraight(3.0, 1.0, true));
 			// Raise the lift
-			addSequential(new LiftUp());
+//			addSequential(new LiftUp());
 		} else {
 			addSequential(new TurnAbsolute(0, 5));
 			addSequential(new DistanceDriveStraight(8.0, 4.0, true));

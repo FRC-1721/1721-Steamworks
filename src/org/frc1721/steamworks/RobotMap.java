@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  */
 
 // TODO CLEAN ALL THE THINGS UP
+// TODO Why do we have VictorSP objects and encoder objects
 public class RobotMap {
 
 	// Variables to change Robot
@@ -29,8 +30,8 @@ public class RobotMap {
 	/** VictorSP for the climbing **/
 	public static VictorSP cClimb;
 
-	/** VictorSP for the lift **/
-	public static VictorSP lLift;
+	/** VictorSP for the shooter **/
+	public static VictorSP sShooter;
 
 	/** PWM ports for drive motor controllers **/
 	public static final int dtlPWM = 0, dtrPWM = 1;
@@ -39,15 +40,28 @@ public class RobotMap {
 	public static final int climbPWM = 2;
 
 	/** PWM port for the lift motor controller **/
-	public static final int liftPWM = 3;
+	public static final int shooterPWM = 3;
+
+	/** Shooter rate **/
+	public static final double	shooterTargetRate	= 1500;
+	public static final double	shooterErrorPercent	= 0.05;	// 5% Error
+
 
 	/** Encoders for drive **/
 	public static Encoder	dtlEnc, dtrEnc;
+	public static Encoder	shooterEnc;
 	public static boolean	leftEncoderDisabled		= false;
 	public static boolean	rightEncoderDisabled	= false;
+	public static boolean	shooterEncoderDisabled	= false;	// This doesn't do anything..
 
 	/** Encoder DIO Ports **/
-	public static final int dtlEncPA = 0, dtlEncPB = 1, dtrEncPA = 2, dtrEncPB = 3;
+	public static final int	dtlEncPA	= 0;
+	public static final int	dtlEncPB	= 1;
+	public static final int	dtrEncPA	= 2;
+	public static final int	dtrEncPB	= 3;
+
+	public static final int	sEncPA	= -1;
+	public static final int	sEncPB	= -2;	// TODO assign a valid ports!
 
 	/** Limit Switch DIO Port **/
 	public static final int gearLs = 4, topLs = 5, bottomLs = 6;
@@ -68,7 +82,7 @@ public class RobotMap {
 	public static double	distD	= distP * distTu / 8.0;
 
 	/** Encoder reversals **/
-	public static final boolean dtlEncR = false, dtrEncL = false; // TODO FIX
+	public static final boolean dtlEncR = false, dtrEncL = false, sEncR = false; // TODO FIX
 
 	/** Gyro **/
 	public static AHRS navx;
@@ -81,7 +95,7 @@ public class RobotMap {
 	/** Some field positions **/
 	// Take y = 0 as centerline of field, and x as away from driver team
 	public static double	centerStartX		= 1.5, centerStartY = 0.0;
-	public static double    sideStartX          = 1.5, sideStartY = 5.5;
+	public static double	sideStartX			= 1.5, sideStartY = 5.5;
 	public static double	cGearDepositX		= 9.5, cGearDepositY = 0.0;
 	public static double	sideGearDepositX	= cGearDepositX + 1.47;
 	public static double	sideGearDepositY	= 2.55;
@@ -117,8 +131,9 @@ public class RobotMap {
 	 * 
 	 */
 
-	public static double	rDPP	= 0.0074536447630841;
-	public static double	lDPP	= 0.0074536447630841;
+	public static double	rDPP	= 0.0074536447630841d;
+	public static double	lDPP	= 0.0074536447630841d;
+	public static double	sDPP	= 1d;
 
 	/** Whether we are using a raspberry pi for vision processing **/
 	public static final boolean visionPi = true;
@@ -183,9 +198,12 @@ public class RobotMap {
 			forwardDriveButton = 6,
 			reverseDriveButton = 4,
 			runTeleopDepositGearButton = 3;
+	
+	public static final int spinUpButton = 4, spinDownButton = 1;
 
 
 	public static final int gamepadLYaxis = 1;
+	public static final int gamepadRYaxis = 5;
 
 	public static final int	gamepadLTrigger	= 2;
 	public static final int	gamepadRTrigger	= 3;

@@ -1,5 +1,4 @@
 package org.frc1721.steamworks;
-//@formatter:off
 
 import java.io.File;
 import java.io.FileWriter;
@@ -52,9 +51,9 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = resizeImageOutput;
-		double[] hsvThresholdHue = {33.99280575539568, 64.8122866894198};
-		double[] hsvThresholdSaturation = {0.0, 39.59897610921501};
-		double[] hsvThresholdValue = {224.73021582733816, 255.0};
+		double[] hsvThresholdHue = {37.23021582733812, 47.91808873720138};
+		double[] hsvThresholdSaturation = {0.0, 20.01706484641638};
+		double[] hsvThresholdValue = {231.60971223021585, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:
@@ -73,14 +72,14 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 60.0;
+		double filterContoursMinArea = 250.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
-		double filterContoursMaxWidth = 1000.0;
+		double filterContoursMaxWidth = 50.0;
 		double filterContoursMinHeight = 0.0;
 		double filterContoursMaxHeight = 1000.0;
 		double[] filterContoursSolidity = {0, 100};
-		double filterContoursMaxVertices = 1000000.0;
+		double filterContoursMaxVertices = 45.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;
 		double filterContoursMaxRatio = 1000.0;

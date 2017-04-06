@@ -1,10 +1,11 @@
 package org.frc1721.steamworks.subsystems;
 
+import java.text.DecimalFormat;
+
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,12 +16,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // TODO MAKE WORK
 public class ShooterController extends PIDSubsystem {
 
-	public boolean spinning = false;
+	protected static final double	originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
+																					// RobotMap.java to edit quick.
+	protected static double			spin			= originalSpin;
+	protected static DecimalFormat	dFormat			= new DecimalFormat("#.###");
+	private static boolean			isSpin			= false;
 
 	public ShooterController() {
-		super("Shooter", 1.0, 0.0, 0.0);
+		super("Shooter", RobotMap.sD, RobotMap.sI, RobotMap.sP);
 		setAbsoluteTolerance(RobotMap.shooterErrorPercent);
-		RobotMap.shooterEnc.setDistancePerPulse(RobotMap.sDPP);
 		getPIDController().setContinuous();
 	}
 
@@ -43,8 +47,27 @@ public class ShooterController extends PIDSubsystem {
 	}
 
 	public static void jstick(Joystick operator) {
-		SmartDashboard.putNumber("Scaled Right Joystick Axis", ((operator.getRawAxis(RobotMap.gamepadRYaxis) + 1.0d) / 2.0d));
-		
+		if (operator.getRawButton(RobotMap.resetSpinButton)) {
+			spin = originalSpin;
+			isSpin = true;
+		}
+
+		if (operator.getRawButton(RobotMap.spinUpButton)) {
+			isSpin = true;
+		}
+
+		if (operator.getRawButton(RobotMap.spinDownButton)) {
+			isSpin = false;
+		}
+
+		spin += Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
+		spin = limit(spin);
+
+		SmartDashboard.putNumber("Scaled Right Joystick Axis", Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis))));
+		SmartDashboard.putNumber("Spin Value", spin);
+		SmartDashboard.putNumber("Rate", RobotMap.shooterEnc.getRate());
+		// System.out.println("foo");
+		setShooter(spin);
 	}
 
 	/**
@@ -54,10 +77,17 @@ public class ShooterController extends PIDSubsystem {
 	 * @param set The value to set the motor to.
 	 * @return The current shooter speed.
 	 */
-	public double setShooter(double set) {
+	private static double setShooter(double set) {
+		if (isSpin)
+			RobotMap.sShooter.set(-limit(set));
+		else
+			RobotMap.sShooter.set(0.0d);
 
-		RobotMap.sShooter.set(limit(set));
 		return RobotMap.sShooter.get();
+	}
+
+	public static void setSpin(boolean isSpin) {
+		ShooterController.isSpin = isSpin;
 	}
 
 	/**

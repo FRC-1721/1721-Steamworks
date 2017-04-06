@@ -39,12 +39,12 @@ public class RobotMap {
 	/** PWN port for the climbing motor controller **/
 	public static final int climbPWM = 2;
 
-	/** PWM port for the lift motor controller **/
+	/** PWM port for the shooter motor controller **/
 	public static final int shooterPWM = 3;
 
 	/** Shooter rate **/
 	public static final double	shooterTargetRate	= 1500;
-	public static final double	shooterErrorPercent	= 0.05;	// 5% Error
+	public static final double	shooterErrorPercent	= 0.01;	// 5% Error
 
 
 	/** Encoders for drive **/
@@ -60,8 +60,8 @@ public class RobotMap {
 	public static final int	dtrEncPA	= 2;
 	public static final int	dtrEncPB	= 3;
 
-	public static final int	sEncPA	= -1;
-	public static final int	sEncPB	= -2;	// TODO assign a valid ports!
+	public static final int	sEncPA	= 4;
+	public static final int	sEncPB	= 5;
 
 	/** Limit Switch DIO Port **/
 	public static final int gearLs = 4, topLs = 5, bottomLs = 6;
@@ -72,9 +72,11 @@ public class RobotMap {
 
 	// ---------> DRIVE TRAIN: PID AND GYRO <----------
 
-	/** PID Control Variables **/
+	/** Drive PID Control Variables **/
 	public static double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 
+	/** Shooter PID Control Variables **/
+	public static double sP = 2.0, sI = 0.0, sD = 0.2; // TODO Figure out what the F term is
 	// Distance controller
 	public static double	distTu	= 0.2;
 	public static double	distP	= 1.5;
@@ -198,12 +200,14 @@ public class RobotMap {
 			forwardDriveButton = 6,
 			reverseDriveButton = 4,
 			runTeleopDepositGearButton = 3;
-	
-	public static final int spinUpButton = 4, spinDownButton = 1;
+
+	public static final int	spinUpButton	= 1;
+	public static final int	spinDownButton	= 2;
+	public static final int	resetSpinButton	= 3;	// TODO Make a button.
 
 
-	public static final int gamepadLYaxis = 1;
-	public static final int gamepadRYaxis = 5;
+	public static final int	gamepadLYaxis	= 1;
+	public static final int	gamepadRYaxis	= 5;
 
 	public static final int	gamepadLTrigger	= 2;
 	public static final int	gamepadRTrigger	= 3;

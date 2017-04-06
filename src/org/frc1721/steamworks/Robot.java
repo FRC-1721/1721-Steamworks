@@ -65,6 +65,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtrEnc.setDistancePerPulse(RobotMap.rDPP);
 
 		RobotMap.shooterEnc = new Encoder(RobotMap.sEncPA, RobotMap.sEncPB, RobotMap.sEncR);
+		RobotMap.shooterEnc.setDistancePerPulse(RobotMap.sDPP);
 
 		/** Network Tables **/
 		// RobotMap.cameraTable = NetworkTable.getTable("GRIP/myContourReport");
@@ -84,9 +85,9 @@ public class Robot extends IterativeRobot {
 		LCDController.print(RobotMap.lcd, "Hello World", 1);
 
 		/** Limit Switch's **/
-		topLimitSwitch = new DigitalInput(RobotMap.topLs);
-		bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs);
-		gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
+//		topLimitSwitch = new DigitalInput(RobotMap.topLs);
+//		bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs); // TODO remove limit switch stuffs
+//		gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
 
 		/** Gyro and navController **/
 		RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz);
@@ -254,9 +255,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Shooter Encoder", RobotMap.sShooter.getRaw());
 
 		/** Limit Switch Stuff **/
-		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
-		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
-		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
+//		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
+//		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
+//		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
 
 		/** Navx Stuff **/
 		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());

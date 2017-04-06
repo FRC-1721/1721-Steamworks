@@ -18,11 +18,11 @@ public class AutoDepositGearSides extends CommandGroup {
 					new SetCoordinates(RobotMap.sideStartX, dir*RobotMap.sideStartY));
 			addSequential(new SetYawOffset(180.0));
 			addSequential(new EnableDrivePIDCommand());
-			addSequential(new DriveToCoordinates(RobotMap.sideStartX + 5.0,dir*RobotMap.sideStartY, -2.0, 0.1, 20));
-			double targetX = RobotMap.sideGearDepositX - 1.0*0.866;
-			double targetY = dir*(RobotMap.sideGearDepositY + 1.0*0.5); //fudge
+			addSequential(new DriveToCoordinates(RobotMap.sideStartX + 6.0,dir*RobotMap.sideStartY, -2.0, 0.1, 20));
+			double targetX = RobotMap.sideGearDepositX - 0.25;
+			double targetY = dir*(RobotMap.sideGearDepositY + 0.5*0.866); //fudge
 			// Drive to a point in line with the gear deposit
-			addSequential(new DriveToCoordinates(targetX, targetY, -1.0, 0.1, 20));
+			addSequential(new DriveToCoordinates(targetX, targetY, -2.0, 0.1, 20));
 			
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target

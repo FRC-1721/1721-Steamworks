@@ -1,1 +1,1 @@
-rsync -avz -e ssh camerapi1721.local:FRC .
+rsync -avz -e ssh pi@camerapi1721.local:FRC .

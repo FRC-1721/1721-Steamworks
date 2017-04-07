@@ -1,7 +1,19 @@
 package org.frc1721.steamworks;
 
-import org.frc1721.steamworks.commands.*;
-import org.frc1721.steamworks.subsystems.*;
+import org.frc1721.steamworks.commands.AutoCalibrateVision;
+import org.frc1721.steamworks.commands.AutoCrossLineStraight;
+import org.frc1721.steamworks.commands.AutoDepositGear;
+import org.frc1721.steamworks.commands.AutoDepositGearSides;
+import org.frc1721.steamworks.commands.AutoTestVision;
+import org.frc1721.steamworks.commands.DoNothing;
+import org.frc1721.steamworks.commands.TestAuto;
+import org.frc1721.steamworks.subsystems.CameraSystem;
+import org.frc1721.steamworks.subsystems.ClimberController;
+import org.frc1721.steamworks.subsystems.DistanceController;
+import org.frc1721.steamworks.subsystems.DriveTrain;
+import org.frc1721.steamworks.subsystems.LCDController;
+import org.frc1721.steamworks.subsystems.NavxController;
+import org.frc1721.steamworks.subsystems.ShooterController;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -11,14 +23,13 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.VisionThread;
 
 public class Robot extends IterativeRobot {
 
@@ -85,9 +96,9 @@ public class Robot extends IterativeRobot {
 		LCDController.print(RobotMap.lcd, "Hello World", 1);
 
 		/** Limit Switch's **/
-//		topLimitSwitch = new DigitalInput(RobotMap.topLs);
-//		bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs); // TODO remove limit switch stuffs
-//		gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
+		// topLimitSwitch = new DigitalInput(RobotMap.topLs);
+		// bottomLimitSwitch = new DigitalInput(RobotMap.bottomLs); // TODO remove limit switch stuffs
+		// gearLimitSwitch = new DigitalInput(RobotMap.gearLs);
 
 		/** Gyro and navController **/
 		RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.navUpdateHz);
@@ -105,6 +116,9 @@ public class Robot extends IterativeRobot {
 		/** Climber **/
 		climber = new ClimberController();
 
+		/** Servo **/
+		RobotMap.shooterServo = new Servo(RobotMap.shooterServoPWN);
+		
 		/** Robot Drive **/
 		// robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftController,
@@ -257,9 +271,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Shooter Encoder", RobotMap.sShooter.getRaw());
 
 		/** Limit Switch Stuff **/
-//		SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
-//		SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
-//		SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
+		// SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
+		// SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());
+		// SmartDashboard.putBoolean("Bottom Limit Switch", bottomLimitSwitch.get());
 
 		/** Navx Stuff **/
 		SmartDashboard.putNumber("Yaw", RobotMap.navx.getYaw());
@@ -276,6 +290,7 @@ public class Robot extends IterativeRobot {
 
 		/** Camera Data **/
 		cameraSystem.updateSmartDashboard();
+		ShooterController.updateSmartDashboard();
 		/*
 		 * SmartDashboard.putNumber("area", RobotMap.cameraTable.getNumberArray("area", new double[] { -1 })[0]);
 		 * SmartDashboard.putNumber("centerY", RobotMap.cameraTable.getNumberArray("centerY", new double[] { -1 })[0]);
@@ -291,7 +306,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Operator LY Axis", OI.jOp.getRawAxis(RobotMap.gamepadLYaxis));
 		SmartDashboard.putNumber("Operator Left Trigger", OI.jOp.getRawAxis(RobotMap.gamepadLTrigger));
 		SmartDashboard.putNumber("Operator Right Trigger", OI.jOp.getRawAxis(RobotMap.gamepadRTrigger));
-		
+
 
 		/** PID Stuff **/
 		SmartDashboard.putBoolean("PID", Robot.robotDrive.getPIDStatus());

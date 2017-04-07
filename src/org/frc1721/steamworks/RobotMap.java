@@ -6,6 +6,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
@@ -42,9 +43,15 @@ public class RobotMap {
 	/** PWM port for the shooter motor controller **/
 	public static final int shooterPWM = 3;
 
+	/** Servo **/
+	public static Servo shooterServo;
+
+	/** Servo Channel **/
+	public static final int shooterServoPWN = 4;
+
 	/** Shooter rate **/
 	public static final double	shooterTargetRate	= 1500;
-	public static final double	shooterErrorPercent	= 0.01;	// 5% Error
+	public static final double	shooterErrorPercent	= 0.01;	// 1% Error?
 
 
 	/** Encoders for drive **/
@@ -211,6 +218,12 @@ public class RobotMap {
 
 	public static final int	gamepadLTrigger	= 2;
 	public static final int	gamepadRTrigger	= 3;
+	
+	public static final int gamepadPovTop = 0;
+	public static final int gamepadPovBottom = 180;
+	
+	public static final double servoDown = 0.80d;
+	public static final double servoUp = 1.0d;
 
 	public static final int redTeam = 0, blueTeam = 1;
 

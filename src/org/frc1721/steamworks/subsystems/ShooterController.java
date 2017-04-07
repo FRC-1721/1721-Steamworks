@@ -21,6 +21,7 @@ public class ShooterController extends PIDSubsystem {
 	protected static double			spin			= originalSpin;
 	protected static DecimalFormat	dFormat			= new DecimalFormat("#.###");
 	private static boolean			isSpin			= false;
+	protected static double			servoValue		= RobotMap.servoDown;
 
 	public ShooterController() {
 		super("Shooter", RobotMap.sD, RobotMap.sI, RobotMap.sP);
@@ -47,6 +48,17 @@ public class ShooterController extends PIDSubsystem {
 	}
 
 	public static void jstick(Joystick operator) {
+
+		switch (operator.getPOV()) {
+			case RobotMap.gamepadPovTop:
+				servoValue = RobotMap.servoUp;
+				break;
+			case RobotMap.gamepadPovBottom:
+				servoValue = RobotMap.servoDown;
+				break;
+
+		}
+
 		if (operator.getRawButton(RobotMap.resetSpinButton)) {
 			spin = originalSpin;
 			isSpin = true;
@@ -60,16 +72,23 @@ public class ShooterController extends PIDSubsystem {
 			isSpin = false;
 		}
 
+		servoValue -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadLYaxis)));
+		servoValue = limit(servoValue);
+
+
 		spin -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
 		spin = limit(spin);
 
-		SmartDashboard.putNumber("Scaled Right Joystick Axis", Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis))));
-		SmartDashboard.putNumber("Spin Value", spin);
-		SmartDashboard.putNumber("Rate", RobotMap.shooterEnc.getRate());
-		SmartDashboard.getBoolean("isSpin", isSpin);
 		// System.out.println("foo");
 		setShooter(spin);
+		setServo(servoValue);
 	}
+
+	private static double setServo(double servo) {
+		RobotMap.shooterServo.set(servo);
+		return RobotMap.shooterServo.get();
+	}
+
 
 	/**
 	 * Sets the shooter,
@@ -80,7 +99,7 @@ public class ShooterController extends PIDSubsystem {
 	 */
 	private static double setShooter(double set) {
 		if (isSpin)
-			RobotMap.sShooter.set(-limit(set));
+			RobotMap.sShooter.set(-set);
 		else
 			RobotMap.sShooter.set(0.0d);
 
@@ -92,17 +111,37 @@ public class ShooterController extends PIDSubsystem {
 	}
 
 	/**
-	 * Limit motor values to the -1.0 to +1.0 range.
+	 * Limit values. default -1.0 to +1.0.
 	 */
 	private static double limit(double num) {
-		if (num > 1.0) {
-			return 1.0;
-		}
 		if (num < -1.0) {
 			return -1.0;
+		}
+		if (num > 1.0) {
+			return 1.0;
 		}
 		return num;
 	}
 
+	/**
+	 * Limit values. from min to max.
+	 */
+	private static double limit(double num, double min, double max) {
+		if (num < min) {
+			return min;
+		}
+		if (num > max) {
+			return max;
+		}
+		return num;
+	}
+
+	public static void updateSmartDashboard() {
+		SmartDashboard.putNumber("Spin Value", spin);
+		SmartDashboard.putNumber("Rate", RobotMap.shooterEnc.getRate());
+		SmartDashboard.getBoolean("isSpin", isSpin);
+		SmartDashboard.putNumber("servo", servoValue);
+
+	}
 
 }

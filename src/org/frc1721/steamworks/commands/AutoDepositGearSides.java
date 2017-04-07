@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
  *
  */
 public class AutoDepositGearSides extends CommandGroup {
-	public AutoDepositGearSides(double dir) {
+	public AutoDepositGearSides(double dir, boolean shoot) {
 
 		boolean useOldMethod = true;
 		// use a dir of 0 to signal to not j-hook
@@ -26,7 +26,9 @@ public class AutoDepositGearSides extends CommandGroup {
 			double targetX = RobotMap.sideGearDepositX - 0.25;
 			double targetY = dir*(RobotMap.sideGearDepositY + 0.5*0.866); //fudge
 			addSequential(new DriveToCoordinates(targetX, targetY, -2.0, 0.1, 20));
-			addSequential(new SpinUpShooter());
+			if (shoot) {
+				addSequential(new SpinUpShooter());
+			}
 			
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target

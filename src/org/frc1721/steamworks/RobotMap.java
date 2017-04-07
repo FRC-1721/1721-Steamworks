@@ -43,11 +43,11 @@ public class RobotMap {
 	/** PWM port for the shooter motor controller **/
 	public static final int shooterPWM = 3;
 
-	/** Servo **/
-	public static Servo shooterServo;
-
 	/** Servo Channel **/
 	public static final int shooterServoPWN = 4;
+
+	/** Servo **/
+	public static Servo shooterServo;
 
 	/** Shooter rate **/
 	public static final double	shooterTargetRate	= 1500;
@@ -84,7 +84,7 @@ public class RobotMap {
 
 	/** Shooter PID Control Variables **/
 	public static double sP = 2.0, sI = 0.0, sD = 0.2; // TODO Figure out what the F term is
-	
+
 	// Distance controller
 	public static double	distTu	= 0.2;
 	public static double	distP	= 1.5;
@@ -212,6 +212,7 @@ public class RobotMap {
 	public static final int	spinUpButton	= 1;
 	public static final int	spinDownButton	= 2;
 	public static final int	resetSpinButton	= 3;	// TODO Make a button.
+	public static final int	fullClimb		= 4;
 
 
 	public static final int	gamepadLYaxis	= 1;
@@ -219,12 +220,12 @@ public class RobotMap {
 
 	public static final int	gamepadLTrigger	= 2;
 	public static final int	gamepadRTrigger	= 3;
-	
-	public static final int gamepadPovTop = 0;
-	public static final int gamepadPovBottom = 180;
-	
-	public static final double servoDown = 0.80d;
-	public static final double servoUp = 1.0d;
+
+	public static final int	gamepadPovTop		= 0;
+	public static final int	gamepadPovBottom	= 180;
+
+	public static final double	servoDown	= 0.80d;
+	public static final double	servoUp		= 1.0d;
 
 	public static final int redTeam = 0, blueTeam = 1;
 

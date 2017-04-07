@@ -14,6 +14,7 @@ public class AutoDepositGearSides extends CommandGroup {
 		boolean useOldMethod = true;
 		// use a dir of 0 to signal to not j-hook
 		if (useOldMethod) {
+//			addParallel(new SpinUpShooter());
 			addSequential(new SetCameraCalibration(true));
 			addSequential(
 					new SetCoordinates(RobotMap.sideStartX, dir * RobotMap.sideStartY));
@@ -27,7 +28,7 @@ public class AutoDepositGearSides extends CommandGroup {
 			double targetY = dir * (RobotMap.sideGearDepositY + 0.5 * 0.866); // fudge
 			addSequential(new DriveToCoordinates(targetX, targetY, -2.0, 0.1, 20));
 			if (shoot) {
-				addSequential(new SpinUpShooter());
+				addParallel(new SpinUpShooter());
 			}
 
 			addSequential(new DistanceDriveStraight(1.0, 0.5));

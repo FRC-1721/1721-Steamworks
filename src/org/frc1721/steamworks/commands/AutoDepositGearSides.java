@@ -9,39 +9,42 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
  *
  */
 public class AutoDepositGearSides extends CommandGroup {
-	public AutoDepositGearSides(double dir) {
+	public AutoDepositGearSides(double dir, boolean shoot) {
 
 		boolean useOldMethod = true;
 		// use a dir of 0 to signal to not j-hook
 		if (useOldMethod) {
 			addSequential(new SetCameraCalibration(true));
 			addSequential(
-					new SetCoordinates(RobotMap.sideStartX, dir * RobotMap.sideStartY));
+					new SetCoordinates(RobotMap.sideStartX, dir*RobotMap.sideStartY));
 			addSequential(new SetYawOffset(180.0));
 			addSequential(new EnableDrivePIDCommand());
-			addSequential(new DriveToCoordinates(RobotMap.sideStartX + 6.0, dir * RobotMap.sideStartY, -2.0, 0.1, 20));
-			double targetX = RobotMap.sideGearDepositX - 0.5; // based on 120 degree angle
-			double targetY = dir * (RobotMap.sideGearDepositY + 0.866);
+			addSequential(new DriveToCoordinates(RobotMap.sideStartX + 6.0,dir*RobotMap.sideStartY, -2.0, 0.1, 20));
 			// Turn past desired heading to target in order to pick up a vision sample
-			addSequential(new TurnAbsolute(dir * 110.0, 5, 2));
+			addSequential(new TurnAbsolute(dir*110.0, 5, 2));
 			// Drive to a point in line with the gear deposit
+			double targetX = RobotMap.sideGearDepositX - 0.25;
+			double targetY = dir*(RobotMap.sideGearDepositY + 0.5*0.866); //fudge
 			addSequential(new DriveToCoordinates(targetX, targetY, -2.0, 0.1, 20));
-
-			addSequential(new DistanceDriveStraight(1.5, 0.5));
+			if (shoot) {
+				addSequential(new SpinUpShooter());
+			}
+			
+			addSequential(new DistanceDriveStraight(1.0, 0.5));
 			
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target
 			// addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
-			// addSequential(new DrivePause(5.0));
+			//addSequential(new DrivePause(5.0));
 			// addSequential(new DistanceDriveStraight(1.0, 0.5, 0.2));
 			// addSequential(new DriveToCoordinates(targetX, 0.0, -1.0, 0.1, 20));
 			// addSequential(new DrivePause(1.5));
-			// addSequential(new DistanceDriveStraight(2.0, 0.5));
-			// if (dir != 0.0) {
-			// targetX = 14.0;
-			// targetY = RobotMap.sideStartY*dir;
-			// addSequential(new DriveToCoordinates(targetX, targetY, 5.0, 2.0, 2));
-			// }
+			//addSequential(new DistanceDriveStraight(2.0, 0.5));
+			//if (dir != 0.0) {
+			//	targetX = 14.0;
+			//	targetY = RobotMap.sideStartY*dir;
+			//	addSequential(new DriveToCoordinates(targetX, targetY, 5.0, 2.0, 2));
+			//}
 		} else {
 			// Todo Below not working yet.
 			// New method that tries to auto-determine the closest target

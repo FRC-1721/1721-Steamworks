@@ -18,6 +18,7 @@ import org.frc1721.steamworks.subsystems.ShooterController;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -25,8 +26,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.hal.AllianceStationID;
+import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -118,7 +122,7 @@ public class Robot extends IterativeRobot {
 
 		/** Servo **/
 		RobotMap.shooterServo = new Servo(RobotMap.shooterServoPWN);
-		
+
 		/** Robot Drive **/
 		// robotDrive.setInvertedMotor(robotDrive.MotorType.kFrontRight, true);
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftController,
@@ -136,6 +140,11 @@ public class Robot extends IterativeRobot {
 		/** Auto Chooser **/
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new TestAuto();
+
+		// TODO Make this more autonomous
+		// E.G. DriverStation.getInstance().getAlliance();
+		// E.G. DriverStation.getInstance().getLocation();
+
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("CrossLineStraightRight", new AutoCrossLineStraight(5.5));
 		autoChooser.addDefault("CrossLineStraightLeft", new AutoCrossLineStraight(-5.5));

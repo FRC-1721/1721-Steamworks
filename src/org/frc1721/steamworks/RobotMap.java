@@ -84,6 +84,7 @@ public class RobotMap {
 
 	/** Shooter PID Control Variables **/
 	public static double sP = 2.0, sI = 0.0, sD = 0.2; // TODO Figure out what the F term is
+	
 	// Distance controller
 	public static double	distTu	= 0.2;
 	public static double	distP	= 1.5;

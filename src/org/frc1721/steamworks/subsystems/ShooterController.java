@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 
-// TODO MAKE WORK
 public class ShooterController extends PIDSubsystem {
 
 	protected static final double	originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
@@ -72,8 +71,8 @@ public class ShooterController extends PIDSubsystem {
 			isSpin = false;
 		}
 
-		servoValue -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadLYaxis)));
-		servoValue = limit(servoValue);
+		// servoValue -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadLYaxis)));
+		servoValue = limit(servoValue, Math.min(RobotMap.servoDown, RobotMap.servoUp), Math.max(RobotMap.servoDown, RobotMap.servoUp));
 
 
 		spin -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
@@ -101,7 +100,7 @@ public class ShooterController extends PIDSubsystem {
 		if (isSpin)
 			RobotMap.sShooter.set(-set);
 		else
-			RobotMap.sShooter.set(0.0d);
+			RobotMap.sShooter.set(0.0d); // TODO Learn if .stopMotor would work better here
 
 		return RobotMap.sShooter.get();
 	}

@@ -1,14 +1,11 @@
 package org.frc1721.steamworks.commands;
 
 import org.frc1721.steamworks.OI;
-
 import org.frc1721.steamworks.Robot;
 import org.frc1721.steamworks.RobotMap;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-
-import static java.lang.System.out;
 
 public class DriveInTeleop extends Command {
 
@@ -29,7 +26,7 @@ public class DriveInTeleop extends Command {
 				Robot.driveTrain.jInput(OI.jsticks[0], OI.jsticks[1]);
 				break;
 			default:
-				out.printf("Tell Zachary to look in '%s.java'\n", this.getClass().getName());
+				DriverStation.reportError(String.format("Tell Zachary to look in '%s.java'\n", this.getClass().getName()), false);
 				break;
 		}
 	}

@@ -2,6 +2,7 @@ package org.frc1721.steamworks.subsystems;
 
 import java.text.DecimalFormat;
 
+import org.frc1721.steamworks.OI;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.Shooter;
 
@@ -15,15 +16,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterController extends PIDSubsystem {
 
-	protected static final double	originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
+	public static final double		originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
 																					// RobotMap.java to edit quick.
-	protected static double			spin			= originalSpin;
-	protected static DecimalFormat	dFormat			= new DecimalFormat("#.###");
-	private static boolean			isSpin			= false;
-	protected static double			servoValue		= RobotMap.servoDown;
+	private static double			spin			= originalSpin;
+	private static DecimalFormat	dFormat			= new DecimalFormat("#.###");
+	private static boolean			enabled			= false;						// I'm using enabled so that I can turn
+																					// the motors on and off but preserve the
+																					// value of spin
+	private static double			servoValue		= RobotMap.servoDown;
 
 	public ShooterController() {
-		super("Shooter", RobotMap.sD, RobotMap.sI, RobotMap.sP);
+		super("Shooter", RobotMap.sP, RobotMap.sI, RobotMap.sD);
 		setAbsoluteTolerance(RobotMap.shooterErrorPercent);
 		getPIDController().setContinuous();
 	}
@@ -60,23 +63,23 @@ public class ShooterController extends PIDSubsystem {
 
 		if (operator.getRawButton(RobotMap.resetSpinButton)) {
 			spin = originalSpin;
-			isSpin = true;
+			enabled = true;
 		}
 
 		if (operator.getRawButton(RobotMap.spinUpButton)) {
-			isSpin = true;
+			enabled = true;
 		}
 
 		if (operator.getRawButton(RobotMap.spinDownButton)) {
-			isSpin = false;
+			enabled = false;
 		}
 
-		// servoValue -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadLYaxis)));
-		servoValue = limit(servoValue, Math.min(RobotMap.servoDown, RobotMap.servoUp), Math.max(RobotMap.servoDown, RobotMap.servoUp));
+		//servoValue -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadLYaxis)));
+		servoValue = OI.limit(servoValue, Math.min(RobotMap.servoDown, RobotMap.servoUp), Math.max(RobotMap.servoDown, RobotMap.servoUp));
 
 
 		spin -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
-		spin = limit(spin);
+		spin = OI.limit(spin);
 
 		// System.out.println("foo");
 		setShooter(spin);
@@ -97,48 +100,28 @@ public class ShooterController extends PIDSubsystem {
 	 * @return The current shooter speed.
 	 */
 	private static double setShooter(double set) {
-		if (isSpin)
-			RobotMap.sShooter.set(-set);
+		if (enabled)
+			RobotMap.sShooter.set(set);
 		else
 			RobotMap.sShooter.set(0.0d); // TODO Learn if .stopMotor would work better here
 
 		return RobotMap.sShooter.get();
 	}
 
-	public static void setSpin(boolean isSpin) {
-		ShooterController.isSpin = isSpin;
-	}
-
 	/**
-	 * Limit values. default -1.0 to +1.0.
+	 * Only to be used in SpinDownShooter.java and SpinUpShooter.java.
+	 * 
+	 * @param isSpin
 	 */
-	private static double limit(double num) {
-		if (num < -1.0) {
-			return -1.0;
-		}
-		if (num > 1.0) {
-			return 1.0;
-		}
-		return num;
-	}
-
-	/**
-	 * Limit values. from min to max.
-	 */
-	private static double limit(double num, double min, double max) {
-		if (num < min) {
-			return min;
-		}
-		if (num > max) {
-			return max;
-		}
-		return num;
+	public static void setSpin(boolean enable) {
+		ShooterController.enabled = enable;
 	}
 
 	public static void updateSmartDashboard() {
+		SmartDashboard.putNumber("Shooter Encoder", RobotMap.sShooter.get());
 		SmartDashboard.putNumber("Spin Value", spin);
 		SmartDashboard.putNumber("Rate", RobotMap.shooterEnc.getRate());
-		SmartDashboard.getBoolean("isSpin", isSpin);
+		SmartDashboard.getBoolean("isSpin", enabled);
 		SmartDashboard.putNumber("servo", servoValue);
 
 	}

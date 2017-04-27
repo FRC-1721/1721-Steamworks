@@ -46,7 +46,6 @@ public class Robot extends IterativeRobot {
 	 */
 
 	public static ClimberController climber;
-	// public static LiftController lift;
 	public static ShooterController		shooter;
 	public static DriveTrain			driveTrain;
 	public static CustomRobotDrive		robotDrive;
@@ -68,10 +67,14 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		/** Motor Controllers **/
-		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);// .setInverted(true);
-		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);// .setInverted(true);
+		RobotMap.dtLeft = new VictorSP(RobotMap.dtlPWM);
+		RobotMap.dtRight = new VictorSP(RobotMap.dtrPWM);
 		RobotMap.cClimb = new VictorSP(RobotMap.climbPWM);
 		RobotMap.sShooter = new VictorSP(RobotMap.shooterPWM);
+
+		/** Motor Controller Inversions **/
+		RobotMap.cClimb.setInverted(RobotMap.climbInverted);
+		RobotMap.sShooter.setInverted(RobotMap.shooterInverted);
 
 		/** Encoders **/
 		RobotMap.dtlEnc = new Encoder(RobotMap.dtlEncPA, RobotMap.dtlEncPB, RobotMap.dtrEncL);
@@ -94,10 +97,10 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRightController.setPIDSourceType(PIDSourceType.kRate);
 
 		/** LCD **/
-		RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
-		lcdController = new LCDController();
-		lcdController.initLCD(RobotMap.lcd);
-		LCDController.print(RobotMap.lcd, "Hello World", 1);
+		// RobotMap.lcd = new I2C(I2C.Port.kOnboard, 0x27);
+		// lcdController = new LCDController();
+		// lcdController.initLCD(RobotMap.lcd);
+		// LCDController.print(RobotMap.lcd, "Hello World", 1);
 
 		/** Limit Switch's **/
 		// topLimitSwitch = new DigitalInput(RobotMap.topLs);
@@ -110,9 +113,6 @@ public class Robot extends IterativeRobot {
 				RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
 		navController.setDisplacementRange(-180.0, 180.0);
 		positionEstimator = new PositionEstimator();
-
-		/** Lift **/
-		// lift = new LiftController();
 
 		/** Shooter **/
 		shooter = new ShooterController();
@@ -150,13 +150,13 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("CrossLineStraightLeft", new AutoCrossLineStraight(-5.5));
 		// center of robot about 2 feet off wall
 		autoChooser.addObject("TestVision", new AutoTestVision());
-		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));
-		autoChooser.addObject("AutoGearLeft", new AutoDepositGear(-1.0));
+//		autoChooser.addObject("AutoGearRight", new AutoDepositGear(1.0));
+//		autoChooser.addObject("AutoGearLeft", new AutoDepositGear(-1.0));
 		autoChooser.addObject("AutoGearStraight", new AutoDepositGear(0.0));
-		autoChooser.addObject("SideAutoGearRightShoot", new AutoDepositGearSides(1.0,true));
-		autoChooser.addObject("SideAutoGearLeftShoot", new AutoDepositGearSides(-1.0,true));
-		autoChooser.addObject("SideAutoGearRight", new AutoDepositGearSides(1.0,false));
-		autoChooser.addObject("SideAutoGearLeft", new AutoDepositGearSides(-1.0,false));
+		autoChooser.addObject("SideAutoGearRightShoot", new AutoDepositGearSides(1.0, true));
+		autoChooser.addObject("SideAutoGearLeftShoot", new AutoDepositGearSides(-1.0, true));
+		autoChooser.addObject("SideAutoGearRight", new AutoDepositGearSides(1.0, false));
+		autoChooser.addObject("SideAutoGearLeft", new AutoDepositGearSides(-1.0, false));
 		// autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
 		autoChooser.addObject("CalibrateVision", new AutoCalibrateVision());
 		autoChooser.addObject("Do Nothing", new DoNothing());
@@ -253,6 +253,9 @@ public class Robot extends IterativeRobot {
 		 */
 		driveTrain.setGyroMode(CustomRobotDrive.GyroMode.off);
 		// driveTrain.setGyroMode(CustomRobotDrive.GyroMode.rate);
+		
+		if (autonomousCommand != null)
+		    autonomousCommand.cancel();
 	}
 
 	@Override
@@ -277,8 +280,10 @@ public class Robot extends IterativeRobot {
 		// out.printf("'%s.printSmartDashboard()' Worked.\n",
 		// this.getClass().getName());
 
-		SmartDashboard.putNumber("Shooter Encoder", RobotMap.sShooter.getRaw());
-
+		SmartDashboard.putNumber("Left Drive Train Encoder", RobotMap.dtlEnc.get());
+		SmartDashboard.putNumber("Right Drive Train Encoder", RobotMap.dtrEnc.get());
+		
+		
 		/** Limit Switch Stuff **/
 		// SmartDashboard.putBoolean("Gear Limit Switch", gearLimitSwitch.get());
 		// SmartDashboard.putBoolean("Top Limit Switch", topLimitSwitch.get());

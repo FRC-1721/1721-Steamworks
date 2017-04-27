@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 @SuppressWarnings("unused")
+@Deprecated
 public class LCDController extends Subsystem {
 
 	@Override

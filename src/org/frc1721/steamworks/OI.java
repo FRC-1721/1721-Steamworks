@@ -7,12 +7,10 @@ import org.frc1721.steamworks.commands.DisableDrivePIDCommand;
 import org.frc1721.steamworks.commands.DriveToGearTarget;
 import org.frc1721.steamworks.commands.EnableDrivePIDCommand;
 import org.frc1721.steamworks.commands.SetDriveReversed;
-import org.frc1721.steamworks.commands.TeleopDepositGear;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator interface to the commands
@@ -132,15 +130,15 @@ public class OI {
 
 		out.println("Op Controller: " + gpOp);
 
-		SmartDashboard.putString("Joystick Mode", RobotMap.controllerMode.toString());
+		DriverStation.reportWarning("Joystick Mode" + RobotMap.controllerMode.toString(), false);
 
 		// TODO This was causing a crash
-//		for (int i = 0; i < jsticks.length; i++)
-//			out.print(joystickInfo(jsticks[i]));
+		// for (int i = 0; i < jsticks.length; i++)
+		// out.print(joystickInfo(jsticks[i]));
 
-//		for (int i = 0; i < 3; i++) // TODO see how this works out.
-//			out.print(driverstationInfo(i));
-		
+		// for (int i = 0; i < 3; i++) // TODO see how this works out.
+		// out.print(driverstationInfo(i));
+
 
 		/** Driver Buttons **/
 		try {
@@ -156,7 +154,8 @@ public class OI {
 			reverseDriveButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.reverseDriveButton);
 			reverseDriveButton.whenPressed(new SetDriveReversed(-1.0));
 			teleopDepositGearButton = new JoystickButton(jsticks[RobotMap.pidStick], RobotMap.runTeleopDepositGearButton);
-			teleopDepositGearButton.whileHeld(new DriveToGearTarget(approachPoints,-3.0,0.1)); // TODO Maybe make this a two button system
+			teleopDepositGearButton.whileHeld(new DriveToGearTarget(approachPoints, -3.0, 0.1)); // TODO Maybe make this a
+																									// two button system
 
 		} catch (RuntimeException e) {
 			DriverStation.reportError(String.format("The Driver Buttons in '%s.java' broke again.\n" + "RESTARTING ROBOT CODE!!!\n", this.getClass().getName()), true);
@@ -166,13 +165,42 @@ public class OI {
 
 	}
 
+	@SuppressWarnings("unused")
 	private String joystickInfo(Joystick jstick) {
 		// TODO Fix
-		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(), jstick.getPort());
+		return String.format("The number of buttons this joystick has is %d\n" + "The name of the joystick is %s\n" + "The port of this joystick is %s\n", jstick.getButtonCount(), jstick.getName(),
+				jstick.getPort());
 	}
 
+	@SuppressWarnings("unused")
 	private String driverstationInfo(int stick) {
 		return String.format("The driverstation joystick type is %d\n", m_ds.getJoystickType(stick));
+	}
+
+	/**
+	 * Limit values. default -1.0 to +1.0.
+	 */
+	public static double limit(double num) {
+		if (num < -1.0) {
+			return -1.0;
+		}
+		if (num > 1.0) {
+			return 1.0;
+		}
+		return num;
+	}
+
+	/**
+	 * Limit values. from min to max.
+	 */
+	public static double limit(double num, double min, double max) {
+		if (num < min) {
+			return min;
+		}
+		if (num > max) {
+			return max;
+		}
+		return num;
 	}
 
 }

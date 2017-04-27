@@ -31,7 +31,7 @@ public class AutoDepositGearSides extends CommandGroup {
 				addParallel(new SpinUpShooter());
 			}
 
-			addSequential(new DistanceDriveStraight(1.0, 0.5));
+			addSequential(new DistanceDriveStraight(-1.0, 0.5));
 
 			// targetX = RobotMap.cGearDepositX - 1.0;
 			// Drive slowly final portion, increase tolerance to give it time on target

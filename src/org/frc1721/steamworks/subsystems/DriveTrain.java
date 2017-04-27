@@ -73,8 +73,17 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void jInput(Joystick stick) {
-		m_robotDrive.arcadeDrive(-m_reversed * stick.getY(), 0.70 * (-stick.getTwist()),
-				true, true);
+		// TODO Joe wanted the slider to go faster or slower, slider would effect turning and drive speed.
+		m_robotDrive.arcadeDrive(-m_reversed * stick.getY(), 0.70 * (-stick.getTwist()), true, true);
+		// m_robotDrive.arcadeDrive(-m_reversed * stick.getY(),
+		// ((stick.getRawAxis(RobotMap.joystickSliderAxis) + 1.0d) / 2.0d) * (-stick.getTwist()), true, true);
+	}
+
+	public void jInput(Joystick left, Joystick right) {
+		// TODO make tank drive great again, think about re-thinking how we're doing motors directions and stuff in
+		// DriveTrain, unfortunately I think this will take a little time to insure PID is working with the changes
+		m_robotDrive.tankDrive(left, right, false);
+		DriverStation.reportError("Tank Drive is not 100% right now. ~Zachary", false);
 	}
 
 	public boolean setDriveReversed(double reversed) {
@@ -83,12 +92,6 @@ public class DriveTrain extends Subsystem {
 			newDirection = true;
 		m_reversed = reversed;
 		return newDirection;
-	}
-
-
-	public void jInput(Joystick left, Joystick right) {
-		// TODO make tank drive great again
-		m_robotDrive.tankDrive(left, right, false);
 	}
 
 	public void stop() {

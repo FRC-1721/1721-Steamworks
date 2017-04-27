@@ -23,7 +23,6 @@ This code is maintained and written by the following people
 - Brennan Macaig
 
 ### Competition notes:
-- pull the vision branch.  Several bug fixes are in it.
 - make a backup of main.py on the pi.  scp the new main.py into the home directory of the pi.
 - You may want to re-name the host name of the pi since other's may have a raspberry pi.  If you do, replace it in main.py
 - May want to setup main.py to run on startup.  

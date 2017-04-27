@@ -17,7 +17,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  */
 
 // TODO CLEAN ALL THE THINGS UP
+// TODO Remove all magic numbers from everything
 // TODO Why do we have VictorSP objects and encoder objects
+// TODO Make everything an enum, I like enums.
 public class RobotMap {
 
 	// Variables to change Robot
@@ -29,10 +31,12 @@ public class RobotMap {
 	public static VictorSP dtLeft, dtRight;
 
 	/** VictorSP for the climbing **/
-	public static VictorSP cClimb;
+	public static VictorSP		cClimb;
+	public static final boolean	climbInverted	= true;
 
 	/** VictorSP for the shooter **/
-	public static VictorSP sShooter;
+	public static VictorSP		sShooter;
+	public static final boolean	shooterInverted	= true;
 
 	/** PWM ports for drive motor controllers **/
 	public static final int dtlPWM = 0, dtrPWM = 1;
@@ -83,7 +87,7 @@ public class RobotMap {
 	public static double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 
 	/** Shooter PID Control Variables **/
-	public static double sP = 2.0, sI = 0.0, sD = 0.2; // TODO Figure out what the F term is
+	public static double sP = 4.0, sI = 0.0, sD = 0.02; // TODO Figure out what the F term is
 
 	// Distance controller
 	public static double	distTu	= 0.2;
@@ -207,13 +211,17 @@ public class RobotMap {
 			pidEnableButton = 8,
 			forwardDriveButton = 6,
 			reverseDriveButton = 4,
-			runTeleopDepositGearButton = 3;
+			runTeleopDepositGearButton = 3,
+			joystickSliderAxis = 3;
 
 	public static final int	spinUpButton	= 1;
 	public static final int	spinDownButton	= 2;
-	public static final int	resetSpinButton	= 3;	// TODO Make a button.
+	public static final int	resetSpinButton	= 3;
 	public static final int	fullClimb		= 4;
 
+
+	// public static final AxisType gamepadLYaxis = AxisType.
+	// TODO Use ButtonType and AxisType instead of using the raw numbers.
 
 	public static final int	gamepadLYaxis	= 1;
 	public static final int	gamepadRYaxis	= 5;
@@ -224,6 +232,9 @@ public class RobotMap {
 	public static final int	gamepadPovTop		= 0;
 	public static final int	gamepadPovBottom	= 180;
 
+	/*
+	 * Rough Position to put the servo in, I'm aware this is getto but this servo is getto too so fuck it.
+	 */
 	public static final double	servoDown	= 0.80d;
 	public static final double	servoUp		= 1.0d;
 

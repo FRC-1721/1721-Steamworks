@@ -159,7 +159,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("SideAutoGearLeft", new AutoDepositGearSides(-1.0, false));
 		// autoChooser.addObject("DepositSteam10Red", new AutoDepositSteam(2.0, -9.5, RobotMap.redTeam, true));
 		autoChooser.addObject("CalibrateVision", new AutoCalibrateVision());
-		autoChoosrer.addObject("Do Nothing", new DoNothing());
+		autoChooser.addObject("Do Nothing", new DoNothing());
 		/*
 		 * autoChooser.addObject("Steam10Blue", new AutoDepositSteam(2.0, 10.0, RobotMap.blueTeam, false));
 		 * autoChooser.addObject("Steam15Blue", new AutoDepositSteam(2.0, 15.0, RobotMap.blueTeam, false));

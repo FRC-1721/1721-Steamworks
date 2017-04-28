@@ -324,7 +324,7 @@ public class PositionEstimator {
 				visionPosition[i] = newPosition[i];
 				// Only take 10% of the correction due to sensor error
 				if (Robot.cameraSystem.calibrated) {
-					double delX = 0.5 * (newPosition[i] - lastPosEst[i]);
+					double delX = 0.25 * (newPosition[i] - lastPosEst[i]);
 					// limit the correction in case of bad data. At 10 fps this can get bad quickly.
 					if (delX > 0.5) {
 						delX = 0.5;

@@ -87,7 +87,7 @@ public class RobotMap {
 	public static double dtP = 1.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 
 	/** Shooter PID Control Variables **/
-	public static double sP = 4.0, sI = 0.0, sD = 0.02; // TODO Figure out what the F term is
+	public static double sP = 4.0, sI = 0.0, sD = 0.1; // TODO Figure out what the F term is
 
 	// Distance controller
 	public static double	distTu	= 0.2;
@@ -124,7 +124,7 @@ public class RobotMap {
 
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
-	public static double	navP	= 0.4 * 0.006;
+	public static double	navP	= 0.6 * 0.006;
 	public static double	navI	= 0.0 * navP / (0.5 * navTu);
 	public static double	navD	= navP * navTu / 3.0;
 	public static double	navF	= 0.0;

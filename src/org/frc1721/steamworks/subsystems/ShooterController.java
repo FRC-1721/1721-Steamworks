@@ -5,16 +5,17 @@ import java.text.DecimalFormat;
 import org.frc1721.steamworks.OI;
 import org.frc1721.steamworks.RobotMap;
 import org.frc1721.steamworks.commands.Shooter;
+import org.frc1721.steamworks.CustomPIDSubsystem;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
 
-public class ShooterController extends PIDSubsystem {
+public class ShooterController extends CustomPIDSubsystem {
 
 	public static final double		originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
 																					// RobotMap.java to edit quick.
@@ -28,7 +29,7 @@ public class ShooterController extends PIDSubsystem {
 	public ShooterController() {
 		super("Shooter", RobotMap.sP, RobotMap.sI, RobotMap.sD);
 		setAbsoluteTolerance(RobotMap.shooterErrorPercent);
-		getPIDController().setContinuous();
+		setPIDSourceType(PIDSourceType.kRate);
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class ShooterController extends PIDSubsystem {
 	@Override
 	protected double returnPIDInput() {
 		// returns the sensor value that is providing the feedback for the system
-		return RobotMap.shooterEnc.getRate();
+		return RobotMap.shooterEnc.getDistance();
 	}
 
 	@Override
@@ -81,7 +82,6 @@ public class ShooterController extends PIDSubsystem {
 		spin -= Double.valueOf(dFormat.format(0.001d * operator.getRawAxis(RobotMap.gamepadRYaxis)));
 		spin = OI.limit(spin);
 
-		// System.out.println("foo");
 		setShooter(spin);
 		setServo(servoValue);
 	}

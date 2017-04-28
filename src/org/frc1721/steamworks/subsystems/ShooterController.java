@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterController extends CustomPIDSubsystem {
 
-	public static final double		originalSpin	= 0.83d;						// TODO TEMP, I'm keeping this out of
+	public static final double		originalSpin	= 0.90d;						// TODO TEMP, I'm keeping this out of
 																					// RobotMap.java to edit quick.
 	private static double			spin			= originalSpin;
 	private static DecimalFormat	dFormat			= new DecimalFormat("#.###");

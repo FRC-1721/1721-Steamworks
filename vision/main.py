@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Capture frame-by-frame
 import string,cgi,time
+import os
 from os import curdir, sep
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
@@ -28,6 +29,109 @@ BUF_SIZE=6
 q = Queue.Queue(BUF_SIZE)
 qOut = Queue.Queue(2)    
 visionSample = 0
+
+class SDOutThread(threading.Thread):
+    def __init__(self):
+        super(SDOutThread,self).__init__()
+        self.running = True
+        self.frame = None
+        self.jpg = None
+        self.frameID = 0
+        self.fd = None
+        self.sd = None
+        self.vout = None
+        self.robotMode = 'disabled'
+        self.sampleID = 0
+        
+    def run(self):
+        while self.running:
+            self.writeData()        
+                #cv2.imshow('frame',self.frame)
+                #if cv2.waitKey(1) & 0xFF == ord('q'):
+                #    self.running = False
+                
+            sleep(0.03)
+        if self.fd is not None:
+            self.fd.close()
+
+
+    def getFileID(self,name):
+        idFile = name + '.id'
+        if os.path.isfile(idFile):
+            fd = open(idFile, 'r')
+            id = int(fd.readline())
+            fd.close()
+        else:
+            id = 1
+        fd = open(idFile,'w')
+        fd.write(str(id+1))
+        fd.close()
+        return str(id)
+
+    def setFile(self, name):
+        if self.fd is not None:
+            self.fd.close()
+        if self.vout is not None:
+            self.vout.release()
+        fileBase = 'vision.data.' +name +'.' + self.getFileID(name+".data") 
+        fileName = fileBase + '.dat'
+        self.fd = open(fileName,'w')
+        self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
+                      'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
+        # Define the codec and create VideoWriter object
+        #fourcc = cv2.VideoWriter_fourcc(*args["codec"])
+        fourcc  = cv2.cv.CV_FOURCC(*'MJPG')
+        self.vout = cv2.VideoWriter(fileBase + '.avi',fourcc, 30, (640,480))
+
+
+    def writeData(self):
+        global visionSample
+        if self.sd is None:
+            self.sd = NetworkTables.getTable('SmartDashboard')
+        if self.sd is not None:
+            #try:
+            if True:
+                robotMode = self.sd.getString('robotMode', 'disabled')
+                if robotMode == 'disabled':
+                    if self.fd is not None:
+                        self.fd.close()
+                        self.fd = None
+                    if self.vout is not None:
+                        print ('releasing vout')
+                        self.vout.release()
+                        self.vout = None
+                    self.robotMode = robotMode
+                    return
+                if robotMode != self.robotMode:
+                    self.setFile(robotMode)
+                    self.robotMode = robotMode
+                sampleID = self.sd.getNumber('visionSample',-1.0)
+                
+                
+                rawDist = self.sd.getNumber('visionRawDist', -1.0)
+                rawAngle = self.sd.getNumber('visionRawAngle',-1000.0)
+
+                
+                x = self.sd.getNumber('PositionEstX', -1000.0)
+                y = self.sd.getNumber('PositionEstY', -1000.0)
+
+                angle = self.sd.getNumber('NavControllerHeading', -370.0)
+                # if not getting angle, not point in writing data, maybe robot is off, or disabled
+                #if angle < -360.0:
+                #    return
+                distM = self.sd.getNumber("Vision distM", 0.0)
+                distC = self.sd.getNumber("Vision distC", 0.0)
+                angleC = self.sd.getNumber("Vision angleC", 0.0)
+                angleM = self.sd.getNumber("Vision angleM", 0.0)     
+                visX = self.sd.getNumber("VisionEstX", -1000.0)
+                visY = self.sd.getNumber("VisionEstY", -1000.0)                    
+                distRSquared = self.sd.getNumber("distRSquared", 0.0)
+                angleRSquared = self.sd.getNumber("angleRSquared",0.0)
+                
+                self.fd.write('%s %s %s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, visX, visY, angle, rawDist, rawAngle,
+                                                  distM, distC, angleC, angleM, distRSquared, angleRSquared))
+
+
 
         
 class VideoOutThread(threading.Thread):
@@ -63,19 +167,29 @@ class VideoOutThread(threading.Thread):
         jpg = cv2.imencode('.jpg',self.frame)
         return jpg.tobytes()
 
+    def getFileID(self,name):
+        idFile = name + '.id'
+        if os.path.isfile(idFile):
+            fd = open(idFile, 'r')
+            id = int(fd.readline())
+            fd.close()
+        else:
+            id = 1
+        fd = open(idFile,'w')
+        fd.write(str(id+1))
+        fd.close()
+        return str(id)
+
     def setFile(self, name):
         if self.fd is not None:
             self.fd.close()
         if self.vout is not None:
             self.vout.release()
-        timeStr =  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        parts = timeStr.split('-')
-        timeStr = '-'.join(parts[3:])
-        fileBase = 'vision.' +name +'.' + timeStr 
-        fileName = fileBase + '.dat'
-        self.fd = open(fileName,'w')
-        self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
-                      'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
+        fileBase = 'vision.' +name +'.' + self.getFileID(name) 
+        #fileName = fileBase + '.dat'
+        #self.fd = open(fileName,'w')
+        #self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
+        #              'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
         # Define the codec and create VideoWriter object
         #fourcc = cv2.VideoWriter_fourcc(*args["codec"])
         fourcc  = cv2.cv.CV_FOURCC(*'MJPG')
@@ -86,9 +200,8 @@ class VideoOutThread(threading.Thread):
         global visionSample
         if self.sd is None:
             self.sd = NetworkTables.getTable('SmartDashboard')
-        if self.sd is not None:
-            try:
-                robotMode = self.sd.getString('robotMode', 'disabled')
+        if self.sd is not None:               
+ 		robotMode = self.sd.getString('robotMode', 'disabled')
                 if robotMode == 'disabled':
                     if self.fd is not None:
                         self.fd.close()
@@ -102,37 +215,10 @@ class VideoOutThread(threading.Thread):
                 if robotMode != self.robotMode:
                     self.setFile(robotMode)
                     self.robotMode = robotMode
-                sampleID = self.sd.getNumber('visionSample',-1.0)
-                cv2.putText(frame,str(sampleID),(10,460), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
-                
-                rawDist = self.sd.getNumber('visionRawDist', -1.0)
-                rawAngle = self.sd.getNumber('visionRawAngle',-1000.0)
 
-                
-                x = self.sd.getNumber('PositionEstX', -1000.0)
-                y = self.sd.getNumber('PositionEstY', -1000.0)
-
-                angle = self.sd.getNumber('NavControllerHeading', -370.0)
-                # if not getting angle, not point in writing data, maybe robot is off, or disabled
-                #if angle < -360.0:
-                #    return
-                distM = self.sd.getNumber("Vision distM", 0.0)
-                distC = self.sd.getNumber("Vision distC", 0.0)
-                angleC = self.sd.getNumber("Vision angleC", 0.0)
-                angleM = self.sd.getNumber("Vision angleM", 0.0)     
-                visX = self.sd.getNumber("VisionEstX", -1000.0)
-                visY = self.sd.getNumber("VisionEstY", -1000.0)                    
-                distRSquared = self.sd.getNumber("distRSquared", 0.0)
-                angleRSquared = self.sd.getNumber("angleRSquared",0.0)
-                posString = 'pos: %s,%s'%(x,y)
-                visPosString = 'vis: %s,%s'%(visX,visY)
-                cv2.putText(frame,posString,(10,430), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
-                cv2.putText(frame,visPosString,(10,400), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
-                self.fd.write('%s %s %s %s %s %s %s %s %s %s %s %s %s %s \n'%(visionSample, x, y, visX, visY, angle, rawDist, rawAngle,
-                                                  distM, distC, angleC, angleM, distRSquared, angleRSquared))
                 self.vout.write(frame)
-            except:
-                print('unable to write data')
+            #except:
+                #print('unable to write data')
 
 
 
@@ -211,13 +297,26 @@ class ProducerThread(threading.Thread):
         self.robotMode = 'disabled'
 
     
+    def getFileID(self,name):
+        idFile = name + '.id'
+        if os.path.isfile(idFile):
+            fd = open(idFile, 'r')
+            id = int(fd.readline())
+            fd.close()
+        else:
+            id = 1
+        fd = open(idFile,'w')
+        fd.write(id)
+        fd.close()
+        return str(id)
+    
     def setFile(self, name):
         if self.fd is not None:
             self.fd.close()
         timeStr =  datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        parts = timeStr.split('-')
-        timeStr = '-'.join(parts[3:])
-        fileName = 'vision.' +name +'.' + timeStr + '.dat'
+        #parts = timeStr.split('-')
+        #timeStr = '-'.join(parts[3:])
+        fileName = 'vision.' +name +'.' +self.getFileID(name) + '.dat'
         self.fd = open(fileName,'w')
         self.fd.write('# visionSample, x, y, visX, visY, angle, rawDist, rawAngle, ' + 
                       'distM, distC, angleC, angleM, distRSquared, angleRSquared\n')
@@ -278,15 +377,41 @@ class ConsumerThread(threading.Thread):
         super(ConsumerThread,self).__init__()
         self.gp = gp 
         self.running = True
-        
+        self.sd = None
+
     def run(self):
         while self.running:
             if not q.empty():
                 frame = q.get()
                 frame = self.gp.process(frame)
                 if not qOut.full():
+                    self.modFrame(frame)
                     qOut.put(frame)
             sleep(0.01)
+
+    def modFrame(self,frame):
+        global visionSample
+        if self.sd is None:
+            self.sd = NetworkTables.getTable('SmartDashboard')
+        if self.sd is not None:
+            try:
+                sampleID = self.sd.getNumber('visionSample',-1.0)
+                
+
+                
+                x = self.sd.getNumber('PositionEstX', -1000.0)
+                y = self.sd.getNumber('PositionEstY', -1000.0)
+    
+                visX = self.sd.getNumber("VisionEstX", -1000.0)
+                visY = self.sd.getNumber("VisionEstY", -1000.0)                    
+              
+                posString = 'pos: %s,%s'%(x,y)
+                visPosString = 'vis: %s,%s'%(visX,visY)
+                cv2.putText(frame,str(sampleID),(10,460), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+                cv2.putText(frame,posString,(10,430), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+                cv2.putText(frame,visPosString,(10,400), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
+            except:
+                pass
 
           
 class CameraSystem:
@@ -298,6 +423,8 @@ class CameraSystem:
         # old method cv2.VideoCapture(file)
         self.producer = ProducerThread(self.cap,self.fps)
         self.producer.start()
+        self.dataWriter = SDOutThread()
+        self.dataWriter.start()
         self.consumers = []
         for i in range(BUF_SIZE):
             consumer = ConsumerThread(RobotGripPipeline())

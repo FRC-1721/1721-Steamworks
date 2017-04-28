@@ -91,7 +91,7 @@ public class RobotMap {
 
 	// Distance controller
 	public static double	distTu	= 0.2;
-	public static double	distP	= 1.5;
+	public static double	distP	= 2.0;
 	public static double	distI	= 0.1 * distP * 2.0 / distTu;
 	public static double	distD	= distP * distTu / 8.0;
 
@@ -124,7 +124,7 @@ public class RobotMap {
 
 	// Settings from https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method
 
-	public static double	navP	= 0.6 * 0.006;
+	public static double	navP	= 0.8 * 0.006;
 	public static double	navI	= 0.0 * navP / (0.5 * navTu);
 	public static double	navD	= navP * navTu / 3.0;
 	public static double	navF	= 0.0;

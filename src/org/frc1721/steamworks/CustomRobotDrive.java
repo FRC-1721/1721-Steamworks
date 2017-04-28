@@ -22,6 +22,9 @@ public class CustomRobotDrive extends RobotDrive {
 	protected CustomPIDController	m_rightController;
 	protected boolean				m_PIDPresent	= false;
 	protected boolean				m_NAVPresent	= false;
+	protected double maxDelta = 0.10;
+	protected double lastLeftOutput = 0.0;
+	protected double lastRightOutput = 0.0;
 
 	protected boolean m_PIDEnabled = true;
 	// Output from -1 to 1 scaled to give rate in ft/s for PID Controller
@@ -122,6 +125,12 @@ public class CustomRobotDrive extends RobotDrive {
 				m_safetyHelper.feed();
 
 		} else {
+			if (leftOutput > lastLeftOutput + maxDelta) leftOutput = lastLeftOutput + maxDelta;
+			if (leftOutput < lastLeftOutput - maxDelta) leftOutput = lastLeftOutput - maxDelta;
+			if (rightOutput > lastRightOutput + maxDelta) rightOutput = lastRightOutput + maxDelta;
+			if (rightOutput < lastRightOutput - maxDelta) rightOutput = lastRightOutput - maxDelta;
+			lastLeftOutput = leftOutput;
+			lastRightOutput = rightOutput;
 			super.setLeftRightMotorOutputs(leftOutput, rightOutput);
 		}
 

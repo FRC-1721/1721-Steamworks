@@ -105,8 +105,8 @@ public class PositionEstimator {
 			gearTargets[i] = new FieldTarget();
 		}
 		gearTargets[0].set(RobotMap.cGearDepositX, RobotMap.cGearDepositY, 180.0);
-		gearTargets[1].set(RobotMap.sideGearDepositX, RobotMap.sideGearDepositY, 120.0);
-		gearTargets[2].set(RobotMap.sideGearDepositX, -RobotMap.sideGearDepositY, -120.0);
+		gearTargets[1].set(RobotMap.sideGearDepositX, RobotMap.sideGearDepositY, 110.0);
+		gearTargets[2].set(RobotMap.sideGearDepositX, -RobotMap.sideGearDepositY, -110.0);
 		curTarget = gearTargets[0];
 
 		m_peLoop = new java.util.Timer();
